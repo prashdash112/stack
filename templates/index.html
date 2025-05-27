@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Flashcard Generator</title>
+  <link rel="stylesheet" href="../static/style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1 class="title">AI Flashcard Generator</h1>
+    <textarea id="promptInput" placeholder="Enter topic or content..." rows="4"></textarea>
+    <button id="generateBtn">Generate Flashcard</button>
+    <div class="card-container">
+        <div class="card">
+        <div class="card__face card__face--front">
+            <div id="flashcard-content"></div>
+        </div>
+        <div class="card__face card__face--back">
+        <div>
+            <h2>Flashcard Details</h2>
+        </div>
+        </div>
+        </div>
+    </div>
+    <div>
+        <button id="downloadImageBtn" class="small-btn" hidden>Download Flashcard as PNG</button>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <!-- html2canvas for image export -->
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="../static/app.js"></script>
+</body>
+</html>
