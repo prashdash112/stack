@@ -700,7 +700,7 @@
     <div class="container">
         <!-- Header -->
         <div class="header">
-            <h1 class="logo">AI Content for LinkedIn</h1>
+            <h1 class="logo"> AI Content for LinkedIn</h1>
             <p class="tagline">Transform your ideas into engaging LinkedIn posts with AI magic</p>
         </div>
 
@@ -933,20 +933,63 @@ Examples:
             }
             }
 
+            async function copyToClipboard() {
+                const preview = document.querySelector('.post-preview');
+                if (!preview) {
+                    return alert('Nothing to capture!');
+                }
 
-        // Utility functions
-        function copyToClipboard() {
-            const postContent = document.getElementById('postContent');
-            postContent.select();
-            document.execCommand('copy');
-            
-            const btn = event.target;
-            const originalText = btn.textContent;
-            btn.textContent = '✅ Copied!';
-            setTimeout(() => {
-                btn.textContent = originalText;
-            }, 2000);
-        }
+                // 1. Override heading gradients as before
+                const headings = preview.querySelectorAll('h1, h2, h3, h4, h5, h6');
+                headings.forEach(h => {
+                    h.dataset.origBg    = h.style.background;
+                    h.dataset.origClip  = h.style.webkitBackgroundClip;
+                    h.dataset.origColor = h.style.color;
+
+                    h.style.background           = 'none';
+                    h.style.webkitBackgroundClip = 'unset';
+                    h.style.color                = '#fca5a5';
+                });
+
+                // 2. Temporarily override the preview background
+                const origBg = preview.style.background;
+                // preview.style.background = 'linear-gradient(135deg, #2a2a3d, #1e1e2f)'; // dark purple–bluish
+                preview.style.background = 'linear-gradient(90deg, #9f5fd1 0%, #9f5fd1 50%, #00e5ff 50%, #00e5ff 100%)';
+
+                // 3. Capture the full preview box
+                try {
+                    const canvas = await html2canvas(preview, {
+                    backgroundColor: null, // let the inline style show
+                    scale: 2
+                    });
+                    canvas.toBlob(blob => {
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'linkedin-post.png';
+                    a.click();
+                    URL.revokeObjectURL(url);
+                    });
+                } catch (err) {
+                    console.error('Snapshot failed:', err);
+                    alert('Unable to save snapshot.');
+                }
+
+                // 4. Restore original heading and preview background styles
+                headings.forEach(h => {
+                    h.style.background           = h.dataset.origBg;
+                    h.style.webkitBackgroundClip = h.dataset.origClip;
+                    h.style.color                = h.dataset.origColor;
+                    delete h.dataset.origBg;
+                    delete h.dataset.origClip;
+                    delete h.dataset.origColor;
+                });
+                preview.style.background = origBg;
+                }
+
+
+
+
 
         function regenerateContent() {
             if (currentPrompt) {
