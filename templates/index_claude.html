@@ -688,6 +688,14 @@
         to   { opacity: 1; transform: scale(1); }
         }
 
+        /* Prevent tables, code blocks, and the preview card from splitting mid-page */
+        .post-preview,
+        .post-preview table,
+        .post-preview pre,
+        .post-preview code {
+        page-break-inside: avoid;
+        }
+
     </style>
 </head>
 <body>
@@ -795,7 +803,8 @@ Examples:
 
             </div>
             <div class="post-actions">
-                <button class="action-btn primary" onclick="copyToClipboard()">📋 Copy Content</button>
+                <button class="action-btn primary" onclick="copyToClipboard()">📋 Infographic</button>
+                <button class="action-btn" id="exportPdfBtn">📄 Export PDF</button>
                 <button class="action-btn" onclick="regenerateContent()">🔄 Regenerate</button>
                 <button class="action-btn" onclick="clearContent()">🗑️ Clear</button>
             </div>
@@ -808,6 +817,7 @@ Examples:
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <!-- html2canvas for image export -->
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script>
         // Global variables
         let selectedFormat = 'square';
@@ -880,7 +890,6 @@ Examples:
 
                 const response = await mockApiCall(currentPrompt);
                 const markdown_parsed_to_html = marked.parse(response.content);
-                console.log("Parsed to HTML:\n\n", markdown_parsed_to_html)
                 // Display result
                 postContent.innerHTML = markdown_parsed_to_html // response.content;
                 // Then turn it into a Quill editor:
@@ -986,11 +995,97 @@ Examples:
                 });
                 preview.style.background = origBg;
                 }
+// /////////////////////////////// PDF ////////////////////////////////////////////////////////////
+        
+            document.getElementById('exportPdfBtn').addEventListener('click', async () => {
+            const preview = document.querySelector('.post-preview');
+            if (!preview) return alert('Nothing to export!');
+
+            // Temporarily override heading gradients (same as PNG fix)
+            const headings = preview.querySelectorAll('h1, h2, h3, h4, h5, h6');
+            headings.forEach(h => {
+                h.dataset.origBg    = h.style.background;
+                h.dataset.origClip  = h.style.webkitBackgroundClip;
+                h.dataset.origColor = h.style.color;
+                h.style.background           = 'none';
+                h.style.webkitBackgroundClip = 'unset';
+                h.style.color                = '#fca5a5';
+            });
+
+            // Temporarily darken background if needed
+            const origBg = preview.style.background;
+            preview.style.background = 'linear-gradient(135deg, #2a2a3d, #1e1e2f)';
+
+            try {
+                // 1. Render the entire preview to one tall canvas
+                const canvas = await html2canvas(preview, { backgroundColor: null, scale: 2 });
+                
+
+
+                // 2. Export as PNG for perfect fidelity
+                const imgData = canvas.toDataURL('image/png');
+
+                // --- NEW: crop the tall canvas into A4‐sized page slices ---
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF({ unit: 'px', format: 'a4' });
+                const pdfW = pdf.internal.pageSize.getWidth();
+                const pdfH = pdf.internal.pageSize.getHeight();
+
+                // Compute the ratio of canvas→PDF widths
+                const canvasW = canvas.width;
+                const canvasH = canvas.height;
+                const scale = (pdfW - 40) / canvasW; 
+                const pageCanvasH = Math.floor(pdfH / scale);
+
+                let renderedH = 0;
+                while (renderedH < canvasH) {
+                // Create a temp canvas for this page
+                const tempCanvas = document.createElement('canvas');
+                tempCanvas.width = canvasW;
+                tempCanvas.height = Math.min(pageCanvasH, canvasH - renderedH);
+                const tCtx = tempCanvas.getContext('2d');
+                
+                // Draw the slice
+                tCtx.drawImage(
+                    canvas,
+                    0, renderedH,               // src x, y
+                    canvasW, tempCanvas.height, // src w, h
+                    0, 0,
+                    canvasW, tempCanvas.height  // dst w, h
+                );
+                
+                // Add to PDF
+                const sliceData = tempCanvas.toDataURL('image/jpeg', 0.8);
+                // pdf.addImage(sliceData, 'PNG', 20, 20, canvasW * scale, tempCanvas.height * scale);
+                pdf.addImage(sliceData, 'JPEG', 20, 20, canvasW * scale, tempCanvas.height * scale);
+                renderedH += pageCanvasH;
+                if (renderedH < canvasH) pdf.addPage();
+                }
+
+                pdf.save('linkedin-post.pdf');
+
+            } catch (e) {
+                console.error('PDF export failed:', e);
+                alert('Could not export multi-page PDF.');
+            } finally {
+                // Restore heading and preview bg
+                headings.forEach(h => {
+                h.style.background           = h.dataset.origBg;
+                h.style.webkitBackgroundClip = h.dataset.origClip;
+                h.style.color                = h.dataset.origColor;
+                delete h.dataset.origBg;
+                delete h.dataset.origClip;
+                delete h.dataset.origColor;
+                });
+                preview.style.background = origBg;
+            }
+            });
+
+                    
 
 
 
-
-
+// ///////////////////////////////////////////////////////////////////////////////////////
         function regenerateContent() {
             if (currentPrompt) {
                 generateContent();
