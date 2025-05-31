@@ -730,12 +730,12 @@ Examples:
                 ></textarea>
                 
                 <div class="post-options">
-                    <button class="option-btn active" data-format="square">
+                    <!-- <button class="option-btn active" data-format="square">
                         📱 Square Post
                     </button>
                     <button class="option-btn" data-format="vertical">
                         📋 Vertical Post
-                    </button>
+                    </button> -->
                 </div>
                 
                 <button class="generate-btn" id="generateBtn">
@@ -805,9 +805,15 @@ Examples:
             <div class="post-actions">
                 <button class="action-btn primary" onclick="copyToClipboard()">📋 Infographic</button>
                 <button class="action-btn" id="exportPdfBtn">📄 Export PDF</button>
+                <!-- ── INSERT IMAGE BUTTON HERE ── -->
+                <button class="action-btn" id="insertImageBtn">🖼️ Insert Image</button>
+                <!-- ──────────────────────────────── -->
                 <button class="action-btn" onclick="regenerateContent()">🔄 Regenerate</button>
                 <button class="action-btn" onclick="clearContent()">🗑️ Clear</button>
             </div>
+            <!-- ── HIDDEN FILE INPUT FOR IMAGE UPLOAD ── -->
+            <input type="file" id="imageInput" accept="image/*" style="display: none;" />
+            <!-- ──────────────────────────────────────── -->
         </div>
     </div>
     <!-- quill library for html editor  -->
@@ -1116,6 +1122,39 @@ Examples:
                 particle.style.transform = `translateX(${x}px) translateY(${y}px)`;
             });
         });
+    ////////////////////////////////////Image/////////////////////////////////
+        document
+      .getElementById('insertImageBtn')
+      .addEventListener('click', () => {
+        document.getElementById('imageInput').click();
+    });
+
+    document
+      .getElementById('imageInput')
+      .addEventListener('change', async (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+        if (!file.type.startsWith('image/')) {
+          alert('Please select an image file.');
+          return;
+        }
+        const reader = new FileReader();
+        reader.onload = () => {
+          const imgDataUrl = reader.result;
+          const img = document.createElement('img');
+          img.src = imgDataUrl;
+          img.style.maxWidth = '100%';
+          img.style.margin = '1rem 0';
+          img.style.borderRadius = '0.75rem';
+          img.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
+          
+          const postDiv = document.getElementById('postContent');
+          postDiv.appendChild(img);
+          postDiv.appendChild(document.createElement('br'));
+          event.target.value = '';
+        };
+        reader.readAsDataURL(file);
+    });
     </script>
 </body>
 </html>
