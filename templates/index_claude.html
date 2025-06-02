@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Content for LinkedIn</title>
+    <title>GeniusPost AI</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         
@@ -389,10 +389,25 @@
             border: 1px solid rgba(255, 255, 255, 0.2);
             position: relative;
             margin-bottom: 20px;
+            /* Prevent splitting the entire .post-preview box */
+            page-break-inside: avoid;
         }
 
+        /* Prevent splitting code blocks, tables, lists, or blockquotes */
+            .post-preview pre,
+            .post-preview code,
+            .post-preview table,
+            .post-preview thead,
+            .post-preview tbody,
+            .post-preview tr,
+            .post-preview ul,
+            .post-preview ol,
+            .post-preview blockquote {
+            page-break-inside: avoid;
+            }
+
         .post-content {
-            font-size: 1.1rem;
+            font-size: 1.5rem;
             line-height: 1.6;
             color:#ffffff;
             min-height: 150px;
@@ -499,80 +514,64 @@
         100% { filter: hue-rotate(360deg); }
         }
 
-        /* code blocks */
-        #postContent pre,
-        #postContent code {
-        font-family: 'Source Code Pro', monospace;
-        color: #f8f8f2;
-        padding: 0.5rem 0.75rem;
-        border-radius: 0.5rem;
-        overflow-x: auto;
-        margin: 0.75rem 0;
-        transition: transform 0.3s ease;
-        }
-        #postContent pre:hover {
-        transform: translateY(-3px) scale(1.02);
-        }
+    
+    /* ─────────────────────────────────────────────────────────────────────────
+        NEW “Windowed” Code Block Style for #postContent
+        (draws a dark background + top bar with red/yellow/green circles)
+    ──────────────────────────────────────────────────────────────────────── */
 
-        /* inline code */
-        #postContent p code {
-        background: rgba(255,255,255,0.1);
-        color: #ffeb3b;
-        padding: 0.2rem 0.4rem;
-        }
-        /* ── NEON-CARD FOR CODE BLOCKS ── */
-        #postContent pre,
-        #postContent code {
-        position: relative;                   /* make pseudo-elements align */
-        display: block;
-        background: #111;                     /* deep background for contrast */
-        color: #a3d9ff;                       /* soft neon–blue text */
-        font-family: 'Source Code Pro', monospace;
-        font-size: 0.95rem;
-        padding: 1rem 1.25rem;                /* more breathing room */
-        margin: 1.25rem 0;
-        border-radius: 0.75rem;
-        overflow-x: auto;
-        border: 2px solid rgba(163, 217, 255, 0.6);
-        box-shadow:
-            0 0 8px rgba(163, 217, 255, 0.4),
-            inset 0 0 6px rgba(163, 217, 255, 0.2);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
+#postContent pre {
+  background-color: #1d1d1d;       /* very‐dark navy */
+  border-radius: 8px;              /* slightly rounded corners */
+  padding: 16px;                   /* inner padding for code */
+  position: relative;              /* so the pseudo‐elements can be positioned */
+  color: #c2e5d9 ;                
+  font-family: 'Source Code Pro', monospace;
+  font-size: 1.1rem;
+  line-height: 1.5;
+  overflow-x: auto;                /* scroll if it’s too wide */
+  margin: 1.5rem 0;                /* keep some vertical spacing */
+}
 
-        /* Hover to gently pop the card and brighten glow */
-        #postContent pre:hover,
-        #postContent code:hover {
-        transform: translateY(-4px) scale(1.02);
-        box-shadow:
-            0 0 12px rgba(163, 217, 255, 0.6),
-            inset 0 0 8px rgba(163, 217, 255, 0.3);
-        }
 
-        /* Add a subtle neon “header” stripe on top of each block */
-        #postContent pre::before,
-        #postContent code::before {
-        content: ' ';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 4px;
-        background: linear-gradient(90deg, #6b73ff, #fca5a5);
-        border-top-left-radius: 0.75rem;
-        border-top-right-radius: 0.75rem;
-        }
+/* 1) Draw the top “window bar” (dark gray) behind the circles */
+#postContent pre::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 32px;
+  background-color: #e35b74;         /* slightly lighter than the code bg */
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
 
-        /* Inline code gets a mini neon pill */
-        #postContent p code {
-        display: inline-block;
-        background: #111;
-        color: #ffeb3b;
-        padding: 0.3rem 0.6rem;
-        border-radius: 0.5rem;
-        font-size: 0.9rem;
-        box-shadow: 0 0 4px rgba(255, 235, 59, 0.4);
-        }
+/* 2) Draw the red/yellow/green circles in that bar */
+#postContent pre::after {
+  content: '';
+  position: absolute;
+  top: 8px;                        /* down from the top of the bar */
+  left: 12px;                      /* spacing from left edge */
+  width: 10px;
+  height: 10px;
+  background-color: #680b06;       /* red circle */
+  border-radius: 50%;
+  /* create the two other circles (yellow and green) using box-shadow offsets */
+  box-shadow:
+    14px 0 0 #ac7601,             /* yellow circle, 14px to the right */
+    28px 0 0 #01570e;             /* green circle, 28px to the right */
+}
+
+/* 3) Push the actual code text down so it doesn’t overlap the bar */
+#postContent pre code {
+  display: block;          /* ensure it spans full width */
+  padding-top: 28px;       /* create space for the 24px bar + a few pixels */
+  white-space: pre;        /* preserve spacing/line breaks */
+}
+
+/* ───────────────────────────────────────────────────────────────────────── */
+
 
 
         /* tables */
@@ -695,6 +694,21 @@
         .post-preview code {
         page-break-inside: avoid;
         }
+        /* ── GeniusPost AI WATERMARK ── */
+        .watermark {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            opacity: 1.0;
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #d0b8d8;
+            pointer-events: none;
+            user-select: none;
+            z-index: 5;
+        }
+
+    
 
     </style>
 </head>
@@ -708,7 +722,7 @@
     <div class="container">
         <!-- Header -->
         <div class="header">
-            <h1 class="logo"> AI Content for LinkedIn</h1>
+            <h1 class="logo"> GeniusPost AI</h1>
             <p class="tagline">Transform your ideas into engaging LinkedIn posts with AI magic</p>
         </div>
 
@@ -824,6 +838,7 @@ Examples:
     <!-- html2canvas for image export -->
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
     <script>
         // Global variables
         let selectedFormat = 'square';
@@ -953,6 +968,13 @@ Examples:
                 if (!preview) {
                     return alert('Nothing to capture!');
                 }
+                //////////////////////////
+                // ── ① TEMPORARILY ADD WATERMARK ──
+                const wm = document.createElement('div');
+                wm.className = 'watermark';
+                wm.innerText = 'GeniusPost AI';
+                preview.appendChild(wm);
+                //////////////////////////
 
                 // 1. Override heading gradients as before
                 const headings = preview.querySelectorAll('h1, h2, h3, h4, h5, h6');
@@ -1000,12 +1022,19 @@ Examples:
                     delete h.dataset.origColor;
                 });
                 preview.style.background = origBg;
+                // ── ④ REMOVE WATERMARK ──
+                preview.removeChild(wm);
                 }
 // /////////////////////////////// PDF ////////////////////////////////////////////////////////////
         
             document.getElementById('exportPdfBtn').addEventListener('click', async () => {
             const preview = document.querySelector('.post-preview');
             if (!preview) return alert('Nothing to export!');
+            // ── ① TEMPORARILY ADD WATERMARK ──
+            const wm = document.createElement('div');
+            wm.className = 'watermark';
+            wm.innerText = 'GeniusPost AI';
+            preview.appendChild(wm);
 
             // Temporarily override heading gradients (same as PNG fix)
             const headings = preview.querySelectorAll('h1, h2, h3, h4, h5, h6');
@@ -1045,6 +1074,10 @@ Examples:
 
                 let renderedH = 0;
                 while (renderedH < canvasH) {
+                    // 5. Fill entire page with neon purple (or black). 
+                    //    RGB for neon‐purple (#9f7aea) = (159, 122, 234).
+                    pdf.setFillColor(159, 122, 234);
+                    pdf.rect(0, 0, pdfW, pdfH, 'F');
                 // Create a temp canvas for this page
                 const tempCanvas = document.createElement('canvas');
                 tempCanvas.width = canvasW;
@@ -1074,6 +1107,8 @@ Examples:
                 console.error('PDF export failed:', e);
                 alert('Could not export multi-page PDF.');
             } finally {
+                // ── ④ REMOVE WATERMARK ──
+                preview.removeChild(wm);
                 // Restore heading and preview bg
                 headings.forEach(h => {
                 h.style.background           = h.dataset.origBg;
@@ -1087,41 +1122,340 @@ Examples:
             }
             });
 
-                    
+            // NEW: EXPORT PDF USING WKHTMLTOPDF
+//     document.getElementById('exportPdfBtn').addEventListener('click', async () => {
+//       const preview = document.querySelector('.post-preview');
+//       if (!preview) {
+//         return alert('Nothing to export!');
+//       }
+
+//       // ── ① TEMPORARILY ADD WATERMARK ──
+//       const wm = document.createElement('div');
+//       wm.className = 'watermark';
+//       wm.innerText = 'GeniusPost AI';
+//       preview.appendChild(wm);
+
+//       // Temporarily override heading gradients (same as PNG logic)
+//       const headings = preview.querySelectorAll('h1, h2, h3, h4, h5, h6');
+//       headings.forEach(h => {
+//         h.dataset.origBg    = h.style.background;
+//         h.dataset.origClip  = h.style.webkitBackgroundClip;
+//         h.dataset.origColor = h.style.color;
+//         h.style.background           = 'none';
+//         h.style.webkitBackgroundClip = 'unset';
+//         h.style.color                = '#fca5a5';
+//       });
+
+//       // Temporarily darken background
+//       const origBg = preview.style.background;
+//       preview.style.background = 'linear-gradient(135deg, #2a2a3d, #1e1e2f)'; 
+
+//       try {
+//         // ── GATHER THE FULL HTML FOR .post-preview ──
+//         // We include a small <style> block with page-break rules.
+//         const htmlToSend = `
+// <!DOCTYPE html>
+// <html lang="en">
+// <head>
+//   <meta charset="utf-8">
+//   <title>LinkedIn Post PDF</title>
+//   <style>
+//   /* ───────────── IMPORT THE FONT ───────────── */
+//   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+//   /* ───────────── FORCE PRINT COLORS & BACKGROUND ───────────── */
+//   html, body {
+//     height: 100%;
+//     margin: 0;
+//     padding: 0;
+//     font-family: 'Inter', sans-serif;
+
+//     /* ‹– purple gradient same as on-screen: */
+//     background: linear-gradient(45deg, #0a0a0a, #1a1a2e, #16213e, #0f3460);
+//     background-size: 400% 400%;
+
+//     /* ‹– ensure wkhtmltopdf prints this gradient instead of white: */
+//     -webkit-print-color-adjust: exact;  /* ‹– NEW */
+//   }
+
+//   /* ───────────── POST-PREVIEW CONTAINER ───────────── */
+//   .post-preview {
+//     background: rgba(0, 0, 0, 0.3);  /* 30% black over the purple gradient */
+//     border-radius: 15px;
+//     padding: 30px;
+//     border: 1px solid rgba(255, 255, 255, 0.2);
+//     position: relative;
+//     margin-bottom: 20px;
+//     display: block;
+//     page-break-inside: avoid;
+
+//     /* ‹– force any semi-transparent fills to print exactly over the gradient */
+//     -webkit-print-color-adjust: exact;  /* ‹– NEW */
+//   }
+
+//   /* ───────────── WATERMARK ───────────── */
+//   .watermark {
+//     position: absolute;
+//     top: 10px;
+//     right: 10px;
+//     opacity: 1.0;
+//     font-size: 1.1rem;
+//     font-weight: 800;
+//     color: #d0b8d8;
+//     pointer-events: none;
+//     user-select: none;
+//     z-index: 5;
+
+//     /* ‹– ensure the watermark itself doesn’t fade: */
+//     -webkit-print-color-adjust: exact;  /* ‹– NEW */
+//   }
+
+//   /* ───────────── PAGE-BREAK PROTECTION ───────────── */
+//   .post-preview,
+//   .post-preview pre,
+//   .post-preview code,
+//   .post-preview table,
+//   .post-preview thead,
+//   .post-preview tbody,
+//   .post-preview tr,
+//   .post-preview ul,
+//   .post-preview ol,
+//   .post-preview blockquote {
+//     page-break-inside: avoid;
+//   }
+
+//   /* ───────────── HEADING STYLES ───────────── */
+//   .post-preview h1,
+//   .post-preview h2,
+//   .post-preview h3,
+//   .post-preview h4,
+//   .post-preview h5,
+//   .post-preview h6 {
+//     position: relative;
+//     margin: 1.5rem 0 1rem;
+//     font-weight: 700;
+//     background: linear-gradient(45deg, #d8b4fe, #fca5a5, #fde68a);
+//     background-clip: text;
+//     -webkit-background-clip: text;
+//     color: transparent;
+
+//     /* headings render as gradient text (no need for print‐color‐adjust here because the gradient is just text‐fill) */
+//   }
+
+//   /* ───────────── CODE-BLOCK STYLES ───────────── */
+//   .post-preview pre {
+//     background: #111;  /* solid black so that 30% opacity over the gradient shows correctly */
+//     color: #a3d9ff;    /* soft neon blue text */
+//     font-family: 'Source Code Pro', monospace;
+//     font-size: 0.95rem;
+//     padding: 1rem 1.25rem;
+//     border-radius: 0.75rem;
+//     border: 2px solid rgba(163, 217, 255, 0.6);
+//     box-shadow:
+//       0 0 8px rgba(163, 217, 255, 0.4),
+//       inset 0 0 6px rgba(163, 217, 255, 0.2);
+//     margin: 1.25rem 0;
+//     overflow-x: auto;
+
+//     /* ‹– ensure this block prints exactly as above */
+//     -webkit-print-color-adjust: exact;  /* ‹– NEW */
+//   }
+
+//   .post-preview code {
+//     background: #111;
+//     color: #a3d9ff;
+//     font-family: 'Source Code Pro', monospace;
+//     font-size: 0.95rem;
+//     padding: 1rem 1.25rem;
+//     border-radius: 0.75rem;
+//     border: 2px solid rgba(163, 217, 255, 0.6);
+//     box-shadow:
+//       0 0 8px rgba(163, 217, 255, 0.4),
+//       inset 0 0 6px rgba(163, 217, 255, 0.2);
+//     margin: 1.25rem 0;
+//     display: block;
+//     overflow-x: auto;
+
+//     -webkit-print-color-adjust: exact;  /* ‹– NEW */
+//   }
+
+//   /* ───────────── TABLE STYLES ───────────── */
+//   .post-preview table {
+//     width: 100%;
+//     border-collapse: separate;
+//     border-spacing: 0;
+//     margin: 2rem 0;
+//     border: 2px solid rgba(102,126,234,0.8);
+//     box-shadow: 0 0 20px rgba(102,126,234,0.6);
+//     border-radius: 1rem;
+//     overflow: hidden;
+
+//     -webkit-print-color-adjust: exact;  /* ‹– NEW */
+//   }
+
+//   .post-preview th,
+//   .post-preview td {
+//     padding: 1rem 1.5rem;
+//     border: 1px solid rgba(102,126,234,0.3);
+
+//     -webkit-print-color-adjust: exact;  /* ‹– NEW */
+//   }
+
+//   .post-preview th {
+//     background: linear-gradient(90deg, #667eea, #764ba2);
+//     color: #fff;
+//     text-align: left;
+//     text-shadow: 0 0 8px rgba(255,255,255,0.6);
+
+//     -webkit-print-color-adjust: exact;  /* ‹– NEW */
+//   }
+
+//   .post-preview tr:nth-child(even) td {
+//     background: rgba(102,126,234,0.05);
+
+//     -webkit-print-color-adjust: exact;  /* ‹– NEW */
+//   }
+
+//   /* ───────────── LIST STYLES ───────────── */
+//   .post-preview ul,
+//   .post-preview ol {
+//     margin: 1rem 0 1rem 1.5rem;
+//     line-height: 1.6;
+//     -webkit-print-color-adjust: exact;  /* ‹– NEW */
+//   }
+
+//   .post-preview li {
+//     margin-bottom: 0.5rem;
+//     position: relative;
+
+//     -webkit-print-color-adjust: exact;  /* ‹– NEW */
+//   }
+
+//   .post-preview ul li::marker {
+//     color: #fca5a5;
+//     font-size: 1.2rem;
+
+//     -webkit-print-color-adjust: exact;  /* ‹– NEW */
+//   }
+
+//   .post-preview ol li {
+//     counter-increment: section;
+//     -webkit-print-color-adjust: exact;  /* ‹– NEW */
+//   }
+
+//   .post-preview ol li::before {
+//     content: counter(section) '. ';
+//     position: absolute;
+//     left: -1.5rem;
+//     color: #d8b4fe;
+
+//     -webkit-print-color-adjust: exact;  /* ‹– NEW */
+//   }
+
+//   /* ───────────── INLINE CODE ───────────── */
+//   .post-preview p code {
+//     background: rgba(255,255,255,0.1);
+//     color: #ffeb3b;
+//     padding: 0.2rem 0.4rem;
+//     border-radius: 0.5rem;
+//     box-shadow: 0 0 4px rgba(255,235,59,0.4);
+
+//     -webkit-print-color-adjust: exact;  /* ‹– NEW */
+//   }
+
+//   /* ───────────── IMAGE STYLES ───────────── */
+//   .post-preview img {
+//     max-width: 100%;
+//     border-radius: 0.75rem;
+//     box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+//     margin: 1rem 0;
+
+//     -webkit-print-color-adjust: exact;  /* ‹– NEW */
+//   }
+// </style>
+
+// </head>
+// <body>
+//   ${preview.outerHTML}
+// </body>
+// </html>`;
+
+//         // ② SEND TO /generate-pdf BACKEND
+//         const response = await fetch('/generate-pdf', {
+//           method: 'POST',
+//           headers: { 'Content-Type': 'application/json' },
+//           body: JSON.stringify({ html: htmlToSend })
+//         });
+
+//         if (!response.ok) {
+//           const errText = await response.text();
+//           throw new Error(`Server responded ${response.status}: ${errText}`);
+//         }
+
+//         // ③ DOWNLOAD THE PDF
+//         const blob = await response.blob();
+//         const url = URL.createObjectURL(blob);
+//         const a = document.createElement('a');
+//         a.href = url;
+//         a.download = 'linkedin-post.pdf';
+//         document.body.appendChild(a);
+//         a.click();
+//         document.body.removeChild(a);
+//         URL.revokeObjectURL(url);
+//       } catch (e) {
+//         console.error('PDF export failed:', e);
+//         alert('Could not export PDF.');
+//       } finally {
+//         // ── REMOVE WATERMARK & RESTORE BG/HEADINGS ──
+//         preview.removeChild(wm);
+//         headings.forEach(h => {
+//           h.style.background           = h.dataset.origBg;
+//           h.style.webkitBackgroundClip = h.dataset.origClip;
+//           h.style.color                = h.dataset.origColor;
+//           delete h.dataset.origBg;
+//           delete h.dataset.origClip;
+//           delete h.dataset.origColor;
+//         });
+//         preview.style.background = origBg;
+//       }
+//     });
 
 
 
-// ///////////////////////////////////////////////////////////////////////////////////////
-        function regenerateContent() {
-            if (currentPrompt) {
-                generateContent();
-            }
-        }
+            
 
-        function clearContent() {
-            document.getElementById('postContent').value = '';
-            document.getElementById('outputSection').classList.remove('show');
-            document.getElementById('promptInput').value = '';
-            currentPrompt = '';
-        }
+        // ///////////////////////////////////////////////////////////////////////////////////////
+                function regenerateContent() {
+                    if (currentPrompt) {
+                        generateContent();
+                    }
+                }
 
-        // Initialize everything when DOM loads
-        document.addEventListener('DOMContentLoaded', function() {
-            createParticles();
-            initializeEventListeners();
-        });
+                function clearContent() {
+                    document.getElementById('postContent').value = '';
+                    document.getElementById('outputSection').classList.remove('show');
+                    document.getElementById('promptInput').value = '';
+                    currentPrompt = '';
+                }
 
-        // Add some interactive hover effects
-        document.addEventListener('mousemove', function(e) {
-            const particles = document.querySelectorAll('.particle');
-            particles.forEach(particle => {
-                const speed = Math.random() * 2 + 1;
-                const x = (e.clientX * speed) / 100;
-                const y = (e.clientY * speed) / 100;
-                
-                particle.style.transform = `translateX(${x}px) translateY(${y}px)`;
-            });
-        });
+                // Initialize everything when DOM loads
+                document.addEventListener('DOMContentLoaded', function() {
+                    createParticles();
+                    initializeEventListeners();
+                });
+
+                // Add some interactive hover effects
+                document.addEventListener('mousemove', function(e) {
+                    const particles = document.querySelectorAll('.particle');
+                    particles.forEach(particle => {
+                        const speed = Math.random() * 2 + 1;
+                        const x = (e.clientX * speed) / 100;
+                        const y = (e.clientY * speed) / 100;
+                        
+                        particle.style.transform = `translateX(${x}px) translateY(${y}px)`;
+                    });
+                });
+
     ////////////////////////////////////Image/////////////////////////////////
         document
       .getElementById('insertImageBtn')
