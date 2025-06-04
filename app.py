@@ -3,6 +3,7 @@ from flask_cors import CORS
 import os
 import openai
 from openai import OpenAI
+import anthropic
 
 app = Flask(__name__)
 CORS(app)
@@ -25,28 +26,45 @@ def pricing():
 def generate():
     data = request.json or {}
     prompt = data.get('prompt', '').strip()
-    prompt_decorator = 'Important: Just give answer, no unnecessary info. Only add the topic as heading. ' \
-    'Generate a creative flashcard that can be shared over social media.'
+    prompt_decorator = 'Important: Just give answer, no unnecessary info.'
     prompt = prompt + prompt_decorator
     if not prompt:
         return jsonify({'error': 'Prompt is required.'}), 400
 
-    client = OpenAI(organization=os.environ["GPT_ORG"],
-                    project=os.environ["GPT_PROJECT"],
-                    api_key = os.environ["GPT_APIKEY"])
-    try:
-        response = client.chat.completions.create(
-            model="gpt-4o-mini",  # Specify the GPT-4o Mini model
-            messages=[
-                {"role": "user", "content": prompt} 
-            ],
-            max_tokens=2000,       # Adjust based on your requirements
-            temperature=0.7,      # Controls randomness
-            top_p=1.0,            # Controls diversity of the output
-            n=1                   # Number of responses to generate
-        )
+    # client = OpenAI(organization=os.environ["GPT_ORG"],
+    #                 project=os.environ["GPT_PROJECT"],
+    #                 api_key = os.environ["GPT_APIKEY"])
+    # try:
+    #     response = client.chat.completions.create(
+    #         model="gpt-4o-mini",  # Specify the GPT-4o Mini model
+    #         messages=[
+    #             {"role": "user", "content": prompt} 
+    #         ],
+    #         max_tokens=2000,       # Adjust based on your requirements
+    #         temperature=0.7,      # Controls randomness
+    #         top_p=1.0,            # Controls diversity of the output
+    #         n=1                   # Number of responses to generate
+    #     )
         
-        text = response.choices[0].message.content.strip()
+    #     text = response.choices[0].message.content.strip()
+
+    client = anthropic.Anthropic(
+        # api_key="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"  # Replace with your actual API key
+        api_key=os.environ["CLAUDE_APIKEY"]
+    )
+    try:
+        response = client.messages.create(
+            model="claude-sonnet-4-20250514",
+            max_tokens=2000,
+            temperature=1,
+            messages=[
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ]
+        )
+        text = response.content[0].text.strip()
         return jsonify({ 'result': text })
     except Exception as e:
         return jsonify({'error': str(e)}), 500
