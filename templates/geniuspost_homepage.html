@@ -223,18 +223,27 @@
             });
         });
 
-        // CTA button click handlers
-        document.getElementById('tryGeniusBtn').addEventListener('click', function(e) {
+        // // CTA button click handlers
+        // document.getElementById('tryGeniusBtn').addEventListener('click', function(e) {
+        //     e.preventDefault();
+        //     // Redirect to your app page or show modal
+        //     window.location.href = '/app'; // Update this to your actual app URL
+        // });
+
+        // document.getElementById('tryGeniusFinalBtn').addEventListener('click', function(e) {
+        //     e.preventDefault();
+        //     // Redirect to your app page or show modal
+        //     window.location.href = '/app'; // Update this to your actual app URL
+        // });
+        // CTA button click handlers that defer to the anchor's href
+        document.querySelectorAll('#tryGeniusBtn, #tryGeniusFinalBtn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
             e.preventDefault();
-            // Redirect to your app page or show modal
-            window.location.href = '/app'; // Update this to your actual app URL
+            // simply navigate to whatever the <a href> actually is
+            window.location.href = this.href;
+        });
         });
 
-        document.getElementById('tryGeniusFinalBtn').addEventListener('click', function(e) {
-            e.preventDefault();
-            // Redirect to your app page or show modal
-            window.location.href = '/app'; // Update this to your actual app URL
-        });
 
         // Add interactive hover effects for mouse movement
         document.addEventListener('mousemove', function(e) {
