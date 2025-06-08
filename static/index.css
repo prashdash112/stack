@@ -701,23 +701,59 @@ user-select: none;
 z-index: 5;
 }
 
-/* make the nav/header a positioning context */
+/* in both homepage.css & index.css */
+
+/* 1) ensure the parent is relative and give it right padding */
+/*    so your .nav-links or header text never collide with the icon */
 nav.nav, .header {
   position: relative;
+  padding-right: 4rem; /* ← space for the 32px icon + margins */
 }
 
-/* top-right user bar */
-.user-menu {
+/* 2) the rest stays exactly as you already have it */
+.profile-container {
   position: absolute;
   top: 1rem;
   right: 1rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
 }
 
-/* match your theme for the greeting text */
-.user-greeting {
+.profile-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid rgba(255,255,255,0.5);
+}
+
+.profile-card {
+  display: none;
+  position: absolute;
+  top: 120%;    /* sits just below the icon */
+  right: 0;
+  background: #1a1a2e;
   color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  padding: 0.5rem 1rem;
+  min-width: 140px;
+  z-index: 10;
+}
+
+.profile-card.visible {
+  display: block;
+}
+
+.profile-card-header {
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
   font-weight: 500;
+}
+
+.profile-logout-btn {
+  display: block;
+  text-align: right;
+  margin-top: 0.25rem;
+  font-size: 0.85rem;
+  color: #ff6b6b;
+  text-decoration: none;
 }

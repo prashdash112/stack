@@ -19,11 +19,24 @@
             <h1 class="logo"> GeniusPost AI</h1>
             <p class="tagline">Transform your ideas into engaging LinkedIn posts with AI magic</p>
             {% if current_user.is_authenticated %}
-                <div class="user-menu">
-                    <span class="user-greeting">Welcome, {{ current_user.name }}.</span>
-                    <a href="{{ url_for('logout') }}" class="cta-button">Logout</a>
+                <div class="profile-container">
+                    <img
+                    src="{{ current_user.avatar_url }}"
+                    alt="Profile"
+                    id="profileIcon"
+                    class="profile-icon"
+                    />
+                    <div id="profileCard" class="profile-card">
+                    <div class="profile-card-header">
+                        Welcome, {{ current_user.name }}
+                    </div>
+                    <a href="{{ url_for('logout') }}" class="profile-logout-btn">
+                        Logout
+                    </a>
+                    </div>
                 </div>
-            {% endif %}
+{% endif %}
+
         </div>
 
         <!-- Main Content Grid -->
@@ -789,6 +802,25 @@ Examples:
         };
         reader.readAsDataURL(file);
     });
+
+    document.addEventListener('DOMContentLoaded', () => {
+    const icon = document.getElementById('profileIcon');
+    const card = document.getElementById('profileCard');
+    if (!icon || !card) return;
+
+    icon.addEventListener('click', e => {
+      e.stopPropagation();
+      card.classList.toggle('visible');
+    });
+
+    // click outside closes the card
+    document.addEventListener('click', () => {
+      card.classList.remove('visible');
+    });
+
+    // prevent clicks inside the card from bubbling out
+    card.addEventListener('click', e => e.stopPropagation());
+  });
     </script>
 </body>
 </html>

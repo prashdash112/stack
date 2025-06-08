@@ -28,7 +28,8 @@ login_manager.login_view = 'login'
 class User(db.Model, UserMixin):
     id = db.Column(db.String(50), primary_key=True)  # Use Google user ID as primary key
     name = db.Column(db.String(150))
-    email = db.Column(db.String(150), unique=True)  
+    email = db.Column(db.String(150), unique=True)
+    avatar_url = db.Column(db.String(500))  
     def __repr__(self):
         return f"<User id={self.id} name={self.name} email={self.email}>"
     
@@ -108,7 +109,8 @@ def authorize():
             user = User(
                 id=user_data["sub"],
                 name=user_data["name"],
-                email=user_data["email"]
+                email=user_data["email"],
+                avatar_url=user_data.get("picture")
             )
             db.session.add(user)
             db.session.commit()
