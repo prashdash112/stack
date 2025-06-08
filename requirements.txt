@@ -1,9 +1,11 @@
 Flask==3.1.0
 Flask-Cors==5.0.0
 Flask-Login==0.6.3
+psycopg2==2.9.10
 Flask-SQLAlchemy==3.1.1
 anthropic==0.52.1
 gunicorn
 openai==1.58.1
 authlib
 requests>=2.31.0
+oauthlib==3.2.2
