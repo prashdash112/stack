@@ -54,12 +54,17 @@ for var in ('GOOGLE_CLIENT_ID','GOOGLE_CLIENT_SECRET','REDIRECT_URI','SECRET_KEY
 
 @app.route("/login")
 def login():
+    # grab the “next” page (default to /geniuspost)
+    next_page = request.args.get("next", url_for("geniuspost"))
+
+    # include that as state, so Google will echo it back
     google_auth_url = (
         "https://accounts.google.com/o/oauth2/auth?"
         "response_type=code"
         f"&client_id={GOOGLE_CLIENT_ID}"
         f"&redirect_uri={REDIRECT_URI}"
         "&scope=openid+email+profile"
+        f"&state={next_page}"
     )
     return redirect(google_auth_url)
 
@@ -68,7 +73,8 @@ def authorize():
     code = request.args.get("code")
     if not code:
         return "Error: No code provided", 400
-    
+    # Google will return us the original state
+    next_page = request.args.get("state", url_for("geniuspost"))
     # Exchange authorization code for tokens 
     token_url = "https://oauth2.googleapis.com/token"
     token_data = {
@@ -107,8 +113,11 @@ def authorize():
             db.session.add(user)
             db.session.commit()
         print("\n\nUser Record:\n\n",user )
+        # login_user(user)
+        # return redirect(url_for("home"))
         login_user(user)
-        return redirect(url_for("home"))
+        # finally send them on to whatever they originally wanted
+        return redirect(next_page)
     else:
         return "User information could not be retrieved", 400  
 
