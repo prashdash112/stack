@@ -700,3 +700,24 @@ pointer-events: none;
 user-select: none;
 z-index: 5;
 }
+
+/* make the nav/header a positioning context */
+nav.nav, .header {
+  position: relative;
+}
+
+/* top-right user bar */
+.user-menu {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* match your theme for the greeting text */
+.user-greeting {
+  color: #fff;
+  font-weight: 500;
+}

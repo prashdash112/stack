@@ -23,6 +23,13 @@
                 <a href="{{ url_for('pricing') }}" class="nav-link">Pricing</a>
                 <!-- <a href="#" class="cta-nav-btn">Try Free</a> -->
             </div>
+            {% if current_user.is_authenticated %}
+                <div class="user-menu">
+                    <span class="user-greeting">Welcome, {{ current_user.name }}.</span>
+                    <a href="{{ url_for('logout') }}" class="cta-button">Logout</a>
+                </div>
+    {% endif %}
+
         </nav>
 
         <!-- Hero Section -->
