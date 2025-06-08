@@ -6,3 +6,4 @@ anthropic==0.52.1
 gunicorn
 openai==1.58.1
 authlib
+requests>=2.31.0
