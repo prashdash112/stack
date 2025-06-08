@@ -33,7 +33,7 @@
                 Create stunning LinkedIn posts, infographics, and carousels that boost your reach by 11.2x and engagement by 3.7x. 
                 Build your personal brand, influence 1 billion LinkedIn users, and accelerate your career growth with AI magic.
             </p>
-            <a href="{{ url_for('geniuspost') }}" class="cta-button" id="tryGeniusBtn">Try GeniusPost AI</a>
+            <a href="{{ url_for('login', next=url_for('geniuspost')) }}" class="cta-button" id="tryGeniusBtn">Try GeniusPost AI</a>
         </section>
 
         <!-- Stats Section -->
@@ -151,7 +151,7 @@
                 Join thousands of professionals who've transformed their careers with AI-powered content. 
                 Start building your influence today and reach 1 billion LinkedIn users.
             </p>
-            <a href="{{ url_for('geniuspost') }}" class="cta-button" id="tryGeniusFinalBtn">Try GeniusPost AI - It's Free</a>
+            <a href="{{ url_for('login', next=url_for('geniuspost')) }}" class="cta-button" id="tryGeniusFinalBtn">Try GeniusPost AI - It's Free</a>
         </section>
 
         <!-- Footer -->

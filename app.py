@@ -4,15 +4,124 @@ import os
 import openai
 from openai import OpenAI
 import anthropic
+from authlib.integrations.flask_client import OAuth
+from flask_login import LoginManager, UserMixin, login_user, login_required, current_user, logout_user
+from flask_sqlalchemy import SQLAlchemy
+
 
 app = Flask(__name__, template_folder="templates", static_folder="static")
 CORS(app)
-openai.api_key = os.getenv("OPENAI_API_KEY")  # Set in environment
+# openai.api_key = os.getenv("OPENAI_API_KEY")  # Set in environment
+app.secret_key = os.environ['SECRET_KEY']
+# ─── Database Configuration ────────────────────────────
+# Render will inject DATABASE_URL into your environment
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://geniuspost_db_user:5zQSoDVFLAWMz7e8BMPhw1V7rTi4JJwP@dpg-d12sm6be5dus73cp4000-a/geniuspost_db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
+
+# Setup Flask-Login
+login_manager = LoginManager(app)
+login_manager.login_view = 'login'
+
+#### Added Db model 
+class User(db.Model, UserMixin):
+    id = db.Column(db.String(50), primary_key=True)  # Use Google user ID as primary key
+    name = db.Column(db.String(150))
+    email = db.Column(db.String(150), unique=True)  
+    def __repr__(self):
+        return f"<User id={self.id} name={self.name} email={self.email}>"
+    
+# Create the database tables if they don't exist
+with app.app_context():
+    db.create_all()
+
+@login_manager.user_loader
+def load_user(user_id):
+    print("USER ID", User.query.get(user_id))
+    return User.query.get(user_id) 
+    
+# Google OAuth configuration – store these in your environment variables
+GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID")
+GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET")
+# Set your redirect URI as registered in the Google console
+REDIRECT_URI = os.environ.get("REDIRECT_URI")
+
+@app.route("/login")
+def login():
+    google_auth_url = (
+        "https://accounts.google.com/o/oauth2/auth?"
+        "response_type=code"
+        f"&client_id={GOOGLE_CLIENT_ID}"
+        f"&redirect_uri={REDIRECT_URI}"
+        "&scope=openid+email+profile"
+    )
+    return redirect(google_auth_url)
+
+@app.route("/auth/callback")
+def auth_callback():
+    code = request.args.get("code")
+    if not code:
+        return "Error: No code provided", 400
+    
+    # Exchange authorization code for tokens 
+    token_url = "https://oauth2.googleapis.com/token"
+    token_data = {
+        "code": code,
+        "client_id": GOOGLE_CLIENT_ID,
+        "client_secret": GOOGLE_CLIENT_SECRET,
+        "redirect_uri": REDIRECT_URI,
+        "grant_type": "authorization_code"
+    }
+    print("Token data:", token_data)
+    token_response = requests.post(token_url, data=token_data)
+    token_json = token_response.json()
+    print("Token response:", token_json)
+    access_token = token_json.get("access_token")
+    if not access_token:
+        # Log error details if access token is missing
+        return "Access token not retrieved. Check token response.", 400 
+    
+    # Fetch user info from Google
+    user_info_url = "https://openidconnect.googleapis.com/v1/userinfo" #"https://www.googleapis.com/oauth2/v2/userinfo"
+    headers = {"Authorization": f"Bearer {access_token}"}
+    user_info_response = requests.get(user_info_url, headers=headers)
+    print("User info response:", user_info_response.json())
+    
+    if user_info_response.status_code == 200:
+        user_data = user_info_response.json()
+        # Check if user already exists in the database
+        user = User.query.get(user_data["sub"])
+        print("User validated:", user)
+        if not user:
+            user = User(
+                id=user_data["sub"],
+                name=user_data["name"],
+                email=user_data["email"]
+            )
+            db.session.add(user)
+            db.session.commit()
+        print("\n\nUser Record:\n\n",user )
+        login_user(user)
+        return redirect(url_for("home"))
+    else:
+        return "User information could not be retrieved", 400  
+
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for("home"))
 
 @app.route('/')
 def home():
     # return render_template('index_claude.html')
     return render_template('geniuspost_homepage.html')
+
+@app.before_request
+def require_login_for_genius():
+    # if they hit /geniuspost and aren’t authed, send to login
+    if request.endpoint == "geniuspost" and not current_user.is_authenticated:
+        return redirect(url_for("login", next=url_for("geniuspost")))
 
 @app.route("/geniuspost") 
 def geniuspost():
