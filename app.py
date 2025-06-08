@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, redirect, url_for
+import requests
 from flask_cors import CORS
 import os
 import openai
@@ -15,7 +16,7 @@ CORS(app)
 app.secret_key = os.environ['SECRET_KEY']
 # ─── Database Configuration ────────────────────────────
 # Render will inject DATABASE_URL into your environment
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://geniuspost_db_user:5zQSoDVFLAWMz7e8BMPhw1V7rTi4JJwP@dpg-d12sm6be5dus73cp4000-a/geniuspost_db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ["DATABASE_URL"] 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
@@ -46,6 +47,11 @@ GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET")
 # Set your redirect URI as registered in the Google console
 REDIRECT_URI = os.environ.get("REDIRECT_URI")
 
+# to alert at startup whether a var is missing. 
+for var in ('GOOGLE_CLIENT_ID','GOOGLE_CLIENT_SECRET','REDIRECT_URI','SECRET_KEY'):
+    if not os.environ.get(var):
+        raise RuntimeError(f"Missing required env var: {var}")
+
 @app.route("/login")
 def login():
     google_auth_url = (
@@ -57,8 +63,8 @@ def login():
     )
     return redirect(google_auth_url)
 
-@app.route("/auth/callback")
-def auth_callback():
+@app.route("/authorize")
+def authorize():
     code = request.args.get("code")
     if not code:
         return "Error: No code provided", 400
@@ -115,7 +121,7 @@ def logout():
 @app.route('/')
 def home():
     # return render_template('index_claude.html')
-    return render_template('geniuspost_homepage.html')
+    return render_template('geniuspost_homepage.html',current_user=current_user)
 
 @app.before_request
 def require_login_for_genius():
@@ -125,7 +131,7 @@ def require_login_for_genius():
 
 @app.route("/geniuspost") 
 def geniuspost():
-    return render_template("index_claude.html")
+    return render_template("index_claude.html", current_user=current_user)
 
 @app.route("/pricing")
 def pricing():
