@@ -126,13 +126,13 @@ Examples:
 
             </div>
             <div class="post-actions">
-                <button class="action-btn primary" onclick="copyToClipboard()">📋 Infographic</button>
+                <button id="infographicBtn" class="action-btn primary" onclick="copyToClipboard()">📋 Infographic</button>
                 <button class="action-btn" id="exportPdfBtn">📄 Export PDF</button>
                 <!-- ── INSERT IMAGE BUTTON HERE ── -->
                 <button class="action-btn" id="insertImageBtn">🖼️ Insert Image</button>
                 <!-- ──────────────────────────────── -->
-                <button class="action-btn" onclick="regenerateContent()">🔄 Regenerate</button>
-                <button class="action-btn" onclick="clearContent()">🗑️ Clear</button>
+                <button id="regenerateBtn" class="action-btn" onclick="regenerateContent()">🔄 Regenerate</button>
+                <button id="clearBtn" class="action-btn" onclick="clearContent()">🗑️ Clear</button>
             </div>
             <!-- ── HIDDEN FILE INPUT FOR IMAGE UPLOAD ── -->
             <input type="file" id="imageInput" accept="image/*" style="display: none;" />
@@ -510,6 +510,31 @@ Examples:
     // prevent clicks inside the card from bubbling out
     card.addEventListener('click', e => e.stopPropagation());
   });
+
+  function trackAction(action) {
+    fetch("/track_action", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",    // so Flask-Login cookie is sent
+        body: JSON.stringify({ action })
+    }).catch(console.error);
+    }
+
+    // map IDs → action strings
+    const mapping = {
+    generateBtn:    "generate_ai_content",
+    infographicBtn: "infographic",
+    exportPdfBtn:   "export_pdf",
+    insertImageBtn:   "insert_image",
+    regenerateBtn:  "regenerate",
+    clearBtn:       "clear",
+    };
+
+    Object.entries(mapping).forEach(([id, action]) => {
+    const btn = document.getElementById(id);
+    if (btn) btn.addEventListener("click", () => trackAction(action));
+    });
+
     </script>
 </body>
 </html>

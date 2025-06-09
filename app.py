@@ -8,6 +8,7 @@ import anthropic
 from authlib.integrations.flask_client import OAuth
 from flask_login import LoginManager, UserMixin, login_user, login_required, current_user, logout_user
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime, timezone
 
 
 app = Flask(__name__, template_folder="templates", static_folder="static")
@@ -32,7 +33,32 @@ class User(db.Model, UserMixin):
     avatar_url = db.Column(db.String(500))  
     def __repr__(self):
         return f"<User id={self.id} name={self.name} email={self.email}>"
-    
+############ USer stats log #########################
+
+
+class UserMetrics(db.Model):
+    __tablename__ = "user_metrics"
+
+    user_id            = db.Column(db.String(50), db.ForeignKey("user.id"), primary_key=True)
+    username           = db.Column(db.String(150), nullable=False)
+    email              = db.Column(db.String(150), nullable=False)
+    login_count        = db.Column(db.Integer, default=0, nullable=False)
+    generate_count     = db.Column(db.Integer, default=0, nullable=False)
+    infographic_count  = db.Column(db.Integer, default=0, nullable=False)
+    export_pdf_count   = db.Column(db.Integer, default=0, nullable=False)
+    insert_image_count = db.Column(db.Integer, default=0, nullable=False)
+    regenerate_count   = db.Column(db.Integer, default=0, nullable=False)
+    clear_count        = db.Column(db.Integer, default=0, nullable=False)
+    updated_at         = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+
+    user = db.relationship("User", backref="metrics", uselist=False)
+
+    def touch(self, action):
+        """Increment the right counter and update timestamp."""
+        setattr(self, f"{action}_count", getattr(self, f"{action}_count") + 1)
+        self.updated_at = datetime.now(timezone.utc)
+########################################################
+
 # Create the database tables if they don't exist
 with app.app_context():
     db.create_all()
@@ -118,6 +144,19 @@ def authorize():
         # login_user(user)
         # return redirect(url_for("home"))
         login_user(user)
+        # fetch or create the metrics row
+        metrics = UserMetrics.query.get(user.id)
+        if not metrics:
+            metrics = UserMetrics(
+                user_id=user.id,
+                username=user.name,
+                email=user.email
+            )
+            db.session.add(metrics)
+
+        metrics.touch("login")
+        db.session.commit()
+
         # finally send them on to whatever they originally wanted
         return redirect(next_page)
     else:
@@ -193,6 +232,40 @@ def generate():
         return jsonify({ 'result': text })
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+    
+@app.route("/track_action", methods=["POST"])
+@login_required
+def track_action():
+    data   = request.get_json() or {}
+    action = data.get("action")
+    # map incoming action strings to model suffixes
+    allowed = {
+      "generate_ai_content": "generate",
+      "infographic":         "infographic",
+      "export_pdf":          "export_pdf",
+      "insert_image":        "insert_image",
+      "regenerate":          "regenerate",
+      "clear":               "clear"
+    }
+    if action not in allowed:
+        return jsonify({"error": "Invalid action"}), 400
+
+    # fetch or create the single metrics row
+    metrics = UserMetrics.query.get(current_user.id)
+    if not metrics:
+        metrics = UserMetrics(
+            user_id=current_user.id,
+            username=current_user.name,
+            email=current_user.email
+        )
+        db.session.add(metrics)
+
+    # bump the right counter
+    metrics.touch(allowed[action])
+    db.session.commit()
+
+    return jsonify({"status": "ok"})
+
 
 if __name__ == '__main__':
     app.run(host="127.0.0.1", debug=True, port=8000)
