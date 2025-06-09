@@ -35,7 +35,6 @@ class User(db.Model, UserMixin):
         return f"<User id={self.id} name={self.name} email={self.email}>"
 ############ USer stats log #########################
 
-
 class UserMetrics(db.Model):
     __tablename__ = "user_metrics"
 
@@ -53,9 +52,16 @@ class UserMetrics(db.Model):
 
     user = db.relationship("User", backref="metrics", uselist=False)
 
+    # def touch(self, action):
+    #     """Increment the right counter and update timestamp."""
+    #     setattr(self, f"{action}_count", getattr(self, f"{action}_count") + 1)
+    #     self.updated_at = datetime.now(timezone.utc)
+
     def touch(self, action):
-        """Increment the right counter and update timestamp."""
-        setattr(self, f"{action}_count", getattr(self, f"{action}_count") + 1)
+        """Increment the right counter (even if it was None) and update timestamp."""
+        attr = f"{action}_count"
+        current = getattr(self, attr) or 0
+        setattr(self, attr, current + 1)
         self.updated_at = datetime.now(timezone.utc)
 ########################################################
 
