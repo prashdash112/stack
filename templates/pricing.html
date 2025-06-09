@@ -254,10 +254,17 @@
             animation: shimmer 3s infinite;
         }
 
-        .pricing-card.coming-soon {
+        /* .pricing-card.coming-soon {
             opacity: 0.6;
             pointer-events: none;
-        }
+        } */
+
+        .pricing-card.coming-soon {
+            grid-column: 1 / -1;       /* span from the first to the last column */
+            justify-self: center;      /* center the card within that span */
+            /* optionally give it a max-width so it doesn’t stretch full width */
+            max-width: 380px;
+            }
 
         .pricing-card.coming-soon::after {
             content: 'Coming Soon';
@@ -609,12 +616,12 @@
 
         <!-- Hero Section -->
         <section class="hero">
-            <div class="hero-badge">🔥 LIMITED TIME OFFER - First 100 Customers Only</div>
+            <!-- <div class="hero-badge">🔥 LIMITED TIME OFFER - First 100 Customers Only</div> -->
             <h1 class="hero-title">Transform Your LinkedIn Forever</h1>
             <p class="hero-subtitle">Join the exclusive founding members who get lifetime access at 90% OFF</p>
             
             <!-- Countdown Timer -->
-            <div class="countdown-timer">
+            <!-- <div class="countdown-timer">
                 <div class="countdown-item">
                     <div class="countdown-number" id="hours">23</div>
                     <div class="countdown-label">Hours</div>
@@ -627,14 +634,14 @@
                     <div class="countdown-number" id="seconds">32</div>
                     <div class="countdown-label">Seconds</div>
                 </div>
-            </div>
+            </div> -->
         </section>
 
         <!-- Pricing Section -->
         <section class="pricing-section">
             <div class="pricing-grid">
                 <!-- Lifetime Deal Card -->
-                <div class="pricing-card featured">
+                <!-- <div class="pricing-card featured">
                     <div class="pricing-badge">🚀 LAUNCH SPECIAL</div>
                     <h3 class="pricing-title">Lifetime Access</h3>
                     <p class="pricing-subtitle">One-time payment, lifetime value</p>
@@ -663,7 +670,7 @@
                     <button class="cta-button featured" onclick="handlePayment('lifetime')">
                         🚀 Get Lifetime Access - $95
                     </button>
-                </div>
+                </div> -->
 
                 <!-- Monthly Plan Card (Coming Soon) -->
                 <div class="pricing-card coming-soon">
@@ -738,7 +745,7 @@
         </section>
 
         <!-- Guarantee Section -->
-        <section class="guarantee-section">
+        <!-- <section class="guarantee-section">
             <div class="guarantee-badge">
                 <span class="guarantee-icon">🛡️</span>
                 <span class="guarantee-text">30-Day Money-Back Guarantee</span>
@@ -747,7 +754,7 @@
                 Try GeniusPost AI risk-free for 30 days. If you're not completely satisfied with the results, 
                 we'll refund every penny. No questions asked. Your success is our guarantee.
             </p>
-        </section>
+        </section> -->
     </div>
 
     <script>
