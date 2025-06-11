@@ -42,7 +42,7 @@
         <!-- Main Content Grid -->
         <div class="main-grid">
             <!-- Input Section -->
-            <div class="input-section">
+            <!-- <div class="input-section">
                 <h2 class="section-title">Create Your Post</h2>
                 <textarea 
                     class="prompt-input" 
@@ -56,20 +56,33 @@ Examples:
 • Create a motivational post about career growth"
                 ></textarea>
                 
-                <!-- <div class="post-options">
+                <div class="post-options">
                     <button class="option-btn active" data-format="square">
                         📱 Content
                     </button>
                     <button class="option-btn" data-format="vertical">
                         📋 Flowchart
                     </button>
-                </div> -->
+                </div>
                 
                 <button class="generate-btn" id="generateBtn">
                     <span class="btn-text">Generate AI Content</span>
                     <div class="loading-spinner" id="loadingSpinner"></div>
                 </button>
-            </div>
+            </div> -->
+            <div class="input-section">
+                <h2 class="section-title">Create Your Post</h2>
+                <textarea 
+                    class="prompt-input" 
+                    id="promptInput"
+                    placeholder=""
+                ></textarea>
+                
+                <button class="generate-btn" id="generateBtn">
+                    <span class="btn-text">Generate AI Content</span>
+                    <div class="loading-spinner" id="loadingSpinner"></div>
+                </button>
+                </div>
 
             <!-- Benefits Section -->
             <div class="benefits-section">
@@ -534,6 +547,61 @@ Examples:
     const btn = document.getElementById(id);
     if (btn) btn.addEventListener("click", () => trackAction(action));
     });
+    // ////////////////// Dynamic text input placeholder //////////////////////
+
+    document.addEventListener('DOMContentLoaded', () => {
+    const textarea = document.getElementById('promptInput');
+    const samples = [
+      'Write a short engaging post on ML systems using headings, subheadings. ',
+      'Generate an infographic on finance with proper tables.',
+      'Write a carousel with 10 code snippets covering entire MCP workflow. ',
+      'Create a thought leadership post on Real estate, Leave [2-3] sentence blank for my insights.',
+      'Write, edit, style, format, add image and download stunning infographics and Carousels.'
+    ];
+    let loopTimer, charTimer;
+    let sampleIdx = 0, charIdx = 0, deleting = false;
+
+    function startTyping() {
+      const current = samples[sampleIdx];
+      // type or delete one character
+      if (!deleting) {
+        textarea.placeholder = current.slice(0, ++charIdx);
+      } else {
+        textarea.placeholder = current.slice(0, charIdx--);
+      }
+
+      // schedule next char
+      const delay = deleting ? 20 : 60;
+      charTimer = setTimeout(() => {
+        // switch to deleting once fully typed
+        if (!deleting && charIdx === current.length) {
+          deleting = true;
+          clearTimeout(charTimer);
+          loopTimer = setTimeout(startTyping, 1000); // pause before delete
+        }
+        // move to next sample once fully deleted
+        else if (deleting && charIdx === 0) {
+          deleting = false;
+          sampleIdx = (sampleIdx + 1) % samples.length;
+          clearTimeout(charTimer);
+          loopTimer = setTimeout(startTyping, 500); // pause before next type
+        }
+        else {
+          startTyping();
+        }
+      }, delay);
+    }
+
+    // kick off the loop
+    loopTimer = setTimeout(startTyping, 500);
+
+    // when user focuses, stop all timers and clear placeholder
+    textarea.addEventListener('focus', () => {
+      clearTimeout(loopTimer);
+      clearTimeout(charTimer);
+      textarea.placeholder = '';
+    });
+  });
 
     </script>
 </body>
