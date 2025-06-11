@@ -428,345 +428,101 @@ Examples:
                 }
 // /////////////////////////////// PDF ////////////////////////////////////////////////////////////
         
-            // document.getElementById('exportPdfBtn').addEventListener('click', async () => {
-            // const preview = document.querySelector('.post-preview');
-            // if (!preview) return alert('Nothing to export!');
-            // // ── ① TEMPORARILY ADD WATERMARK ──
-            // const wm = document.createElement('div');
-            // wm.className = 'watermark';
-            // wm.innerText = 'GeniusPost AI';
-            // preview.appendChild(wm);
-
-            // // Temporarily override heading gradients (same as PNG fix)
-            // const headings = preview.querySelectorAll('h1, h2, h3, h4, h5, h6');
-            // headings.forEach(h => {
-            //     h.dataset.origBg    = h.style.background;
-            //     h.dataset.origClip  = h.style.webkitBackgroundClip;
-            //     h.dataset.origColor = h.style.color;
-            //     h.style.background           = 'none';
-            //     h.style.webkitBackgroundClip = 'unset';
-            //     h.style.color                = '#fca5a5';
-            // });
-
-            // // Temporarily darken background if needed
-            // const origBg = preview.style.background;
-            // preview.style.background = 'linear-gradient(135deg, #2a2a3d, #1e1e2f)';
-
-            // try {
-            //     // 1. Render the entire preview to one tall canvas
-            //     const canvas = await html2canvas(preview, { backgroundColor: null, scale: 2 });
-                
-
-
-            //     // 2. Export as PNG for perfect fidelity
-            //     const imgData = canvas.toDataURL('image/png');
-
-            //     // --- NEW: crop the tall canvas into A4‐sized page slices ---
-            //     const { jsPDF } = window.jspdf;
-            //     const pdf = new jsPDF({ unit: 'px', format: 'a4' });
-            //     const pdfW = pdf.internal.pageSize.getWidth();
-            //     const pdfH = pdf.internal.pageSize.getHeight();
-
-            //     // Compute the ratio of canvas→PDF widths
-            //     const canvasW = canvas.width;
-            //     const canvasH = canvas.height;
-            //     const scale = (pdfW - 40) / canvasW; 
-            //     const pageCanvasH = Math.floor(pdfH / scale);
-
-            //     let renderedH = 0;
-            //     while (renderedH < canvasH) {
-            //         // 5. Fill entire page with neon purple (or black). 
-            //         //    RGB for neon‐purple (#9f7aea) = (159, 122, 234).
-            //         pdf.setFillColor(159, 122, 234);
-            //         pdf.rect(0, 0, pdfW, pdfH, 'F');
-            //     // Create a temp canvas for this page
-            //     const tempCanvas = document.createElement('canvas');
-            //     tempCanvas.width = canvasW;
-            //     tempCanvas.height = Math.min(pageCanvasH, canvasH - renderedH);
-            //     const tCtx = tempCanvas.getContext('2d');
-                
-            //     // Draw the slice
-            //     tCtx.drawImage(
-            //         canvas,
-            //         0, renderedH,               // src x, y
-            //         canvasW, tempCanvas.height, // src w, h
-            //         0, 0,
-            //         canvasW, tempCanvas.height  // dst w, h
-            //     );
-                
-            //     // Add to PDF
-            //     const sliceData = tempCanvas.toDataURL('image/jpeg', 0.8);
-            //     // pdf.addImage(sliceData, 'PNG', 20, 20, canvasW * scale, tempCanvas.height * scale);
-            //     pdf.addImage(sliceData, 'JPEG', 20, 20, canvasW * scale, tempCanvas.height * scale);
-            //     renderedH += pageCanvasH;
-            //     if (renderedH < canvasH) pdf.addPage();
-            //     }
-
-            //     pdf.save('linkedin-post.pdf');
-
-            // } catch (e) {
-            //     console.error('PDF export failed:', e);
-            //     alert('Could not export multi-page PDF.');
-            // } finally {
-            //     // ── ④ REMOVE WATERMARK ──
-            //     preview.removeChild(wm);
-            //     // Restore heading and preview bg
-            //     headings.forEach(h => {
-            //     h.style.background           = h.dataset.origBg;
-            //     h.style.webkitBackgroundClip = h.dataset.origClip;
-            //     h.style.color                = h.dataset.origColor;
-            //     delete h.dataset.origBg;
-            //     delete h.dataset.origClip;
-            //     delete h.dataset.origColor;
-            //     });
-            //     preview.style.background = origBg;
-            // }
-            // });
             document.getElementById('exportPdfBtn').addEventListener('click', async () => {
-                const preview = document.querySelector('.post-preview');
-                if (!preview) return alert('Nothing to export!');
+            const preview = document.querySelector('.post-preview');
+            if (!preview) return alert('Nothing to export!');
+            // ── ① TEMPORARILY ADD WATERMARK ──
+            const wm = document.createElement('div');
+            wm.className = 'watermark';
+            wm.innerText = 'GeniusPost AI';
+            preview.appendChild(wm);
 
-                try {
-                    // ── ① CREATE PRINT-OPTIMIZED CLONE ──
-                    const printContainer = document.createElement('div');
-                    printContainer.style.cssText = `
-                        position: absolute;
-                        top: -9999px;
-                        left: -9999px;
-                        width: 210mm;
-                        background: white;
-                        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-                        color: #333;
-                        line-height: 1.6;
-                        padding: 20mm;
-                        box-sizing: border-box;
-                    `;
-
-                    // Clone the preview content
-                    const clonedContent = preview.cloneNode(true);
-                    
-                    // ── ② ADD WATERMARK TO CLONE ──
-                    const wm = document.createElement('div');
-                    wm.style.cssText = `
-                        position: fixed;
-                        top: 10mm;
-                        right: 10mm;
-                        font-size: 12px;
-                        color: #999;
-                        z-index: 1000;
-                    `;
-                    wm.innerText = 'GeniusPost AI';
-                    clonedContent.appendChild(wm);
-
-                    // ── ③ ADD PRINT-SPECIFIC STYLES ──
-                    const printStyles = document.createElement('style');
-                    printStyles.id = 'pdf-export-styles';
-                    printStyles.textContent = `
-                        @media print {
-                            * {
-                                -webkit-print-color-adjust: exact !important;
-                                color-adjust: exact !important;
-                                print-color-adjust: exact !important;
-                            }
-                            
-                            body {
-                                margin: 0 !important;
-                                padding: 0 !important;
-                                background: white !important;
-                            }
-                            
-                            /* Prevent content chopping */
-                            h1, h2, h3, h4, h5, h6 {
-                                page-break-after: avoid !important;
-                                break-after: avoid !important;
-                                page-break-inside: avoid !important;
-                                break-inside: avoid !important;
-                                color: #e11d48 !important;
-                                background: none !important;
-                                -webkit-background-clip: unset !important;
-                            }
-                            
-                            p {
-                                page-break-inside: avoid !important;
-                                break-inside: avoid !important;
-                                orphans: 3 !important;
-                                widows: 3 !important;
-                                margin-bottom: 12px !important;
-                            }
-                            
-                            table {
-                                page-break-inside: avoid !important;
-                                break-inside: avoid !important;
-                                page-break-before: auto !important;
-                                page-break-after: auto !important;
-                                border-collapse: collapse !important;
-                                width: 100% !important;
-                                margin-bottom: 20px !important;
-                            }
-                            
-                            tr {
-                                page-break-inside: avoid !important;
-                                break-inside: avoid !important;
-                            }
-                            
-                            td, th {
-                                padding: 8px !important;
-                                border: 1px solid #ddd !important;
-                                page-break-inside: avoid !important;
-                                break-inside: avoid !important;
-                            }
-                            
-                            pre, code, .code-block {
-                                page-break-inside: avoid !important;
-                                break-inside: avoid !important;
-                                background: #f5f5f5 !important;
-                                padding: 12px !important;
-                                border-radius: 4px !important;
-                                font-family: 'Courier New', monospace !important;
-                                font-size: 12px !important;
-                                margin-bottom: 16px !important;
-                                white-space: pre-wrap !important;
-                                word-wrap: break-word !important;
-                            }
-                            
-                            blockquote {
-                                page-break-inside: avoid !important;
-                                break-inside: avoid !important;
-                                border-left: 4px solid #e11d48 !important;
-                                padding-left: 16px !important;
-                                margin: 16px 0 !important;
-                                font-style: italic !important;
-                                background: #f9f9f9 !important;
-                            }
-                            
-                            img {
-                                page-break-inside: avoid !important;
-                                break-inside: avoid !important;
-                                max-width: 100% !important;
-                                height: auto !important;
-                                margin-bottom: 16px !important;
-                            }
-                            
-                            ul, ol {
-                                page-break-inside: avoid !important;
-                                break-inside: avoid !important;
-                                margin-bottom: 16px !important;
-                            }
-                            
-                            li {
-                                page-break-inside: avoid !important;
-                                break-inside: avoid !important;
-                                margin-bottom: 4px !important;
-                            }
-                            
-                            /* Ensure good spacing */
-                            .post-preview > * {
-                                margin-bottom: 16px !important;
-                            }
-                            
-                            @page {
-                                size: A4;
-                                margin: 20mm;
-                            }
-                        }
-                    `;
-
-                    // ── ④ SETUP PRINT ENVIRONMENT ──
-                    document.head.appendChild(printStyles);
-                    printContainer.appendChild(clonedContent);
-                    document.body.appendChild(printContainer);
-
-                    // ── ⑤ CREATE PRINT WINDOW ──
-                    const printWindow = window.open('', '_blank', 'width=800,height=600');
-                    
-                    if (!printWindow) {
-                        throw new Error('Popup blocked. Please allow popups for this site.');
-                    }
-                    
-                    printWindow.document.write(`
-                        <!DOCTYPE html>
-                        <html>
-                        <head>
-                            <meta charset="UTF-8">
-                            <title>LinkedIn Post Export - GeniusPost AI</title>
-                            <style>
-                                ${printStyles.textContent}
-                                
-                                /* Additional styles for print window */
-                                body {
-                                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-                                    line-height: 1.6;
-                                    color: #333;
-                                    max-width: 100%;
-                                    margin: 0;
-                                    padding: 20px;
-                                }
-                                
-                                /* Screen styles for preview */
-                                @media screen {
-                                    body {
-                                        background: #f5f5f5;
-                                        padding: 40px 20px;
-                                    }
-                                    
-                                    .content-wrapper {
-                                        background: white;
-                                        padding: 40px;
-                                        border-radius: 8px;
-                                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-                                        max-width: 210mm;
-                                        margin: 0 auto;
-                                    }
-                                }
-                            </style>
-                        </head>
-                        <body>
-                            <div class="content-wrapper">
-                                ${clonedContent.innerHTML}
-                            </div>
-                            <script>
-                                // Auto-print after content loads
-                                window.onload = function() {
-                                    setTimeout(function() {
-                                        window.print();
-                                    }, 1000);
-                                };
-                                
-                                // Close window after printing (optional)
-                                window.onafterprint = function() {
-                                    setTimeout(function() {
-                                        window.close();
-                                    }, 1000);
-                                };
-                            </script>
-                        </body>
-                        </html>
-                    `);
-                    
-                    printWindow.document.close();
-
-                    // Show success message
-                    alert('Print window opened! Please select "Save as PDF" when the print dialog appears.');
-
-                } catch (e) {
-                    console.error('PDF export failed:', e);
-                    alert('Could not export PDF: ' + e.message);
-                } finally {
-                    // ── ⑥ CLEANUP ──
-                    setTimeout(() => {
-                        // Remove temporary elements
-                        const printStyles = document.getElementById('pdf-export-styles');
-                        if (printStyles) {
-                            document.head.removeChild(printStyles);
-                        }
-                        
-                        const printContainer = document.querySelector('div[style*="position: absolute"][style*="top: -9999px"]');
-                        if (printContainer) {
-                            document.body.removeChild(printContainer);
-                        }
-                    }, 3000);
-                }
+            // Temporarily override heading gradients (same as PNG fix)
+            const headings = preview.querySelectorAll('h1, h2, h3, h4, h5, h6');
+            headings.forEach(h => {
+                h.dataset.origBg    = h.style.background;
+                h.dataset.origClip  = h.style.webkitBackgroundClip;
+                h.dataset.origColor = h.style.color;
+                h.style.background           = 'none';
+                h.style.webkitBackgroundClip = 'unset';
+                h.style.color                = '#fca5a5';
             });
+
+            // Temporarily darken background if needed
+            const origBg = preview.style.background;
+            preview.style.background = 'linear-gradient(135deg, #2a2a3d, #1e1e2f)';
+
+            try {
+                // 1. Render the entire preview to one tall canvas
+                const canvas = await html2canvas(preview, { backgroundColor: null, scale: 2 });
+                
+
+
+                // 2. Export as PNG for perfect fidelity
+                const imgData = canvas.toDataURL('image/png');
+
+                // --- NEW: crop the tall canvas into A4‐sized page slices ---
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF({ unit: 'px', format: 'a4' });
+                const pdfW = pdf.internal.pageSize.getWidth();
+                const pdfH = pdf.internal.pageSize.getHeight();
+
+                // Compute the ratio of canvas→PDF widths
+                const canvasW = canvas.width;
+                const canvasH = canvas.height;
+                const scale = (pdfW - 40) / canvasW; 
+                const pageCanvasH = Math.floor(pdfH / scale);
+
+                let renderedH = 0;
+                while (renderedH < canvasH) {
+                    // 5. Fill entire page with neon purple (or black). 
+                    //    RGB for neon‐purple (#9f7aea) = (159, 122, 234).
+                    pdf.setFillColor(159, 122, 234);
+                    pdf.rect(0, 0, pdfW, pdfH, 'F');
+                // Create a temp canvas for this page
+                const tempCanvas = document.createElement('canvas');
+                tempCanvas.width = canvasW;
+                tempCanvas.height = Math.min(pageCanvasH, canvasH - renderedH);
+                const tCtx = tempCanvas.getContext('2d');
+                
+                // Draw the slice
+                tCtx.drawImage(
+                    canvas,
+                    0, renderedH,               // src x, y
+                    canvasW, tempCanvas.height, // src w, h
+                    0, 0,
+                    canvasW, tempCanvas.height  // dst w, h
+                );
+                
+                // Add to PDF
+                const sliceData = tempCanvas.toDataURL('image/jpeg', 0.8);
+                // pdf.addImage(sliceData, 'PNG', 20, 20, canvasW * scale, tempCanvas.height * scale);
+                pdf.addImage(sliceData, 'JPEG', 20, 20, canvasW * scale, tempCanvas.height * scale);
+                renderedH += pageCanvasH;
+                if (renderedH < canvasH) pdf.addPage();
+                }
+
+                pdf.save('linkedin-post.pdf');
+
+            } catch (e) {
+                console.error('PDF export failed:', e);
+                alert('Could not export multi-page PDF.');
+            } finally {
+                // ── ④ REMOVE WATERMARK ──
+                preview.removeChild(wm);
+                // Restore heading and preview bg
+                headings.forEach(h => {
+                h.style.background           = h.dataset.origBg;
+                h.style.webkitBackgroundClip = h.dataset.origClip;
+                h.style.color                = h.dataset.origColor;
+                delete h.dataset.origBg;
+                delete h.dataset.origClip;
+                delete h.dataset.origColor;
+                });
+                preview.style.background = origBg;
+            }
+            });
+            
 
             
 
@@ -827,6 +583,10 @@ Examples:
           img.style.margin = '1rem 0';
           img.style.borderRadius = '0.75rem';
           img.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
+          // ensure image has white background so it doesn’t blend into the dark canvas
+          img.style.backgroundColor = '#ffffff';
+          // optionally give a tiny padding if you want a white border frame
+          img.style.padding = '0.35rem';
           
           const postDiv = document.getElementById('postContent');
           postDiv.appendChild(img);
