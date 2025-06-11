@@ -850,11 +850,49 @@ Examples:
                 img.src = processedImageUrl;
                 
                 // Ensure image loads before proceeding
+                // img.onload = () => {
+                // wrapper.appendChild(img);
+                // const postDiv = document.getElementById('postContent');
+                // postDiv.appendChild(wrapper);
+                // postDiv.appendChild(document.createElement('br'));
+                // };
+                // Ensure image loads before proceeding
                 img.onload = () => {
                 wrapper.appendChild(img);
+                
+                // Insert at cursor position instead of at the end
                 const postDiv = document.getElementById('postContent');
-                postDiv.appendChild(wrapper);
-                postDiv.appendChild(document.createElement('br'));
+                const selection = window.getSelection();
+                
+                if (selection.rangeCount > 0) {
+                    // Get the current cursor position
+                    const range = selection.getRangeAt(0);
+                    
+                    // Make sure the cursor is inside the postContent div
+                    if (postDiv.contains(range.commonAncestorContainer)) {
+                    // Insert at cursor position
+                    range.deleteContents(); // Clear any selected text
+                    range.insertNode(document.createElement('br')); // Add line break after
+                    range.insertNode(wrapper); // Insert the image wrapper
+                    
+                    // Move cursor after the inserted image
+                    range.setStartAfter(wrapper);
+                    range.setEndAfter(wrapper);
+                    selection.removeAllRanges();
+                    selection.addRange(range);
+                    } else {
+                    // Fallback: if cursor is not in postContent, append at the end
+                    postDiv.appendChild(wrapper);
+                    postDiv.appendChild(document.createElement('br'));
+                    }
+                } else {
+                    // Fallback: if no selection, append at the end
+                    postDiv.appendChild(wrapper);
+                    postDiv.appendChild(document.createElement('br'));
+                }
+                
+                // Focus back on the content div
+                postDiv.focus();
                 };
                 
                 event.target.value = '';
