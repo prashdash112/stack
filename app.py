@@ -197,7 +197,7 @@ def pricing():
 def generate():
     data = request.json or {}
     prompt = data.get('prompt', '').strip()
-    prompt_decorator = 'Important: Unless specified something specific. Always answer with headings, subheadings, bullet points, code(if necessary) and tables(if necessary).' 
+    prompt_decorator = 'Important: 1) Dont give unnecessary information. 2) Unless specified something specific. Always answer with headings, subheadings, bullet points, code(if necessary) and tables(if necessary).3) Always answer the entire prompt but keep content short.' 
     prompt = prompt + prompt_decorator
     if not prompt:
         return jsonify({'error': 'Prompt is required.'}), 400

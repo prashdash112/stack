@@ -5,6 +5,64 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GeniusPost AI</title>
     <link rel="stylesheet" href="../static/index.css"> 
+    <style>
+        /* Add responsive table styles to fix overflow issue */
+        .post-preview {
+            overflow-x: auto; /* Enable horizontal scrolling if needed */
+        }
+        
+        .post-content table {
+            width: 100%;
+            max-width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            overflow: hidden;
+            font-size: 0.9rem; /* Slightly smaller font for better fit */
+        }
+        
+        .post-content th,
+        .post-content td {
+            padding: 8px 12px;
+            text-align: left;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            word-wrap: break-word;
+            max-width: 150px; /* Limit cell width */
+            overflow-wrap: break-word;
+        }
+        
+        .post-content th {
+            background: rgba(255, 255, 255, 0.1);
+            font-weight: 600;
+            color: #fca5a5;
+        }
+        
+        .post-content td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        
+        /* For very large tables, make them scrollable */
+        .post-content .table-wrapper {
+            overflow-x: auto;
+            margin: 1rem 0;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Responsive behavior for smaller screens */
+        @media (max-width: 768px) {
+            .post-content table {
+                font-size: 0.8rem;
+            }
+            
+            .post-content th,
+            .post-content td {
+                padding: 6px 8px;
+                max-width: 100px;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- Animated Background -->
@@ -233,7 +291,11 @@ Examples:
 
                 const response = await mockApiCall(currentPrompt);
                 const markdown_parsed_to_html = marked.parse(response.content);
-                postContent.innerHTML = markdown_parsed_to_html // response.content;
+                
+                // Process the HTML to wrap large tables for better responsiveness
+                const processedHtml = processTablesForResponsiveness(markdown_parsed_to_html);
+                
+                postContent.innerHTML = processedHtml;
                 outputSection.classList.add('show');
                 outputSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
@@ -246,6 +308,30 @@ Examples:
                 btnText.style.display = 'block';
                 loadingSpinner.style.display = 'none';
             }
+        }
+
+        // Function to process tables for better responsiveness
+        function processTablesForResponsiveness(html) {
+            // Create a temporary div to parse the HTML
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = html;
+            
+            // Find all tables and wrap them if they're large
+            const tables = tempDiv.querySelectorAll('table');
+            tables.forEach(table => {
+                const rows = table.querySelectorAll('tr');
+                const cols = rows[0] ? rows[0].querySelectorAll('td, th').length : 0;
+                
+                // If table has many columns (>6) or many rows (>8), wrap it for scrolling
+                if (cols > 6 || rows.length > 8) {
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'table-wrapper';
+                    table.parentNode.insertBefore(wrapper, table);
+                    wrapper.appendChild(table);
+                }
+            });
+            
+            return tempDiv.innerHTML;
         }
 
         async function mockApiCall(prompt) {
