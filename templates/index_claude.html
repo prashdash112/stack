@@ -397,9 +397,12 @@ Examples:
                 // 3. Capture the full preview box
                 try {
                     const canvas = await html2canvas(preview, {
-                    backgroundColor: null, // let the inline style show
-                    scale: 2
-                    });
+                        backgroundColor: null,
+                        scale: 2,
+                        useCORS: true,
+                        allowTaint: true
+                        });
+
                     canvas.toBlob(blob => {
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement('a');
@@ -454,10 +457,12 @@ Examples:
 
             try {
                 // 1. Render the entire preview to one tall canvas
-                const canvas = await html2canvas(preview, { backgroundColor: null, scale: 2 });
-                
-
-
+                const canvas = await html2canvas(preview, {
+                                        backgroundColor: null,
+                                        scale: 2,
+                                        useCORS: true,
+                                        allowTaint: true
+                                        });
                 // 2. Export as PNG for perfect fidelity
                 const imgData = canvas.toDataURL('image/png');
 
@@ -591,7 +596,7 @@ Examples:
         //   const postDiv = document.getElementById('postContent');
         //   postDiv.appendChild(img);
         //   postDiv.appendChild(document.createElement('br'));
-        
+
             // Create a white “frame” wrapper
             const wrapper = document.createElement('div');
             wrapper.style.display       = 'inline-block';
@@ -603,6 +608,9 @@ Examples:
 
             // The actual image, filling the wrapper
             const img = document.createElement('img');
+            img.crossOrigin      = 'anonymous';   // help html2canvas grab it pixel-perfect
+            img.style.mixBlendMode = 'normal';    // disable any “blend with page” effect
+            img.style.opacity      = '1';         // ensure it’s drawn fully opaque
             img.src            = imgDataUrl;
             img.style.maxWidth = '100%';
             img.style.display  = 'block';
