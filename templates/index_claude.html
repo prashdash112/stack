@@ -428,9 +428,104 @@ Examples:
                 }
 // /////////////////////////////// PDF ////////////////////////////////////////////////////////////
         
+            // document.getElementById('exportPdfBtn').addEventListener('click', async () => {
+            // const preview = document.querySelector('.post-preview');
+            // if (!preview) return alert('Nothing to export!');
+            // // ── ① TEMPORARILY ADD WATERMARK ──
+            // const wm = document.createElement('div');
+            // wm.className = 'watermark';
+            // wm.innerText = 'GeniusPost AI';
+            // preview.appendChild(wm);
+
+            // // Temporarily override heading gradients (same as PNG fix)
+            // const headings = preview.querySelectorAll('h1, h2, h3, h4, h5, h6');
+            // headings.forEach(h => {
+            //     h.dataset.origBg    = h.style.background;
+            //     h.dataset.origClip  = h.style.webkitBackgroundClip;
+            //     h.dataset.origColor = h.style.color;
+            //     h.style.background           = 'none';
+            //     h.style.webkitBackgroundClip = 'unset';
+            //     h.style.color                = '#fca5a5';
+            // });
+
+            // // Temporarily darken background if needed
+            // const origBg = preview.style.background;
+            // preview.style.background = 'linear-gradient(135deg, #2a2a3d, #1e1e2f)';
+
+            // try {
+            //     // 1. Render the entire preview to one tall canvas
+            //     const canvas = await html2canvas(preview, { backgroundColor: null, scale: 2 });
+                
+
+
+            //     // 2. Export as PNG for perfect fidelity
+            //     const imgData = canvas.toDataURL('image/png');
+
+            //     // --- NEW: crop the tall canvas into A4‐sized page slices ---
+            //     const { jsPDF } = window.jspdf;
+            //     const pdf = new jsPDF({ unit: 'px', format: 'a4' });
+            //     const pdfW = pdf.internal.pageSize.getWidth();
+            //     const pdfH = pdf.internal.pageSize.getHeight();
+
+            //     // Compute the ratio of canvas→PDF widths
+            //     const canvasW = canvas.width;
+            //     const canvasH = canvas.height;
+            //     const scale = (pdfW - 40) / canvasW; 
+            //     const pageCanvasH = Math.floor(pdfH / scale);
+
+            //     let renderedH = 0;
+            //     while (renderedH < canvasH) {
+            //         // 5. Fill entire page with neon purple (or black). 
+            //         //    RGB for neon‐purple (#9f7aea) = (159, 122, 234).
+            //         pdf.setFillColor(159, 122, 234);
+            //         pdf.rect(0, 0, pdfW, pdfH, 'F');
+            //     // Create a temp canvas for this page
+            //     const tempCanvas = document.createElement('canvas');
+            //     tempCanvas.width = canvasW;
+            //     tempCanvas.height = Math.min(pageCanvasH, canvasH - renderedH);
+            //     const tCtx = tempCanvas.getContext('2d');
+                
+            //     // Draw the slice
+            //     tCtx.drawImage(
+            //         canvas,
+            //         0, renderedH,               // src x, y
+            //         canvasW, tempCanvas.height, // src w, h
+            //         0, 0,
+            //         canvasW, tempCanvas.height  // dst w, h
+            //     );
+                
+            //     // Add to PDF
+            //     const sliceData = tempCanvas.toDataURL('image/jpeg', 0.8);
+            //     // pdf.addImage(sliceData, 'PNG', 20, 20, canvasW * scale, tempCanvas.height * scale);
+            //     pdf.addImage(sliceData, 'JPEG', 20, 20, canvasW * scale, tempCanvas.height * scale);
+            //     renderedH += pageCanvasH;
+            //     if (renderedH < canvasH) pdf.addPage();
+            //     }
+
+            //     pdf.save('linkedin-post.pdf');
+
+            // } catch (e) {
+            //     console.error('PDF export failed:', e);
+            //     alert('Could not export multi-page PDF.');
+            // } finally {
+            //     // ── ④ REMOVE WATERMARK ──
+            //     preview.removeChild(wm);
+            //     // Restore heading and preview bg
+            //     headings.forEach(h => {
+            //     h.style.background           = h.dataset.origBg;
+            //     h.style.webkitBackgroundClip = h.dataset.origClip;
+            //     h.style.color                = h.dataset.origColor;
+            //     delete h.dataset.origBg;
+            //     delete h.dataset.origClip;
+            //     delete h.dataset.origColor;
+            //     });
+            //     preview.style.background = origBg;
+            // }
+            // });
             document.getElementById('exportPdfBtn').addEventListener('click', async () => {
             const preview = document.querySelector('.post-preview');
             if (!preview) return alert('Nothing to export!');
+
             // ── ① TEMPORARILY ADD WATERMARK ──
             const wm = document.createElement('div');
             wm.className = 'watermark';
@@ -440,88 +535,196 @@ Examples:
             // Temporarily override heading gradients (same as PNG fix)
             const headings = preview.querySelectorAll('h1, h2, h3, h4, h5, h6');
             headings.forEach(h => {
-                h.dataset.origBg    = h.style.background;
-                h.dataset.origClip  = h.style.webkitBackgroundClip;
+                h.dataset.origBg = h.style.background;
+                h.dataset.origClip = h.style.webkitBackgroundClip;
                 h.dataset.origColor = h.style.color;
-                h.style.background           = 'none';
+                h.style.background = 'none';
                 h.style.webkitBackgroundClip = 'unset';
-                h.style.color                = '#fca5a5';
+                h.style.color = '#fca5a5';
             });
 
             // Temporarily darken background if needed
             const origBg = preview.style.background;
             preview.style.background = 'linear-gradient(135deg, #2a2a3d, #1e1e2f)';
 
+            // Add CSS to prevent content splitting
+            const style = document.createElement('style');
+            style.textContent = `
+                .post-preview * {
+                    page-break-inside: avoid !important;
+                    break-inside: avoid !important;
+                }
+                .post-preview table,
+                .post-preview pre,
+                .post-preview blockquote,
+                .post-preview .code-block {
+                    page-break-inside: avoid !important;
+                    break-inside: avoid !important;
+                    margin-bottom: 20px !important;
+                }
+                .post-preview p {
+                    orphans: 3 !important;
+                    widows: 3 !important;
+                }
+            `;
+            document.head.appendChild(style);
+
             try {
-                // 1. Render the entire preview to one tall canvas
-                const canvas = await html2canvas(preview, { backgroundColor: null, scale: 2 });
-                
-
-
-                // 2. Export as PNG for perfect fidelity
-                const imgData = canvas.toDataURL('image/png');
-
-                // --- NEW: crop the tall canvas into A4‐sized page slices ---
-                const { jsPDF } = window.jspdf;
-                const pdf = new jsPDF({ unit: 'px', format: 'a4' });
-                const pdfW = pdf.internal.pageSize.getWidth();
-                const pdfH = pdf.internal.pageSize.getHeight();
-
-                // Compute the ratio of canvas→PDF widths
-                const canvasW = canvas.width;
-                const canvasH = canvas.height;
-                const scale = (pdfW - 40) / canvasW; 
-                const pageCanvasH = Math.floor(pdfH / scale);
-
-                let renderedH = 0;
-                while (renderedH < canvasH) {
-                    // 5. Fill entire page with neon purple (or black). 
-                    //    RGB for neon‐purple (#9f7aea) = (159, 122, 234).
-                    pdf.setFillColor(159, 122, 234);
-                    pdf.rect(0, 0, pdfW, pdfH, 'F');
-                // Create a temp canvas for this page
-                const tempCanvas = document.createElement('canvas');
-                tempCanvas.width = canvasW;
-                tempCanvas.height = Math.min(pageCanvasH, canvasH - renderedH);
-                const tCtx = tempCanvas.getContext('2d');
-                
-                // Draw the slice
-                tCtx.drawImage(
-                    canvas,
-                    0, renderedH,               // src x, y
-                    canvasW, tempCanvas.height, // src w, h
-                    0, 0,
-                    canvasW, tempCanvas.height  // dst w, h
-                );
-                
-                // Add to PDF
-                const sliceData = tempCanvas.toDataURL('image/jpeg', 0.8);
-                // pdf.addImage(sliceData, 'PNG', 20, 20, canvasW * scale, tempCanvas.height * scale);
-                pdf.addImage(sliceData, 'JPEG', 20, 20, canvasW * scale, tempCanvas.height * scale);
-                renderedH += pageCanvasH;
-                if (renderedH < canvasH) pdf.addPage();
+                // Helper function to get element bounds relative to preview
+                function getElementBounds(element) {
+                    const previewRect = preview.getBoundingClientRect();
+                    const elementRect = element.getBoundingClientRect();
+                    return {
+                        top: elementRect.top - previewRect.top + preview.scrollTop,
+                        bottom: elementRect.bottom - previewRect.top + preview.scrollTop,
+                        height: elementRect.height
+                    };
                 }
 
+                // Get all major content elements that shouldn't be split
+                const protectedElements = preview.querySelectorAll('h1, h2, h3, h4, h5, h6, table, pre, blockquote, .code-block, figure, img');
+                const breakPoints = [];
+                
+                // Calculate safe break points between elements
+                let lastBottom = 0;
+                protectedElements.forEach(el => {
+                    const bounds = getElementBounds(el);
+                    if (bounds.top > lastBottom + 50) { // 50px minimum gap
+                        breakPoints.push(bounds.top - 10); // Break slightly before element
+                    }
+                    lastBottom = Math.max(lastBottom, bounds.bottom);
+                });
+
+                // 1. Render the entire preview to canvas with optimized settings
+                const canvas = await html2canvas(preview, {
+                    backgroundColor: null,
+                    scale: 1.5, // Reduced from 2 for smaller file size
+                    useCORS: true,
+                    allowTaint: true,
+                    imageTimeout: 0,
+                    removeContainer: true
+                });
+
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF({ 
+                    unit: 'px', 
+                    format: 'a4',
+                    compress: true // Enable compression
+                });
+                
+                const pdfW = pdf.internal.pageSize.getWidth();
+                const pdfH = pdf.internal.pageSize.getHeight();
+                const margin = 20;
+                const contentW = pdfW - (margin * 2);
+                const contentH = pdfH - (margin * 2);
+
+                // Compute scaling
+                const canvasW = canvas.width;
+                const canvasH = canvas.height;
+                const scale = contentW / canvasW;
+                const scaledContentH = contentH / scale;
+
+                // Smart page breaking
+                let currentY = 0;
+                let pageNumber = 0;
+
+                while (currentY < canvasH) {
+                    if (pageNumber > 0) pdf.addPage();
+                    
+                    // Fill page with background color
+                    pdf.setFillColor(159, 122, 234);
+                    pdf.rect(0, 0, pdfW, pdfH, 'F');
+
+                    // Find the best break point for this page
+                    let nextY = currentY + scaledContentH;
+                    
+                    // Look for a safe break point within the page
+                    const availableBreaks = breakPoints.filter(bp => 
+                        bp > currentY + (scaledContentH * 0.5) && bp < nextY
+                    );
+                    
+                    if (availableBreaks.length > 0) {
+                        // Use the last available break point
+                        nextY = availableBreaks[availableBreaks.length - 1];
+                    }
+
+                    const sliceHeight = Math.min(nextY - currentY, canvasH - currentY);
+                    
+                    // Create optimized temp canvas for this slice
+                    const tempCanvas = document.createElement('canvas');
+                    tempCanvas.width = canvasW;
+                    tempCanvas.height = sliceHeight;
+                    const tCtx = tempCanvas.getContext('2d');
+                    
+                    // Enable image smoothing for better quality at smaller sizes
+                    tCtx.imageSmoothingEnabled = true;
+                    tCtx.imageSmoothingQuality = 'high';
+                    
+                    // Draw the slice
+                    tCtx.drawImage(
+                        canvas,
+                        0, currentY,
+                        canvasW, sliceHeight,
+                        0, 0,
+                        canvasW, sliceHeight
+                    );
+
+                    // Add to PDF with optimized settings
+                    const sliceData = tempCanvas.toDataURL('image/jpeg', 0.7); // Reduced quality for smaller size
+                    pdf.addImage(
+                        sliceData, 
+                        'JPEG', 
+                        margin, 
+                        margin, 
+                        canvasW * scale, 
+                        sliceHeight * scale
+                    );
+
+                    currentY = nextY;
+                    pageNumber++;
+
+                    // Safety check to prevent infinite loops
+                    if (pageNumber > 50) {
+                        console.warn('Maximum page limit reached');
+                        break;
+                    }
+                }
+
+                // Additional compression
+                pdf.output('dataurlstring'); // This helps with compression
+
                 pdf.save('linkedin-post.pdf');
+                alert(`PDF exported successfully with ${pageNumber} page${pageNumber > 1 ? 's' : ''}!`);
 
             } catch (e) {
                 console.error('PDF export failed:', e);
-                alert('Could not export multi-page PDF.');
+                alert('Could not export PDF: ' + e.message);
             } finally {
-                // ── ④ REMOVE WATERMARK ──
-                preview.removeChild(wm);
-                // Restore heading and preview bg
+                // ── CLEANUP ──
+                // Remove watermark
+                if (wm && wm.parentNode) {
+                    preview.removeChild(wm);
+                }
+                
+                // Restore heading styles
                 headings.forEach(h => {
-                h.style.background           = h.dataset.origBg;
-                h.style.webkitBackgroundClip = h.dataset.origClip;
-                h.style.color                = h.dataset.origColor;
-                delete h.dataset.origBg;
-                delete h.dataset.origClip;
-                delete h.dataset.origColor;
+                    h.style.background = h.dataset.origBg || '';
+                    h.style.webkitBackgroundClip = h.dataset.origClip || '';
+                    h.style.color = h.dataset.origColor || '';
+                    delete h.dataset.origBg;
+                    delete h.dataset.origClip;
+                    delete h.dataset.origColor;
                 });
+                
+                // Restore preview background
                 preview.style.background = origBg;
+                
+                // Remove added styles
+                if (style && style.parentNode) {
+                    document.head.removeChild(style);
+                }
             }
-            });
+        });
 
             
 
