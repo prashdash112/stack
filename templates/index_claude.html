@@ -365,169 +365,417 @@ Examples:
             }
             }
 
+            // async function copyToClipboard() {
+            //     const preview = document.querySelector('.post-preview');
+            //     if (!preview) {
+            //         return alert('Nothing to capture!');
+            //     }
+            //     //////////////////////////
+            //     // ── ① TEMPORARILY ADD WATERMARK ──
+            //     const wm = document.createElement('div');
+            //     wm.className = 'watermark';
+            //     wm.innerText = 'GeniusPost AI';
+            //     preview.appendChild(wm);
+            //     //////////////////////////
+
+            //     // 1. Override heading gradients as before
+            //     const headings = preview.querySelectorAll('h1, h2, h3, h4, h5, h6');
+            //     headings.forEach(h => {
+            //         h.dataset.origBg    = h.style.background;
+            //         h.dataset.origClip  = h.style.webkitBackgroundClip;
+            //         h.dataset.origColor = h.style.color;
+
+            //         h.style.background           = 'none';
+            //         h.style.webkitBackgroundClip = 'unset';
+            //         h.style.color                = '#fca5a5';
+            //     });
+
+            //     // 2. Temporarily override the preview background
+            //     const origBg = preview.style.background;
+            //     preview.style.background = 'linear-gradient(135deg, #2a2a3d, #1e1e2f)'; // dark purple–bluish
+
+            //     // 3. Capture the full preview box
+            //     try {
+            //         const canvas = await html2canvas(preview, {
+            //             backgroundColor: null,
+            //             scale: 2,
+            //             useCORS: true,
+            //             allowTaint: true
+            //             });
+
+            //         canvas.toBlob(blob => {
+            //         const url = URL.createObjectURL(blob);
+            //         const a = document.createElement('a');
+            //         a.href = url;
+            //         a.download = 'linkedin-post.png';
+            //         a.click();
+            //         URL.revokeObjectURL(url);
+            //         });
+            //     } catch (err) {
+            //         console.error('Snapshot failed:', err);
+            //         alert('Unable to save snapshot.');
+            //     }
+
+            //     // 4. Restore original heading and preview background styles
+            //     headings.forEach(h => {
+            //         h.style.background           = h.dataset.origBg;
+            //         h.style.webkitBackgroundClip = h.dataset.origClip;
+            //         h.style.color                = h.dataset.origColor;
+            //         delete h.dataset.origBg;
+            //         delete h.dataset.origClip;
+            //         delete h.dataset.origColor;
+            //     });
+            //     preview.style.background = origBg;
+            //     // ── ④ REMOVE WATERMARK ──
+            //     preview.removeChild(wm);
+            //     }
             async function copyToClipboard() {
-                const preview = document.querySelector('.post-preview');
-                if (!preview) {
-                    return alert('Nothing to capture!');
-                }
-                //////////////////////////
-                // ── ① TEMPORARILY ADD WATERMARK ──
-                const wm = document.createElement('div');
-                wm.className = 'watermark';
-                wm.innerText = 'GeniusPost AI';
-                preview.appendChild(wm);
-                //////////////////////////
-
-                // 1. Override heading gradients as before
-                const headings = preview.querySelectorAll('h1, h2, h3, h4, h5, h6');
-                headings.forEach(h => {
-                    h.dataset.origBg    = h.style.background;
-                    h.dataset.origClip  = h.style.webkitBackgroundClip;
-                    h.dataset.origColor = h.style.color;
-
-                    h.style.background           = 'none';
-                    h.style.webkitBackgroundClip = 'unset';
-                    h.style.color                = '#fca5a5';
-                });
-
-                // 2. Temporarily override the preview background
-                const origBg = preview.style.background;
-                preview.style.background = 'linear-gradient(135deg, #2a2a3d, #1e1e2f)'; // dark purple–bluish
-
-                // 3. Capture the full preview box
-                try {
-                    const canvas = await html2canvas(preview, {
-                        backgroundColor: null,
-                        scale: 2,
-                        useCORS: true,
-                        allowTaint: true
-                        });
-
-                    canvas.toBlob(blob => {
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = 'linkedin-post.png';
-                    a.click();
-                    URL.revokeObjectURL(url);
-                    });
-                } catch (err) {
-                    console.error('Snapshot failed:', err);
-                    alert('Unable to save snapshot.');
-                }
-
-                // 4. Restore original heading and preview background styles
-                headings.forEach(h => {
-                    h.style.background           = h.dataset.origBg;
-                    h.style.webkitBackgroundClip = h.dataset.origClip;
-                    h.style.color                = h.dataset.origColor;
-                    delete h.dataset.origBg;
-                    delete h.dataset.origClip;
-                    delete h.dataset.origColor;
-                });
-                preview.style.background = origBg;
-                // ── ④ REMOVE WATERMARK ──
-                preview.removeChild(wm);
-                }
-// /////////////////////////////// PDF ////////////////////////////////////////////////////////////
-        
-            document.getElementById('exportPdfBtn').addEventListener('click', async () => {
             const preview = document.querySelector('.post-preview');
-            if (!preview) return alert('Nothing to export!');
+            if (!preview) {
+                return alert('Nothing to capture!');
+            }
+
             // ── ① TEMPORARILY ADD WATERMARK ──
             const wm = document.createElement('div');
             wm.className = 'watermark';
             wm.innerText = 'GeniusPost AI';
             preview.appendChild(wm);
 
-            // Temporarily override heading gradients (same as PNG fix)
+            // Override heading gradients for better capture
             const headings = preview.querySelectorAll('h1, h2, h3, h4, h5, h6');
             headings.forEach(h => {
-                h.dataset.origBg    = h.style.background;
-                h.dataset.origClip  = h.style.webkitBackgroundClip;
+                h.dataset.origBg = h.style.background;
+                h.dataset.origClip = h.style.webkitBackgroundClip;
                 h.dataset.origColor = h.style.color;
-                h.style.background           = 'none';
+
+                h.style.background = 'none';
                 h.style.webkitBackgroundClip = 'unset';
-                h.style.color                = '#fca5a5';
+                h.style.color = '#fca5a5';
             });
 
-            // Temporarily darken background if needed
+            // Enhance all images for better capture
+            const images = preview.querySelectorAll('img');
+            const imageOverrides = [];
+            
+            images.forEach((img, index) => {
+                // Store original styles
+                imageOverrides[index] = {
+                origBackground: img.style.backgroundColor,
+                origOpacity: img.style.opacity,
+                origMixBlend: img.style.mixBlendMode
+                };
+                
+                // Force solid background and full opacity
+                img.style.backgroundColor = '#ffffff';
+                img.style.opacity = '1';
+                img.style.mixBlendMode = 'normal';
+                
+                // Ensure parent wrapper is also solid
+                const wrapper = img.parentElement;
+                if (wrapper && wrapper.style.background) {
+                wrapper.style.backgroundColor = '#ffffff';
+                wrapper.style.backgroundImage = 'none';
+                }
+            });
+
+            // Temporarily override the preview background
             const origBg = preview.style.background;
             preview.style.background = 'linear-gradient(135deg, #2a2a3d, #1e1e2f)';
 
             try {
-                // 1. Render the entire preview to one tall canvas
                 const canvas = await html2canvas(preview, {
-                                        backgroundColor: null,
-                                        scale: 2,
-                                        useCORS: true,
-                                        allowTaint: true
-                                        });
-                // 2. Export as PNG for perfect fidelity
-                const imgData = canvas.toDataURL('image/png');
-
-                // --- NEW: crop the tall canvas into A4‐sized page slices ---
-                const { jsPDF } = window.jspdf;
-                const pdf = new jsPDF({ unit: 'px', format: 'a4' });
-                const pdfW = pdf.internal.pageSize.getWidth();
-                const pdfH = pdf.internal.pageSize.getHeight();
-
-                // Compute the ratio of canvas→PDF widths
-                const canvasW = canvas.width;
-                const canvasH = canvas.height;
-                const scale = (pdfW - 40) / canvasW; 
-                const pageCanvasH = Math.floor(pdfH / scale);
-
-                let renderedH = 0;
-                while (renderedH < canvasH) {
-                    // 5. Fill entire page with neon purple (or black). 
-                    //    RGB for neon‐purple (#9f7aea) = (159, 122, 234).
-                    pdf.setFillColor(159, 122, 234);
-                    pdf.rect(0, 0, pdfW, pdfH, 'F');
-                // Create a temp canvas for this page
-                const tempCanvas = document.createElement('canvas');
-                tempCanvas.width = canvasW;
-                tempCanvas.height = Math.min(pageCanvasH, canvasH - renderedH);
-                const tCtx = tempCanvas.getContext('2d');
-                
-                // Draw the slice
-                tCtx.drawImage(
-                    canvas,
-                    0, renderedH,               // src x, y
-                    canvasW, tempCanvas.height, // src w, h
-                    0, 0,
-                    canvasW, tempCanvas.height  // dst w, h
-                );
-                
-                // Add to PDF
-                const sliceData = tempCanvas.toDataURL('image/jpeg', 0.8);
-                // pdf.addImage(sliceData, 'PNG', 20, 20, canvasW * scale, tempCanvas.height * scale);
-                pdf.addImage(sliceData, 'JPEG', 20, 20, canvasW * scale, tempCanvas.height * scale);
-                renderedH += pageCanvasH;
-                if (renderedH < canvasH) pdf.addPage();
+                backgroundColor: '#2a2a3d', // Solid background color
+                scale: 2,
+                useCORS: true,
+                allowTaint: false,
+                removeContainer: false,
+                imageTimeout: 0,
+                logging: false,
+                // Enhanced options for better image capture
+                foreignObjectRendering: false,
+                onclone: (clonedDoc) => {
+                    // Ensure all images in the cloned document have solid backgrounds
+                    const clonedImages = clonedDoc.querySelectorAll('img');
+                    clonedImages.forEach(img => {
+                    img.style.backgroundColor = '#ffffff';
+                    img.style.opacity = '1';
+                    img.style.mixBlendMode = 'normal';
+                    });
                 }
+                });
 
-                pdf.save('linkedin-post.pdf');
+                canvas.toBlob(blob => {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'linkedin-post.png';
+                a.click();
+                URL.revokeObjectURL(url);
+                }, 'image/png', 1.0); // Maximum quality
 
-            } catch (e) {
-                console.error('PDF export failed:', e);
-                alert('Could not export multi-page PDF.');
-            } finally {
-                // ── ④ REMOVE WATERMARK ──
-                preview.removeChild(wm);
-                // Restore heading and preview bg
-                headings.forEach(h => {
-                h.style.background           = h.dataset.origBg;
+            } catch (err) {
+                console.error('Snapshot failed:', err);
+                alert('Unable to save snapshot.');
+            }
+
+            // Restore all original styles
+            headings.forEach(h => {
+                h.style.background = h.dataset.origBg;
                 h.style.webkitBackgroundClip = h.dataset.origClip;
-                h.style.color                = h.dataset.origColor;
+                h.style.color = h.dataset.origColor;
                 delete h.dataset.origBg;
                 delete h.dataset.origClip;
                 delete h.dataset.origColor;
-                });
-                preview.style.background = origBg;
-            }
             });
-            
+
+            // Restore image styles
+            images.forEach((img, index) => {
+                img.style.backgroundColor = imageOverrides[index].origBackground;
+                img.style.opacity = imageOverrides[index].origOpacity;
+                img.style.mixBlendMode = imageOverrides[index].origMixBlend;
+            });
+
+            preview.style.background = origBg;
+            preview.removeChild(wm);
+            }
+            // /////////////////////////////// PDF ////////////////////////////////////////////////////////////
+                    
+                        // document.getElementById('exportPdfBtn').addEventListener('click', async () => {
+                        // const preview = document.querySelector('.post-preview');
+                        // if (!preview) return alert('Nothing to export!');
+                        // // ── ① TEMPORARILY ADD WATERMARK ──
+                        // const wm = document.createElement('div');
+                        // wm.className = 'watermark';
+                        // wm.innerText = 'GeniusPost AI';
+                        // preview.appendChild(wm);
+
+                        // // Temporarily override heading gradients (same as PNG fix)
+                        // const headings = preview.querySelectorAll('h1, h2, h3, h4, h5, h6');
+                        // headings.forEach(h => {
+                        //     h.dataset.origBg    = h.style.background;
+                        //     h.dataset.origClip  = h.style.webkitBackgroundClip;
+                        //     h.dataset.origColor = h.style.color;
+                        //     h.style.background           = 'none';
+                        //     h.style.webkitBackgroundClip = 'unset';
+                        //     h.style.color                = '#fca5a5';
+                        // });
+
+                        // // Temporarily darken background if needed
+                        // const origBg = preview.style.background;
+                        // preview.style.background = 'linear-gradient(135deg, #2a2a3d, #1e1e2f)';
+
+                        // try {
+                        //     // 1. Render the entire preview to one tall canvas
+                        //     const canvas = await html2canvas(preview, {
+                        //                             backgroundColor: null,
+                        //                             scale: 2,
+                        //                             useCORS: true,
+                        //                             allowTaint: true
+                        //                             });
+                        //     // 2. Export as PNG for perfect fidelity
+                        //     const imgData = canvas.toDataURL('image/png');
+
+                        //     // --- NEW: crop the tall canvas into A4‐sized page slices ---
+                        //     const { jsPDF } = window.jspdf;
+                        //     const pdf = new jsPDF({ unit: 'px', format: 'a4' });
+                        //     const pdfW = pdf.internal.pageSize.getWidth();
+                        //     const pdfH = pdf.internal.pageSize.getHeight();
+
+                        //     // Compute the ratio of canvas→PDF widths
+                        //     const canvasW = canvas.width;
+                        //     const canvasH = canvas.height;
+                        //     const scale = (pdfW - 40) / canvasW; 
+                        //     const pageCanvasH = Math.floor(pdfH / scale);
+
+                        //     let renderedH = 0;
+                        //     while (renderedH < canvasH) {
+                        //         // 5. Fill entire page with neon purple (or black). 
+                        //         //    RGB for neon‐purple (#9f7aea) = (159, 122, 234).
+                        //         pdf.setFillColor(159, 122, 234);
+                        //         pdf.rect(0, 0, pdfW, pdfH, 'F');
+                        //     // Create a temp canvas for this page
+                        //     const tempCanvas = document.createElement('canvas');
+                        //     tempCanvas.width = canvasW;
+                        //     tempCanvas.height = Math.min(pageCanvasH, canvasH - renderedH);
+                        //     const tCtx = tempCanvas.getContext('2d');
+                            
+                        //     // Draw the slice
+                        //     tCtx.drawImage(
+                        //         canvas,
+                        //         0, renderedH,               // src x, y
+                        //         canvasW, tempCanvas.height, // src w, h
+                        //         0, 0,
+                        //         canvasW, tempCanvas.height  // dst w, h
+                        //     );
+                            
+                        //     // Add to PDF
+                        //     const sliceData = tempCanvas.toDataURL('image/jpeg', 0.8);
+                        //     // pdf.addImage(sliceData, 'PNG', 20, 20, canvasW * scale, tempCanvas.height * scale);
+                        //     pdf.addImage(sliceData, 'JPEG', 20, 20, canvasW * scale, tempCanvas.height * scale);
+                        //     renderedH += pageCanvasH;
+                        //     if (renderedH < canvasH) pdf.addPage();
+                        //     }
+
+                        //     pdf.save('linkedin-post.pdf');
+
+                        // } catch (e) {
+                        //     console.error('PDF export failed:', e);
+                        //     alert('Could not export multi-page PDF.');
+                        // } finally {
+                        //     // ── ④ REMOVE WATERMARK ──
+                        //     preview.removeChild(wm);
+                        //     // Restore heading and preview bg
+                        //     headings.forEach(h => {
+                        //     h.style.background           = h.dataset.origBg;
+                        //     h.style.webkitBackgroundClip = h.dataset.origClip;
+                        //     h.style.color                = h.dataset.origColor;
+                        //     delete h.dataset.origBg;
+                        //     delete h.dataset.origClip;
+                        //     delete h.dataset.origColor;
+                        //     });
+                        //     preview.style.background = origBg;
+                        // }
+                        // });
+                        document.getElementById('exportPdfBtn').addEventListener('click', async () => {
+                        const preview = document.querySelector('.post-preview');
+                        if (!preview) return alert('Nothing to export!');
+
+                        // ── ① TEMPORARILY ADD WATERMARK ──
+                        const wm = document.createElement('div');
+                        wm.className = 'watermark';
+                        wm.innerText = 'GeniusPost AI';
+                        preview.appendChild(wm);
+
+                        // Temporarily override heading gradients
+                        const headings = preview.querySelectorAll('h1, h2, h3, h4, h5, h6');
+                        headings.forEach(h => {
+                            h.dataset.origBg = h.style.background;
+                            h.dataset.origClip = h.style.webkitBackgroundClip;
+                            h.dataset.origColor = h.style.color;
+                            h.style.background = 'none';
+                            h.style.webkitBackgroundClip = 'unset';
+                            h.style.color = '#fca5a5';
+                        });
+
+                        // Enhance all images for PDF capture
+                        const images = preview.querySelectorAll('img');
+                        const imageOverrides = [];
+                        
+                        images.forEach((img, index) => {
+                            imageOverrides[index] = {
+                            origBackground: img.style.backgroundColor,
+                            origOpacity: img.style.opacity,
+                            origMixBlend: img.style.mixBlendMode
+                            };
+                            
+                            img.style.backgroundColor = '#ffffff';
+                            img.style.opacity = '1';
+                            img.style.mixBlendMode = 'normal';
+                            
+                            const wrapper = img.parentElement;
+                            if (wrapper && wrapper.style.background) {
+                            wrapper.style.backgroundColor = '#ffffff';
+                            wrapper.style.backgroundImage = 'none';
+                            }
+                        });
+
+                        // Temporarily darken background
+                        const origBg = preview.style.background;
+                        preview.style.background = 'linear-gradient(135deg, #2a2a3d, #1e1e2f)';
+
+                        try {
+                            // Render with enhanced settings for better image quality
+                            const canvas = await html2canvas(preview, {
+                            backgroundColor: '#2a2a3d',
+                            scale: 2,
+                            useCORS: true,
+                            allowTaint: false,
+                            removeContainer: false,
+                            imageTimeout: 0,
+                            logging: false,
+                            foreignObjectRendering: false,
+                            onclone: (clonedDoc) => {
+                                const clonedImages = clonedDoc.querySelectorAll('img');
+                                clonedImages.forEach(img => {
+                                img.style.backgroundColor = '#ffffff';
+                                img.style.opacity = '1';
+                                img.style.mixBlendMode = 'normal';
+                                });
+                            }
+                            });
+
+                            // Use PNG for maximum quality in PDF
+                            const imgData = canvas.toDataURL('image/png', 1.0);
+
+                            const { jsPDF } = window.jspdf;
+                            const pdf = new jsPDF({ unit: 'px', format: 'a4' });
+                            const pdfW = pdf.internal.pageSize.getWidth();
+                            const pdfH = pdf.internal.pageSize.getHeight();
+
+                            const canvasW = canvas.width;
+                            const canvasH = canvas.height;
+                            const scale = (pdfW - 40) / canvasW;
+                            const pageCanvasH = Math.floor(pdfH / scale);
+
+                            let renderedH = 0;
+                            while (renderedH < canvasH) {
+                            // Fill page with background color
+                            pdf.setFillColor(159, 122, 234);
+                            pdf.rect(0, 0, pdfW, pdfH, 'F');
+
+                            const tempCanvas = document.createElement('canvas');
+                            tempCanvas.width = canvasW;
+                            tempCanvas.height = Math.min(pageCanvasH, canvasH - renderedH);
+                            const tCtx = tempCanvas.getContext('2d');
+                            
+                            // Fill temp canvas with solid background
+                            tCtx.fillStyle = '#2a2a3d';
+                            tCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+                            
+                            // Draw the slice
+                            tCtx.drawImage(
+                                canvas,
+                                0, renderedH,
+                                canvasW, tempCanvas.height,
+                                0, 0,
+                                canvasW, tempCanvas.height
+                            );
+                            
+                            // Add to PDF with maximum quality
+                            const sliceData = tempCanvas.toDataURL('image/png', 1.0);
+                            pdf.addImage(sliceData, 'PNG', 20, 20, canvasW * scale, tempCanvas.height * scale);
+                            
+                            renderedH += pageCanvasH;
+                            if (renderedH < canvasH) pdf.addPage();
+                            }
+
+                            pdf.save('linkedin-post.pdf');
+
+                        } catch (e) {
+                            console.error('PDF export failed:', e);
+                            alert('Could not export PDF.');
+                        } finally {
+                            // Restore all styles
+                            headings.forEach(h => {
+                            h.style.background = h.dataset.origBg;
+                            h.style.webkitBackgroundClip = h.dataset.origClip;
+                            h.style.color = h.dataset.origColor;
+                            delete h.dataset.origBg;
+                            delete h.dataset.origClip;
+                            delete h.dataset.origColor;
+                            });
+
+                            images.forEach((img, index) => {
+                            img.style.backgroundColor = imageOverrides[index].origBackground;
+                            img.style.opacity = imageOverrides[index].origOpacity;
+                            img.style.mixBlendMode = imageOverrides[index].origMixBlend;
+                            });
+
+                            preview.style.background = origBg;
+                            preview.removeChild(wm);
+                        }
+                        });
+                                    
 
             
 
@@ -570,61 +818,139 @@ Examples:
         document.getElementById('imageInput').click();
     });
 
-    document
-      .getElementById('imageInput')
-      .addEventListener('change', async (event) => {
-        const file = event.target.files[0];
-        if (!file) return;
-        if (!file.type.startsWith('image/')) {
-          alert('Please select an image file.');
-          return;
-        }
-        const reader = new FileReader();
-        reader.onload = () => {
-          const imgDataUrl = reader.result;
-        //   const img = document.createElement('img');
-        //   img.src = imgDataUrl;
-        //   img.style.maxWidth = '100%';
-        //   img.style.margin = '1rem 0';
-        //   img.style.borderRadius = '0.75rem';
-        //   img.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
-        // //   // ensure image has white background so it doesn’t blend into the dark canvas
-        // //   img.style.backgroundColor = '#030006'; //'#ffffff';
-        // //   // optionally give a tiny padding if you want a white border frame
-        // //   img.style.padding = '0.35rem';
+    // document
+    //   .getElementById('imageInput')
+    //   .addEventListener('change', async (event) => {
+    //     const file = event.target.files[0];
+    //     if (!file) return;
+    //     if (!file.type.startsWith('image/')) {
+    //       alert('Please select an image file.');
+    //       return;
+    //     }
+    //     const reader = new FileReader();
+    //     reader.onload = () => {
+    //       const imgDataUrl = reader.result;
+    //     //   const img = document.createElement('img');
+    //     //   img.src = imgDataUrl;
+    //     //   img.style.maxWidth = '100%';
+    //     //   img.style.margin = '1rem 0';
+    //     //   img.style.borderRadius = '0.75rem';
+    //     //   img.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
+    //     // //   // ensure image has white background so it doesn’t blend into the dark canvas
+    //     // //   img.style.backgroundColor = '#030006'; //'#ffffff';
+    //     // //   // optionally give a tiny padding if you want a white border frame
+    //     // //   img.style.padding = '0.35rem';
           
-        //   const postDiv = document.getElementById('postContent');
-        //   postDiv.appendChild(img);
-        //   postDiv.appendChild(document.createElement('br'));
+    //     //   const postDiv = document.getElementById('postContent');
+    //     //   postDiv.appendChild(img);
+    //     //   postDiv.appendChild(document.createElement('br'));
 
-            // Create a white “frame” wrapper
-            const wrapper = document.createElement('div');
-            wrapper.style.display       = 'inline-block';
-            wrapper.style.background    = '#ffffff';
-            wrapper.style.padding       = '0.25rem';
-            wrapper.style.borderRadius  = '0.75rem';
-            wrapper.style.boxShadow     = '0 4px 12px rgba(0,0,0,0.3)';
-            wrapper.style.margin        = '1rem 0';
+    //         // Create a white “frame” wrapper
+    //         const wrapper = document.createElement('div');
+    //         wrapper.style.display       = 'inline-block';
+    //         wrapper.style.background    = '#ffffff';
+    //         wrapper.style.padding       = '0.25rem';
+    //         wrapper.style.borderRadius  = '0.75rem';
+    //         wrapper.style.boxShadow     = '0 4px 12px rgba(0,0,0,0.3)';
+    //         wrapper.style.margin        = '1rem 0';
 
-            // The actual image, filling the wrapper
-            const img = document.createElement('img');
-            img.crossOrigin      = 'anonymous';   // help html2canvas grab it pixel-perfect
-            img.style.mixBlendMode = 'normal';    // disable any “blend with page” effect
-            img.style.opacity      = '1';         // ensure it’s drawn fully opaque
-            img.src            = imgDataUrl;
-            img.style.maxWidth = '100%';
-            img.style.display  = 'block';
+    //         // The actual image, filling the wrapper
+    //         const img = document.createElement('img');
+    //         img.crossOrigin      = 'anonymous';   // help html2canvas grab it pixel-perfect
+    //         img.style.mixBlendMode = 'normal';    // disable any “blend with page” effect
+    //         img.style.opacity      = '1';         // ensure it’s drawn fully opaque
+    //         img.src            = imgDataUrl;
+    //         img.style.maxWidth = '100%';
+    //         img.style.display  = 'block';
 
-            // Nest & append
-            wrapper.appendChild(img);
-            const postDiv = document.getElementById('postContent');
-            postDiv.appendChild(wrapper);
-            postDiv.appendChild(document.createElement('br'));
+    //         // Nest & append
+    //         wrapper.appendChild(img);
+    //         const postDiv = document.getElementById('postContent');
+    //         postDiv.appendChild(wrapper);
+    //         postDiv.appendChild(document.createElement('br'));
 
-          event.target.value = '';
-        };
-        reader.readAsDataURL(file);
-    });
+    //       event.target.value = '';
+    //     };
+    //     reader.readAsDataURL(file);
+    // });
+    document
+        .getElementById('imageInput')
+        .addEventListener('change', async (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+            if (!file.type.startsWith('image/')) {
+            alert('Please select an image file.');
+            return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = () => {
+            const imgDataUrl = reader.result;
+
+            // Create a canvas to ensure the image has a solid white background
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const tempImg = new Image();
+            
+            tempImg.onload = () => {
+                // Set canvas size to match image
+                canvas.width = tempImg.width;
+                canvas.height = tempImg.height;
+                
+                // Fill with solid white background first
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Draw the image on top of the white background
+                ctx.drawImage(tempImg, 0, 0);
+                
+                // Convert to data URL with solid background
+                const processedImageUrl = canvas.toDataURL('image/png', 1.0);
+                
+                // Create the wrapper with enhanced styles for html2canvas
+                const wrapper = document.createElement('div');
+                wrapper.style.display = 'block';
+                wrapper.style.background = '#ffffff';
+                wrapper.style.padding = '0.5rem';
+                wrapper.style.borderRadius = '0.75rem';
+                wrapper.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
+                wrapper.style.margin = '1rem auto';
+                wrapper.style.maxWidth = '100%';
+                wrapper.style.width = 'fit-content';
+                // Critical: Force background to be opaque for html2canvas
+                wrapper.style.backgroundColor = '#ffffff';
+                wrapper.style.backgroundImage = 'none';
+                wrapper.style.opacity = '1';
+                
+                // Create the image element with enhanced properties
+                const img = document.createElement('img');
+                img.crossOrigin = 'anonymous';
+                img.style.display = 'block';
+                img.style.maxWidth = '100%';
+                img.style.height = 'auto';
+                img.style.border = 'none';
+                img.style.outline = 'none';
+                img.style.backgroundColor = '#ffffff';
+                img.style.opacity = '1';
+                img.style.mixBlendMode = 'normal';
+                // Use the processed image with solid background
+                img.src = processedImageUrl;
+                
+                // Ensure image loads before proceeding
+                img.onload = () => {
+                wrapper.appendChild(img);
+                const postDiv = document.getElementById('postContent');
+                postDiv.appendChild(wrapper);
+                postDiv.appendChild(document.createElement('br'));
+                };
+                
+                event.target.value = '';
+            };
+            
+            tempImg.src = imgDataUrl;
+            };
+            reader.readAsDataURL(file);
+        });
 
     document.addEventListener('DOMContentLoaded', () => {
     const icon = document.getElementById('profileIcon');

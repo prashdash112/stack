@@ -757,3 +757,49 @@ nav.nav, .header {
   color: #ff6b6b;
   text-decoration: none;
 }
+
+/* /////////////////Enhanced image wrapper styles for better html2canvas capture */
+.post-content div[style*="background: #ffffff"] {
+    background-color: #ffffff !important;
+    background-image: none !important;
+    opacity: 1 !important;
+    isolation: isolate; /* Prevents blending issues */
+}
+
+/* Force images to be fully opaque with solid backgrounds */
+.post-content img {
+    background-color: #ffffff !important;
+    opacity: 1 !important;
+    mix-blend-mode: normal !important;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    /* Prevent transparency issues */
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    /* Force hardware acceleration for better rendering */
+    transform: translateZ(0);
+    will-change: transform;
+}
+
+/* Ensure wrappers don't interfere with image capture */
+.post-content div img {
+    position: relative;
+    z-index: 1;
+}
+
+/* Enhanced watermark visibility */
+.watermark {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    opacity: 1.0 !important;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #d0b8d8 !important;
+    pointer-events: none;
+    user-select: none;
+    z-index: 5;
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 2px 6px;
+    border-radius: 4px;
+}
