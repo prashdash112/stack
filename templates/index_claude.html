@@ -540,241 +540,154 @@ Examples:
             }
             // /////////////////////////////// PDF ////////////////////////////////////////////////////////////
                     
-                        // document.getElementById('exportPdfBtn').addEventListener('click', async () => {
-                        // const preview = document.querySelector('.post-preview');
-                        // if (!preview) return alert('Nothing to export!');
-                        // // ── ① TEMPORARILY ADD WATERMARK ──
-                        // const wm = document.createElement('div');
-                        // wm.className = 'watermark';
-                        // wm.innerText = 'GeniusPost AI';
-                        // preview.appendChild(wm);
-
-                        // // Temporarily override heading gradients (same as PNG fix)
-                        // const headings = preview.querySelectorAll('h1, h2, h3, h4, h5, h6');
-                        // headings.forEach(h => {
-                        //     h.dataset.origBg    = h.style.background;
-                        //     h.dataset.origClip  = h.style.webkitBackgroundClip;
-                        //     h.dataset.origColor = h.style.color;
-                        //     h.style.background           = 'none';
-                        //     h.style.webkitBackgroundClip = 'unset';
-                        //     h.style.color                = '#fca5a5';
-                        // });
-
-                        // // Temporarily darken background if needed
-                        // const origBg = preview.style.background;
-                        // preview.style.background = 'linear-gradient(135deg, #2a2a3d, #1e1e2f)';
-
-                        // try {
-                        //     // 1. Render the entire preview to one tall canvas
-                        //     const canvas = await html2canvas(preview, {
-                        //                             backgroundColor: null,
-                        //                             scale: 2,
-                        //                             useCORS: true,
-                        //                             allowTaint: true
-                        //                             });
-                        //     // 2. Export as PNG for perfect fidelity
-                        //     const imgData = canvas.toDataURL('image/png');
-
-                        //     // --- NEW: crop the tall canvas into A4‐sized page slices ---
-                        //     const { jsPDF } = window.jspdf;
-                        //     const pdf = new jsPDF({ unit: 'px', format: 'a4' });
-                        //     const pdfW = pdf.internal.pageSize.getWidth();
-                        //     const pdfH = pdf.internal.pageSize.getHeight();
-
-                        //     // Compute the ratio of canvas→PDF widths
-                        //     const canvasW = canvas.width;
-                        //     const canvasH = canvas.height;
-                        //     const scale = (pdfW - 40) / canvasW; 
-                        //     const pageCanvasH = Math.floor(pdfH / scale);
-
-                        //     let renderedH = 0;
-                        //     while (renderedH < canvasH) {
-                        //         // 5. Fill entire page with neon purple (or black). 
-                        //         //    RGB for neon‐purple (#9f7aea) = (159, 122, 234).
-                        //         pdf.setFillColor(159, 122, 234);
-                        //         pdf.rect(0, 0, pdfW, pdfH, 'F');
-                        //     // Create a temp canvas for this page
-                        //     const tempCanvas = document.createElement('canvas');
-                        //     tempCanvas.width = canvasW;
-                        //     tempCanvas.height = Math.min(pageCanvasH, canvasH - renderedH);
-                        //     const tCtx = tempCanvas.getContext('2d');
-                            
-                        //     // Draw the slice
-                        //     tCtx.drawImage(
-                        //         canvas,
-                        //         0, renderedH,               // src x, y
-                        //         canvasW, tempCanvas.height, // src w, h
-                        //         0, 0,
-                        //         canvasW, tempCanvas.height  // dst w, h
-                        //     );
-                            
-                        //     // Add to PDF
-                        //     const sliceData = tempCanvas.toDataURL('image/jpeg', 0.8);
-                        //     // pdf.addImage(sliceData, 'PNG', 20, 20, canvasW * scale, tempCanvas.height * scale);
-                        //     pdf.addImage(sliceData, 'JPEG', 20, 20, canvasW * scale, tempCanvas.height * scale);
-                        //     renderedH += pageCanvasH;
-                        //     if (renderedH < canvasH) pdf.addPage();
-                        //     }
-
-                        //     pdf.save('linkedin-post.pdf');
-
-                        // } catch (e) {
-                        //     console.error('PDF export failed:', e);
-                        //     alert('Could not export multi-page PDF.');
-                        // } finally {
-                        //     // ── ④ REMOVE WATERMARK ──
-                        //     preview.removeChild(wm);
-                        //     // Restore heading and preview bg
-                        //     headings.forEach(h => {
-                        //     h.style.background           = h.dataset.origBg;
-                        //     h.style.webkitBackgroundClip = h.dataset.origClip;
-                        //     h.style.color                = h.dataset.origColor;
-                        //     delete h.dataset.origBg;
-                        //     delete h.dataset.origClip;
-                        //     delete h.dataset.origColor;
-                        //     });
-                        //     preview.style.background = origBg;
-                        // }
-                        // });
                         document.getElementById('exportPdfBtn').addEventListener('click', async () => {
-                        const preview = document.querySelector('.post-preview');
-                        if (!preview) return alert('Nothing to export!');
+  const preview = document.querySelector('.post-preview');
+  if (!preview) return alert('Nothing to export!');
 
-                        // ── ① TEMPORARILY ADD WATERMARK ──
-                        const wm = document.createElement('div');
-                        wm.className = 'watermark';
-                        wm.innerText = 'GeniusPost AI';
-                        preview.appendChild(wm);
+  // ── ① TEMPORARILY ADD WATERMARK ──
+  const wm = document.createElement('div');
+  wm.className = 'watermark';
+  wm.innerText = 'GeniusPost AI';
+  preview.appendChild(wm);
 
-                        // Temporarily override heading gradients
-                        const headings = preview.querySelectorAll('h1, h2, h3, h4, h5, h6');
-                        headings.forEach(h => {
-                            h.dataset.origBg = h.style.background;
-                            h.dataset.origClip = h.style.webkitBackgroundClip;
-                            h.dataset.origColor = h.style.color;
-                            h.style.background = 'none';
-                            h.style.webkitBackgroundClip = 'unset';
-                            h.style.color = '#fca5a5';
-                        });
+  // Temporarily override heading gradients
+  const headings = preview.querySelectorAll('h1, h2, h3, h4, h5, h6');
+  headings.forEach(h => {
+    h.dataset.origBg = h.style.background;
+    h.dataset.origClip = h.style.webkitBackgroundClip;
+    h.dataset.origColor = h.style.color;
+    h.style.background = 'none';
+    h.style.webkitBackgroundClip = 'unset';
+    h.style.color = '#fca5a5';
+  });
 
-                        // Enhance all images for PDF capture
-                        const images = preview.querySelectorAll('img');
-                        const imageOverrides = [];
-                        
-                        images.forEach((img, index) => {
-                            imageOverrides[index] = {
-                            origBackground: img.style.backgroundColor,
-                            origOpacity: img.style.opacity,
-                            origMixBlend: img.style.mixBlendMode
-                            };
-                            
-                            img.style.backgroundColor = '#ffffff';
-                            img.style.opacity = '1';
-                            img.style.mixBlendMode = 'normal';
-                            
-                            const wrapper = img.parentElement;
-                            if (wrapper && wrapper.style.background) {
-                            wrapper.style.backgroundColor = '#ffffff';
-                            wrapper.style.backgroundImage = 'none';
-                            }
-                        });
+  // Enhance all images for PDF capture
+  const images = preview.querySelectorAll('img');
+  const imageOverrides = [];
+  
+  images.forEach((img, index) => {
+    imageOverrides[index] = {
+      origBackground: img.style.backgroundColor,
+      origOpacity: img.style.opacity,
+      origMixBlend: img.style.mixBlendMode
+    };
+    
+    img.style.backgroundColor = '#ffffff';
+    img.style.opacity = '1';
+    img.style.mixBlendMode = 'normal';
+    
+    const wrapper = img.parentElement;
+    if (wrapper && wrapper.style.background) {
+      wrapper.style.backgroundColor = '#ffffff';
+      wrapper.style.backgroundImage = 'none';
+    }
+  });
 
-                        // Temporarily darken background
-                        const origBg = preview.style.background;
-                        preview.style.background = 'linear-gradient(135deg, #2a2a3d, #1e1e2f)';
+  // Temporarily darken background
+  const origBg = preview.style.background;
+  preview.style.background = 'linear-gradient(135deg, #2a2a3d, #1e1e2f)';
 
-                        try {
-                            // Render with enhanced settings for better image quality
-                            const canvas = await html2canvas(preview, {
-                            backgroundColor: '#2a2a3d',
-                            scale: 2,
-                            useCORS: true,
-                            allowTaint: false,
-                            removeContainer: false,
-                            imageTimeout: 0,
-                            logging: false,
-                            foreignObjectRendering: false,
-                            onclone: (clonedDoc) => {
-                                const clonedImages = clonedDoc.querySelectorAll('img');
-                                clonedImages.forEach(img => {
-                                img.style.backgroundColor = '#ffffff';
-                                img.style.opacity = '1';
-                                img.style.mixBlendMode = 'normal';
-                                });
-                            }
-                            });
+  try {
+    // OPTIMIZED: Lower scale and better compression settings
+    const canvas = await html2canvas(preview, {
+      backgroundColor: '#2a2a3d',
+      scale: 1.5, // Reduced from 2 to 1.5 (25% smaller)
+      useCORS: true,
+      allowTaint: false,
+      removeContainer: false,
+      imageTimeout: 0,
+      logging: false,
+      foreignObjectRendering: false,
+      // Additional optimization options
+      width: preview.offsetWidth,
+      height: preview.offsetHeight,
+      onclone: (clonedDoc) => {
+        const clonedImages = clonedDoc.querySelectorAll('img');
+        clonedImages.forEach(img => {
+          img.style.backgroundColor = '#ffffff';
+          img.style.opacity = '1';
+          img.style.mixBlendMode = 'normal';
+        });
+      }
+    });
 
-                            // Use PNG for maximum quality in PDF
-                            const imgData = canvas.toDataURL('image/png', 1.0);
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({ 
+      unit: 'px', 
+      format: 'a4',
+      compress: true // Enable PDF compression
+    });
+    
+    const pdfW = pdf.internal.pageSize.getWidth();
+    const pdfH = pdf.internal.pageSize.getHeight();
 
-                            const { jsPDF } = window.jspdf;
-                            const pdf = new jsPDF({ unit: 'px', format: 'a4' });
-                            const pdfW = pdf.internal.pageSize.getWidth();
-                            const pdfH = pdf.internal.pageSize.getHeight();
+    const canvasW = canvas.width;
+    const canvasH = canvas.height;
+    const scale = (pdfW - 40) / canvasW;
+    const pageCanvasH = Math.floor(pdfH / scale);
 
-                            const canvasW = canvas.width;
-                            const canvasH = canvas.height;
-                            const scale = (pdfW - 40) / canvasW;
-                            const pageCanvasH = Math.floor(pdfH / scale);
+    let renderedH = 0;
+    while (renderedH < canvasH) {
+      // Fill page with background color
+      pdf.setFillColor(42, 42, 61); // #2a2a3d in RGB
+      pdf.rect(0, 0, pdfW, pdfH, 'F');
 
-                            let renderedH = 0;
-                            while (renderedH < canvasH) {
-                            // Fill page with background color
-                            pdf.setFillColor(159, 122, 234);
-                            pdf.rect(0, 0, pdfW, pdfH, 'F');
+      const tempCanvas = document.createElement('canvas');
+      tempCanvas.width = canvasW;
+      tempCanvas.height = Math.min(pageCanvasH, canvasH - renderedH);
+      const tCtx = tempCanvas.getContext('2d');
+      
+      // Fill temp canvas with solid background
+      tCtx.fillStyle = '#2a2a3d';
+      tCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+      
+      // Draw the slice
+      tCtx.drawImage(
+        canvas,
+        0, renderedH,
+        canvasW, tempCanvas.height,
+        0, 0,
+        canvasW, tempCanvas.height
+      );
+      
+      // OPTIMIZED: Use JPEG with moderate compression instead of PNG
+      const sliceData = tempCanvas.toDataURL('image/jpeg', 0.75); // 75% quality for balance
+      pdf.addImage(sliceData, 'JPEG', 20, 20, canvasW * scale, tempCanvas.height * scale);
+      
+      renderedH += pageCanvasH;
+      if (renderedH < canvasH) pdf.addPage();
+    }
 
-                            const tempCanvas = document.createElement('canvas');
-                            tempCanvas.width = canvasW;
-                            tempCanvas.height = Math.min(pageCanvasH, canvasH - renderedH);
-                            const tCtx = tempCanvas.getContext('2d');
-                            
-                            // Fill temp canvas with solid background
-                            tCtx.fillStyle = '#2a2a3d';
-                            tCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
-                            
-                            // Draw the slice
-                            tCtx.drawImage(
-                                canvas,
-                                0, renderedH,
-                                canvasW, tempCanvas.height,
-                                0, 0,
-                                canvasW, tempCanvas.height
-                            );
-                            
-                            // Add to PDF with maximum quality
-                            const sliceData = tempCanvas.toDataURL('image/png', 1.0);
-                            pdf.addImage(sliceData, 'PNG', 20, 20, canvasW * scale, tempCanvas.height * scale);
-                            
-                            renderedH += pageCanvasH;
-                            if (renderedH < canvasH) pdf.addPage();
-                            }
+    // OPTIMIZED: Use PDF compression and output options
+    pdf.save('linkedin-post.pdf', { 
+      compress: true,
+      precision: 2 
+    });
 
-                            pdf.save('linkedin-post.pdf');
+  } catch (e) {
+    console.error('PDF export failed:', e);
+    alert('Could not export PDF.');
+  } finally {
+    // Restore all styles
+    headings.forEach(h => {
+      h.style.background = h.dataset.origBg;
+      h.style.webkitBackgroundClip = h.dataset.origClip;
+      h.style.color = h.dataset.origColor;
+      delete h.dataset.origBg;
+      delete h.dataset.origClip;
+      delete h.dataset.origColor;
+    });
 
-                        } catch (e) {
-                            console.error('PDF export failed:', e);
-                            alert('Could not export PDF.');
-                        } finally {
-                            // Restore all styles
-                            headings.forEach(h => {
-                            h.style.background = h.dataset.origBg;
-                            h.style.webkitBackgroundClip = h.dataset.origClip;
-                            h.style.color = h.dataset.origColor;
-                            delete h.dataset.origBg;
-                            delete h.dataset.origClip;
-                            delete h.dataset.origColor;
-                            });
+    images.forEach((img, index) => {
+      img.style.backgroundColor = imageOverrides[index].origBackground;
+      img.style.opacity = imageOverrides[index].origOpacity;
+      img.style.mixBlendMode = imageOverrides[index].origMixBlend;
+    });
 
-                            images.forEach((img, index) => {
-                            img.style.backgroundColor = imageOverrides[index].origBackground;
-                            img.style.opacity = imageOverrides[index].origOpacity;
-                            img.style.mixBlendMode = imageOverrides[index].origMixBlend;
-                            });
-
-                            preview.style.background = origBg;
-                            preview.removeChild(wm);
-                        }
-                        });
+    preview.style.background = origBg;
+    preview.removeChild(wm);
+  }
+});
                                     
 
             
