@@ -99,35 +99,6 @@
 
         <!-- Main Content Grid -->
         <div class="main-grid">
-            <!-- Input Section -->
-            <!-- <div class="input-section">
-                <h2 class="section-title">Create Your Post</h2>
-                <textarea 
-                    class="prompt-input" 
-                    id="promptInput"
-                    placeholder="Describe your LinkedIn post idea... 
-
-Examples:
-• Write about the importance of continuous learning in tech
-• Share insights about remote work productivity
-• Discuss AI trends in marketing
-• Create a motivational post about career growth"
-                ></textarea>
-                
-                <div class="post-options">
-                    <button class="option-btn active" data-format="square">
-                        📱 Content
-                    </button>
-                    <button class="option-btn" data-format="vertical">
-                        📋 Flowchart
-                    </button>
-                </div>
-                
-                <button class="generate-btn" id="generateBtn">
-                    <span class="btn-text">Generate AI Content</span>
-                    <div class="loading-spinner" id="loadingSpinner"></div>
-                </button>
-            </div> -->
             <div class="input-section">
                 <h2 class="section-title">Create Your Post</h2>
                 <textarea 
@@ -365,70 +336,7 @@ Examples:
             }
             }
 
-            // async function copyToClipboard() {
-            //     const preview = document.querySelector('.post-preview');
-            //     if (!preview) {
-            //         return alert('Nothing to capture!');
-            //     }
-            //     //////////////////////////
-            //     // ── ① TEMPORARILY ADD WATERMARK ──
-            //     const wm = document.createElement('div');
-            //     wm.className = 'watermark';
-            //     wm.innerText = 'GeniusPost AI';
-            //     preview.appendChild(wm);
-            //     //////////////////////////
-
-            //     // 1. Override heading gradients as before
-            //     const headings = preview.querySelectorAll('h1, h2, h3, h4, h5, h6');
-            //     headings.forEach(h => {
-            //         h.dataset.origBg    = h.style.background;
-            //         h.dataset.origClip  = h.style.webkitBackgroundClip;
-            //         h.dataset.origColor = h.style.color;
-
-            //         h.style.background           = 'none';
-            //         h.style.webkitBackgroundClip = 'unset';
-            //         h.style.color                = '#fca5a5';
-            //     });
-
-            //     // 2. Temporarily override the preview background
-            //     const origBg = preview.style.background;
-            //     preview.style.background = 'linear-gradient(135deg, #2a2a3d, #1e1e2f)'; // dark purple–bluish
-
-            //     // 3. Capture the full preview box
-            //     try {
-            //         const canvas = await html2canvas(preview, {
-            //             backgroundColor: null,
-            //             scale: 2,
-            //             useCORS: true,
-            //             allowTaint: true
-            //             });
-
-            //         canvas.toBlob(blob => {
-            //         const url = URL.createObjectURL(blob);
-            //         const a = document.createElement('a');
-            //         a.href = url;
-            //         a.download = 'linkedin-post.png';
-            //         a.click();
-            //         URL.revokeObjectURL(url);
-            //         });
-            //     } catch (err) {
-            //         console.error('Snapshot failed:', err);
-            //         alert('Unable to save snapshot.');
-            //     }
-
-            //     // 4. Restore original heading and preview background styles
-            //     headings.forEach(h => {
-            //         h.style.background           = h.dataset.origBg;
-            //         h.style.webkitBackgroundClip = h.dataset.origClip;
-            //         h.style.color                = h.dataset.origColor;
-            //         delete h.dataset.origBg;
-            //         delete h.dataset.origClip;
-            //         delete h.dataset.origColor;
-            //     });
-            //     preview.style.background = origBg;
-            //     // ── ④ REMOVE WATERMARK ──
-            //     preview.removeChild(wm);
-            //     }
+            
             async function copyToClipboard() {
             const preview = document.querySelector('.post-preview');
             if (!preview) {
@@ -540,7 +448,156 @@ Examples:
             }
             // /////////////////////////////// PDF ////////////////////////////////////////////////////////////
                     
-                        document.getElementById('exportPdfBtn').addEventListener('click', async () => {
+//                         document.getElementById('exportPdfBtn').addEventListener('click', async () => {
+//   const preview = document.querySelector('.post-preview');
+//   if (!preview) return alert('Nothing to export!');
+
+//   // ── ① TEMPORARILY ADD WATERMARK ──
+//   const wm = document.createElement('div');
+//   wm.className = 'watermark';
+//   wm.innerText = 'GeniusPost AI';
+//   preview.appendChild(wm);
+
+//   // Temporarily override heading gradients
+//   const headings = preview.querySelectorAll('h1, h2, h3, h4, h5, h6');
+//   headings.forEach(h => {
+//     h.dataset.origBg = h.style.background;
+//     h.dataset.origClip = h.style.webkitBackgroundClip;
+//     h.dataset.origColor = h.style.color;
+//     h.style.background = 'none';
+//     h.style.webkitBackgroundClip = 'unset';
+//     h.style.color = '#fca5a5';
+//   });
+
+//   // Enhance all images for PDF capture
+//   const images = preview.querySelectorAll('img');
+//   const imageOverrides = [];
+  
+//   images.forEach((img, index) => {
+//     imageOverrides[index] = {
+//       origBackground: img.style.backgroundColor,
+//       origOpacity: img.style.opacity,
+//       origMixBlend: img.style.mixBlendMode
+//     };
+    
+//     img.style.backgroundColor = '#ffffff';
+//     img.style.opacity = '1';
+//     img.style.mixBlendMode = 'normal';
+    
+//     const wrapper = img.parentElement;
+//     if (wrapper && wrapper.style.background) {
+//       wrapper.style.backgroundColor = '#ffffff';
+//       wrapper.style.backgroundImage = 'none';
+//     }
+//   });
+
+//   // Temporarily darken background
+//   const origBg = preview.style.background;
+//   preview.style.background = 'linear-gradient(135deg, #2a2a3d, #1e1e2f)';
+
+//   try {
+//     // OPTIMIZED: Lower scale and better compression settings
+//     const canvas = await html2canvas(preview, {
+//       backgroundColor: '#2a2a3d',
+//       scale: 1.5, // Reduced from 2 to 1.5 (25% smaller)
+//       useCORS: true,
+//       allowTaint: false,
+//       removeContainer: false,
+//       imageTimeout: 0,
+//       logging: false,
+//       foreignObjectRendering: false,
+//       // Additional optimization options
+//       width: preview.offsetWidth,
+//       height: preview.offsetHeight,
+//       onclone: (clonedDoc) => {
+//         const clonedImages = clonedDoc.querySelectorAll('img');
+//         clonedImages.forEach(img => {
+//           img.style.backgroundColor = '#ffffff';
+//           img.style.opacity = '1';
+//           img.style.mixBlendMode = 'normal';
+//         });
+//       }
+//     });
+
+//     const { jsPDF } = window.jspdf;
+//     const pdf = new jsPDF({ 
+//       unit: 'px', 
+//       format: 'a4',
+//       compress: true // Enable PDF compression
+//     });
+    
+//     const pdfW = pdf.internal.pageSize.getWidth();
+//     const pdfH = pdf.internal.pageSize.getHeight();
+
+//     const canvasW = canvas.width;
+//     const canvasH = canvas.height;
+//     const scale = (pdfW - 40) / canvasW;
+//     const pageCanvasH = Math.floor(pdfH / scale);
+
+//     let renderedH = 0;
+//     while (renderedH < canvasH) {
+//       // Fill page with background color
+//       pdf.setFillColor(42, 42, 61); // #2a2a3d in RGB
+//       pdf.rect(0, 0, pdfW, pdfH, 'F');
+
+//       const tempCanvas = document.createElement('canvas');
+//       tempCanvas.width = canvasW;
+//       tempCanvas.height = Math.min(pageCanvasH, canvasH - renderedH);
+//       const tCtx = tempCanvas.getContext('2d');
+      
+//       // Fill temp canvas with solid background
+//       tCtx.fillStyle = '#2a2a3d';
+//       tCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+      
+//       // Draw the slice
+//       tCtx.drawImage(
+//         canvas,
+//         0, renderedH,
+//         canvasW, tempCanvas.height,
+//         0, 0,
+//         canvasW, tempCanvas.height
+//       );
+      
+//       // OPTIMIZED: Use JPEG with moderate compression instead of PNG
+//       const sliceData = tempCanvas.toDataURL('image/jpeg', 0.75); // 75% quality for balance
+//       pdf.addImage(sliceData, 'JPEG', 20, 20, canvasW * scale, tempCanvas.height * scale);
+      
+//       renderedH += pageCanvasH;
+//       if (renderedH < canvasH) pdf.addPage();
+//     }
+
+//     // OPTIMIZED: Use PDF compression and output options
+//     pdf.save('linkedin-post.pdf', { 
+//       compress: true,
+//       precision: 2 
+//     });
+
+//   } catch (e) {
+//     console.error('PDF export failed:', e);
+//     alert('Could not export PDF.');
+//   } finally {
+//     // Restore all styles
+//     headings.forEach(h => {
+//       h.style.background = h.dataset.origBg;
+//       h.style.webkitBackgroundClip = h.dataset.origClip;
+//       h.style.color = h.dataset.origColor;
+//       delete h.dataset.origBg;
+//       delete h.dataset.origClip;
+//       delete h.dataset.origColor;
+//     });
+
+//     images.forEach((img, index) => {
+//       img.style.backgroundColor = imageOverrides[index].origBackground;
+//       img.style.opacity = imageOverrides[index].origOpacity;
+//       img.style.mixBlendMode = imageOverrides[index].origMixBlend;
+//     });
+
+//     preview.style.background = origBg;
+//     preview.removeChild(wm);
+//   }
+// });
+
+document.getElementById('exportPdfBtn').addEventListener('click', async () => {
   const preview = document.querySelector('.post-preview');
   if (!preview) return alert('Nothing to export!');
 
@@ -588,17 +645,15 @@ Examples:
   preview.style.background = 'linear-gradient(135deg, #2a2a3d, #1e1e2f)';
 
   try {
-    // OPTIMIZED: Lower scale and better compression settings
     const canvas = await html2canvas(preview, {
       backgroundColor: '#2a2a3d',
-      scale: 1.5, // Reduced from 2 to 1.5 (25% smaller)
+      scale: 1.5,
       useCORS: true,
       allowTaint: false,
       removeContainer: false,
       imageTimeout: 0,
       logging: false,
       foreignObjectRendering: false,
-      // Additional optimization options
       width: preview.offsetWidth,
       height: preview.offsetHeight,
       onclone: (clonedDoc) => {
@@ -615,50 +670,104 @@ Examples:
     const pdf = new jsPDF({ 
       unit: 'px', 
       format: 'a4',
-      compress: true // Enable PDF compression
+      compress: true
     });
     
     const pdfW = pdf.internal.pageSize.getWidth();
     const pdfH = pdf.internal.pageSize.getHeight();
+    const margin = 20;
+    const contentWidth = pdfW - (margin * 2);
+    const contentHeight = pdfH - (margin * 2);
 
     const canvasW = canvas.width;
     const canvasH = canvas.height;
-    const scale = (pdfW - 40) / canvasW;
-    const pageCanvasH = Math.floor(pdfH / scale);
+    const scale = contentWidth / canvasW;
 
-    let renderedH = 0;
-    while (renderedH < canvasH) {
+    // Smart content detection for page breaks
+    const contentElements = preview.querySelectorAll('h1, h2, h3, h4, h5, h6, p, table, pre, code, img, div');
+    const elementPositions = [];
+    
+    // Get positions of all major content elements
+    contentElements.forEach(el => {
+      const rect = el.getBoundingClientRect();
+      const previewRect = preview.getBoundingClientRect();
+      const relativeTop = rect.top - previewRect.top;
+      const relativeBottom = rect.bottom - previewRect.top;
+      
+      elementPositions.push({
+        element: el.tagName.toLowerCase(),
+        top: (relativeTop / preview.offsetHeight) * canvasH,
+        bottom: (relativeBottom / preview.offsetHeight) * canvasH,
+        height: relativeBottom - relativeTop
+      });
+    });
+
+    // Smart page breaking logic
+    let currentY = 0;
+    let pageNum = 0;
+    const pageContentHeight = contentHeight / scale;
+    
+    while (currentY < canvasH) {
+      if (pageNum > 0) pdf.addPage();
+      
       // Fill page with background color
-      pdf.setFillColor(42, 42, 61); // #2a2a3d in RGB
+      pdf.setFillColor(42, 42, 61);
       pdf.rect(0, 0, pdfW, pdfH, 'F');
 
+      let nextY = currentY + pageContentHeight;
+      
+      // Check if we're about to cut through important content
+      const conflictingElements = elementPositions.filter(el => 
+        el.top < nextY && el.bottom > nextY && el.height > 20
+      );
+      
+      if (conflictingElements.length > 0 && pageNum > 0) {
+        // Find the best break point
+        const bestBreakPoint = conflictingElements.reduce((best, el) => {
+          const topDistance = Math.abs(el.top - currentY);
+          const currentBestDistance = Math.abs(best - currentY);
+          return topDistance < currentBestDistance ? el.top : best;
+        }, nextY);
+        
+        // Ensure we don't make pages too small (minimum 30% of normal page height)
+        const minPageHeight = pageContentHeight * 0.3;
+        if (bestBreakPoint - currentY > minPageHeight) {
+          nextY = bestBreakPoint;
+        }
+      }
+      
+      const actualHeight = Math.min(nextY - currentY, canvasH - currentY);
+      
+      // Create temporary canvas for this page section
       const tempCanvas = document.createElement('canvas');
       tempCanvas.width = canvasW;
-      tempCanvas.height = Math.min(pageCanvasH, canvasH - renderedH);
+      tempCanvas.height = actualHeight;
       const tCtx = tempCanvas.getContext('2d');
       
-      // Fill temp canvas with solid background
+      // Fill with background
       tCtx.fillStyle = '#2a2a3d';
       tCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
       
-      // Draw the slice
+      // Draw the content slice
       tCtx.drawImage(
         canvas,
-        0, renderedH,
-        canvasW, tempCanvas.height,
+        0, currentY,
+        canvasW, actualHeight,
         0, 0,
-        canvasW, tempCanvas.height
+        canvasW, actualHeight
       );
       
-      // OPTIMIZED: Use JPEG with moderate compression instead of PNG
-      const sliceData = tempCanvas.toDataURL('image/jpeg', 0.75); // 75% quality for balance
-      pdf.addImage(sliceData, 'JPEG', 20, 20, canvasW * scale, tempCanvas.height * scale);
+      // Add to PDF with proper scaling
+      const sliceData = tempCanvas.toDataURL('image/jpeg', 0.8);
+      pdf.addImage(sliceData, 'JPEG', margin, margin, contentWidth, actualHeight * scale);
       
-      renderedH += pageCanvasH;
-      if (renderedH < canvasH) pdf.addPage();
+      currentY = nextY;
+      pageNum++;
+      
+      // Safety break to prevent infinite loops
+      if (pageNum > 50) break;
     }
 
-    // OPTIMIZED: Use PDF compression and output options
     pdf.save('linkedin-post.pdf', { 
       compress: true,
       precision: 2 
@@ -731,61 +840,6 @@ Examples:
         document.getElementById('imageInput').click();
     });
 
-    // document
-    //   .getElementById('imageInput')
-    //   .addEventListener('change', async (event) => {
-    //     const file = event.target.files[0];
-    //     if (!file) return;
-    //     if (!file.type.startsWith('image/')) {
-    //       alert('Please select an image file.');
-    //       return;
-    //     }
-    //     const reader = new FileReader();
-    //     reader.onload = () => {
-    //       const imgDataUrl = reader.result;
-    //     //   const img = document.createElement('img');
-    //     //   img.src = imgDataUrl;
-    //     //   img.style.maxWidth = '100%';
-    //     //   img.style.margin = '1rem 0';
-    //     //   img.style.borderRadius = '0.75rem';
-    //     //   img.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
-    //     // //   // ensure image has white background so it doesn’t blend into the dark canvas
-    //     // //   img.style.backgroundColor = '#030006'; //'#ffffff';
-    //     // //   // optionally give a tiny padding if you want a white border frame
-    //     // //   img.style.padding = '0.35rem';
-          
-    //     //   const postDiv = document.getElementById('postContent');
-    //     //   postDiv.appendChild(img);
-    //     //   postDiv.appendChild(document.createElement('br'));
-
-    //         // Create a white “frame” wrapper
-    //         const wrapper = document.createElement('div');
-    //         wrapper.style.display       = 'inline-block';
-    //         wrapper.style.background    = '#ffffff';
-    //         wrapper.style.padding       = '0.25rem';
-    //         wrapper.style.borderRadius  = '0.75rem';
-    //         wrapper.style.boxShadow     = '0 4px 12px rgba(0,0,0,0.3)';
-    //         wrapper.style.margin        = '1rem 0';
-
-    //         // The actual image, filling the wrapper
-    //         const img = document.createElement('img');
-    //         img.crossOrigin      = 'anonymous';   // help html2canvas grab it pixel-perfect
-    //         img.style.mixBlendMode = 'normal';    // disable any “blend with page” effect
-    //         img.style.opacity      = '1';         // ensure it’s drawn fully opaque
-    //         img.src            = imgDataUrl;
-    //         img.style.maxWidth = '100%';
-    //         img.style.display  = 'block';
-
-    //         // Nest & append
-    //         wrapper.appendChild(img);
-    //         const postDiv = document.getElementById('postContent');
-    //         postDiv.appendChild(wrapper);
-    //         postDiv.appendChild(document.createElement('br'));
-
-    //       event.target.value = '';
-    //     };
-    //     reader.readAsDataURL(file);
-    // });
     document
         .getElementById('imageInput')
         .addEventListener('change', async (event) => {
@@ -849,13 +903,6 @@ Examples:
                 // Use the processed image with solid background
                 img.src = processedImageUrl;
                 
-                // Ensure image loads before proceeding
-                // img.onload = () => {
-                // wrapper.appendChild(img);
-                // const postDiv = document.getElementById('postContent');
-                // postDiv.appendChild(wrapper);
-                // postDiv.appendChild(document.createElement('br'));
-                // };
                 // Ensure image loads before proceeding
                 img.onload = () => {
                 wrapper.appendChild(img);
