@@ -4,271 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GeniusPost AI</title>
-    <link rel="stylesheet" href="../static/index.css"> 
-    <style>
-        /* Add responsive table styles to fix overflow issue */
-        .post-preview {
-            overflow-x: auto; /* Enable horizontal scrolling if needed */
-        }
-        
-        .post-content table {
-            width: 100%;
-            max-width: 100%;
-            border-collapse: collapse;
-            margin: 1rem 0;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
-            overflow: hidden;
-            font-size: 0.9rem; /* Slightly smaller font for better fit */
-        }
-        
-        .post-content th,
-        .post-content td {
-            padding: 8px 12px;
-            text-align: left;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            word-wrap: break-word;
-            max-width: 150px; /* Limit cell width */
-            overflow-wrap: break-word;
-        }
-        
-        .post-content th {
-            background: rgba(255, 255, 255, 0.1);
-            font-weight: 600;
-            color: #fca5a5;
-        }
-        
-        .post-content td {
-            background: rgba(255, 255, 255, 0.02);
-        }
-        
-        /* For very large tables, make them scrollable */
-        .post-content .table-wrapper {
-            overflow-x: auto;
-            margin: 1rem 0;
-            border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        /* Responsive behavior for smaller screens */
-        @media (max-width: 768px) {
-            .post-content table {
-                font-size: 0.8rem;
-            }
-            
-            .post-content th,
-            .post-content td {
-                padding: 6px 8px;
-                max-width: 100px;
-            }
-        }
-        /* Editor Tab Styles */
-.editor-tab {
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px 12px 0 0;
-    padding: 12px 20px;
-    margin-bottom: -1px;
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    backdrop-filter: blur(10px);
-    border-bottom: none;
-}
-
-.editor-group {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.editor-label {
-    font-size: 0.9rem;
-    color: #cbd5e1;
-    font-weight: 500;
-    white-space: nowrap;
-}
-
-.editor-control {
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 8px;
-    color: #fff;
-    padding: 8px 12px;
-    font-size: 0.9rem;
-    transition: all 0.3s ease;
-    min-width: 80px;
-    text-align: center;
-}
-
-.editor-control:focus {
-    outline: none;
-    border-color: #fca5a5;
-    background: rgba(255, 255, 255, 0.15);
-    box-shadow: 0 0 0 2px rgba(252, 165, 165, 0.2);
-}
-
-.editor-control:hover {
-    background: rgba(255, 255, 255, 0.15);
-    border-color: rgba(255, 255, 255, 0.3);
-}
-
-select.editor-control {
-    cursor: pointer;
-    padding-right: 30px;
-    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
-    background-repeat: no-repeat;
-    background-position: right 8px center;
-    background-size: 16px;
-    appearance: none;
-}
-
-.size-buttons {
-    display: flex;
-    gap: 4px;
-}
-
-.size-btn {
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 6px;
-    color: #fff;
-    padding: 6px 10px;
-    font-size: 0.85rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-weight: 500;
-}
-
-.size-btn:hover {
-    background: rgba(255, 255, 255, 0.2);
-    border-color: #fca5a5;
-}
-
-.size-btn:active {
-    transform: scale(0.95);
-}
-
-/* Update post-preview to have rounded corners that connect with editor tab */
-.post-preview {
-    border-radius: 0 0 12px 12px;
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .editor-tab {
-        flex-wrap: wrap;
-        gap: 15px;
-        padding: 10px 15px;
-    }
+    <link rel="stylesheet" href="../static/index.css">
     
-    .editor-group {
-        gap: 6px;
-    }
+    <!-- Quill.js Rich Text Editor -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
     
-    .editor-label {
-        font-size: 0.85rem;
-    }
-    
-    .editor-control {
-        padding: 6px 10px;
-        font-size: 0.85rem;
-        min-width: 70px;
-    }
-    
-    .size-btn {
-        padding: 5px 8px;
-        font-size: 0.8rem;
-    }
-}
-
-/* Enhanced font select styling */
-select.editor-control {
-    min-width: 140px; /* Wider to accommodate longer font names */
-}
-
-/* Responsive font select */
-@media (max-width: 768px) {
-    select.editor-control {
-        min-width: 120px;
-        font-size: 0.8rem;
-    }
-}
-
-/* Text Alignment Styles */
-.alignment-buttons {
-    display: flex;
-    gap: 2px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-    padding: 2px;
-}
-
-.align-btn {
-    background: rgba(255, 255, 255, 0.1);
-    border: none;
-    border-radius: 6px;
-    color: #fff;
-    padding: 8px 12px;
-    font-size: 0.85rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 36px;
-    height: 36px;
-}
-
-.align-btn:hover {
-    background: rgba(255, 255, 255, 0.2);
-    color: #fca5a5;
-}
-
-.align-btn.active {
-    background: rgba(252, 165, 165, 0.2);
-    color: #fca5a5;
-    border: 1px solid rgba(252, 165, 165, 0.3);
-}
-
-.align-btn:active {
-    transform: scale(0.95);
-}
-
-/* Responsive alignment buttons */
-@media (max-width: 768px) {
-    .align-btn {
-        padding: 6px 8px;
-        font-size: 0.8rem;
-        min-width: 32px;
-        height: 32px;
-    }
-}
-
-/* BULLETPROOF EDITOR OVERRIDES - High Specificity */
-.post-content[contenteditable="true"] .editor-styled-element {
-    font-family: inherit !important;
-    font-size: inherit !important;
-    text-align: inherit !important;
-}
-
-/* Override for code blocks */
-.post-content[contenteditable="true"] .editor-styled-element pre,
-.post-content[contenteditable="true"] .editor-styled-element code {
-    font-family: 'Courier New', monospace !important;
-}
-
-/* Override for table cells */
-.post-content[contenteditable="true"] .editor-styled-element td,
-.post-content[contenteditable="true"] .editor-styled-element th {
-    font-family: inherit !important;
-    font-size: inherit !important;
-}
-    </style>
+    <!-- External Dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
     <!-- Animated Background -->
@@ -280,31 +25,31 @@ select.editor-control {
     <div class="container">
         <!-- Header -->
         <div class="header">
-            <h1 class="logo"> GeniusPost AI</h1>
+            <h1 class="logo">🚀 GeniusPost AI</h1>
             <p class="tagline">Transform your ideas into engaging LinkedIn posts with AI magic</p>
             {% if current_user.is_authenticated %}
                 <div class="profile-container">
                     <img
-                    src="{{ current_user.avatar_url }}"
-                    alt="Profile"
-                    id="profileIcon"
-                    class="profile-icon"
+                        src="{{ current_user.avatar_url }}"
+                        alt="Profile"
+                        id="profileIcon"
+                        class="profile-icon"
                     />
                     <div id="profileCard" class="profile-card">
-                    <div class="profile-card-header">
-                        Welcome, {{ current_user.name }}
-                    </div>
-                    <a href="{{ url_for('logout') }}" class="profile-logout-btn">
-                        Logout
-                    </a>
+                        <div class="profile-card-header">
+                            Welcome, {{ current_user.name }}
+                        </div>
+                        <a href="{{ url_for('logout') }}" class="profile-logout-btn">
+                            Logout
+                        </a>
                     </div>
                 </div>
-{% endif %}
-
+            {% endif %}
         </div>
 
         <!-- Main Content Grid -->
         <div class="main-grid">
+            <!-- Input Section -->
             <div class="input-section">
                 <h2 class="section-title">Create Your Post</h2>
                 <textarea 
@@ -317,7 +62,7 @@ select.editor-control {
                     <span class="btn-text">Generate AI Content</span>
                     <div class="loading-spinner" id="loadingSpinner"></div>
                 </button>
-                </div>
+            </div>
 
             <!-- Benefits Section -->
             <div class="benefits-section">
@@ -365,76 +110,108 @@ select.editor-control {
             </div>
         </div>
 
-        <!-- Output Section -->
+        <!-- Two-Layer Editor System -->
         <div class="output-section" id="outputSection">
-            <h2 class="section-title">Your Generated Content</h2>
-            <!-- Editor Tab -->
-            <div class="editor-tab">
-                <div class="editor-group">
-                    <span class="editor-label">Font:</span>
-                    <select class="editor-control" id="fontSelect">
-                        <option value="Inter, system-ui, sans-serif">Inter</option>
-                        <option value="Arial, sans-serif">Arial</option>
-                        <option value="Calibri, sans-serif">Calibri</option>
-                        <option value="Georgia, serif">Georgia</option>
-                        <option value="'Times New Roman', serif">Times New Roman</option>
-                        <option value="'Courier New', monospace">Courier New</option>
-                        <option value="Helvetica, Arial, sans-serif">Helvetica</option>
-                        <option value="'Segoe UI', Tahoma, Geneva, Verdana, sans-serif">Segoe UI</option>
-                        <option value="Verdana, Geneva, Tahoma, sans-serif">Verdana</option>
-                        <option value="'Trebuchet MS', Helvetica, sans-serif">Trebuchet MS</option>
-                        <option value="'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', sans-serif">Lucida Sans</option>
-                        <option value="Tahoma, Verdana, sans-serif">Tahoma</option>
-                        <option value="'Palatino Linotype', 'Book Antiqua', Palatino, serif">Palatino</option>
-                        <option value="'Book Antiqua', Palatino, 'Palatino Linotype', serif">Book Antiqua</option>
-                        <option value="'Century Gothic', CenturyGothic, AppleGothic, sans-serif">Century Gothic</option>
-                        <option value="'Franklin Gothic Medium', 'Franklin Gothic', 'ITC Franklin Gothic', Arial, sans-serif">Franklin Gothic</option>
-                    </select>
-                </div>
-                
-                <div class="editor-group">
-                    <span class="editor-label">Size:</span>
-                    <input type="number" class="editor-control" id="fontSizeInput" value="16" min="10" max="108" step="1">
-                    <div class="size-buttons">
-                        <button class="size-btn" id="decreaseSize">A-</button>
-                        <button class="size-btn" id="increaseSize">A+</button>
-                    </div>
-                </div>
-                <div class="editor-group">
-                <span class="editor-label">Align:</span>
-                <div class="alignment-buttons">
-                    <button class="align-btn" id="alignLeft" title="Align Left">⬅</button>
-                    <button class="align-btn" id="alignCenter" title="Align Center">⬆</button>
-                    <button class="align-btn" id="alignRight" title="Align Right">➡</button>
-                </div>
-            </div>
+            <h2 class="section-title">📝 Edit & Style Your Content</h2>
+            
+            <!-- Layer Switcher -->
+            <div class="layer-switcher">
+                <button class="layer-btn active" id="editorTab" data-layer="editor">
+                    ✏️ Rich Editor
+                </button>
+                <button class="layer-btn" id="previewTab" data-layer="preview">
+                    👁️ LinkedIn Preview
+                </button>
             </div>
 
-<div class="post-preview">
-    <div class="post-content" id="postContent" contenteditable="true" spellcheck="false"></div>
-</div>
-            <div class="post-actions">
-                <button id="infographicBtn" class="action-btn primary" onclick="copyToClipboard()">📋 Infographic</button>
-                <button class="action-btn" id="exportPdfBtn">📄 Export PDF</button>
-                <button class="action-btn" id="insertImageBtn">🖼️ Insert Image</button>
-                <button id="regenerateBtn" class="action-btn" onclick="regenerateContent()">🔄 Regenerate</button>
-                <button id="clearBtn" class="action-btn" onclick="clearContent()">🗑️ Clear</button>
+            <!-- Layer 1: Rich Text Editor -->
+            <div class="editor-layer active" id="editorLayer">
+                <div class="editor-controls">
+                    <div class="control-group">
+                        <label class="control-label">Font Family:</label>
+                        <select class="control-select" id="fontFamily">
+                            <option value="Inter">Inter</option>
+                            <option value="Arial">Arial</option>
+                            <option value="Georgia">Georgia</option>
+                            <option value="Times New Roman">Times New Roman</option>
+                            <option value="Helvetica">Helvetica</option>
+                            <option value="Verdana">Verdana</option>
+                        </select>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label class="control-label">Font Size:</label>
+                        <select class="control-select" id="fontSize">
+                            <option value="12px">12px</option>
+                            <option value="14px">14px</option>
+                            <option value="16px" selected>16px</option>
+                            <option value="18px">18px</option>
+                            <option value="20px">20px</option>
+                            <option value="24px">24px</option>
+                            <option value="28px">28px</option>
+                            <option value="32px">32px</option>
+                        </select>
+                    </div>
+
+                    <div class="control-group">
+                        <button class="control-btn" id="insertTable" title="Insert Table">
+                            📊 Table
+                        </button>
+                        <button class="control-btn" id="insertImage" title="Insert Image">
+                            🖼️ Image
+                        </button>
+                        <button class="control-btn" id="insertCode" title="Insert Code Block">
+                            💻 Code
+                        </button>
+                    </div>
+
+                    <div class="editor-actions">
+                        <button class="action-btn secondary" id="clearEditor">
+                            🗑️ Clear
+                        </button>
+                        <button class="action-btn secondary" id="regenerateContent">
+                            🔄 Regenerate
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Quill Rich Text Editor -->
+                <div id="quillEditor" class="quill-container"></div>
             </div>
+
+            <!-- Layer 2: Styled Preview -->
+            <div class="preview-layer" id="previewLayer">
+                <div class="preview-sync-indicator">
+                    <span class="sync-icon">🔄</span>
+                    <span class="sync-text">Live Sync Active</span>
+                </div>
+                
+                <div class="styled-preview" id="styledPreview">
+                    <!-- Styled content will be rendered here -->
+                </div>
+
+                <!-- Preview Actions -->
+                <div class="preview-actions">
+                    <button class="action-btn primary" id="downloadInfographic">
+                        📋 Download Infographic
+                    </button>
+                    <button class="action-btn primary" id="downloadCarousel">
+                        📄 Download Carousel (PDF)
+                    </button>
+                </div>
+            </div>
+
+            <!-- Hidden File Input for Images -->
             <input type="file" id="imageInput" accept="image/*" style="display: none;" />
         </div>
     </div>
-    
-    <!-- External Scripts -->
-    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <script>
-        // Global variables
+        // Global Variables
+        let quill;
         let selectedFormat = 'square';
         let currentPrompt = '';
+        let isUpdatingPreview = false;
 
         // Initialize particles
         function createParticles() {
@@ -450,24 +227,356 @@ select.editor-control {
             }
         }
 
-        // Initialize event listeners
-        function initializeEventListeners() {
-            // Post format selection
-            document.querySelectorAll('.option-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                    selectedFormat = this.dataset.format;
+        // Initialize Quill Editor
+        function initializeQuillEditor() {
+            // Custom toolbar configuration
+            const toolbarOptions = [
+                [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                ['bold', 'italic', 'underline', 'strike'],
+                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                [{ 'indent': '-1'}, { 'indent': '+1' }],
+                [{ 'align': [] }],
+                ['blockquote', 'code-block'],
+                ['link'],
+                ['clean']
+            ];
+
+            quill = new Quill('#quillEditor', {
+                theme: 'snow',
+                modules: {
+                    toolbar: toolbarOptions
+                },
+                placeholder: 'Your AI-generated content will appear here for editing...'
+            });
+
+            // Real-time preview updates
+            quill.on('text-change', function() {
+                if (!isUpdatingPreview) {
+                    updateStyledPreview();
+                }
+            });
+
+            // Apply initial styling
+            applyQuillStyling();
+        }
+
+        // Apply custom styling to Quill editor
+        function applyQuillStyling() {
+            const quillContainer = document.querySelector('.ql-container');
+            const quillEditor = document.querySelector('.ql-editor');
+            
+            if (quillContainer && quillEditor) {
+                quillContainer.style.border = '1px solid rgba(255, 255, 255, 0.2)';
+                quillContainer.style.borderRadius = '0 0 12px 12px';
+                quillContainer.style.background = 'rgba(0, 0, 0, 0.3)';
+                
+                quillEditor.style.color = '#ffffff';
+                quillEditor.style.fontSize = '16px';
+                quillEditor.style.fontFamily = 'Inter, sans-serif';
+                quillEditor.style.minHeight = '400px';
+                quillEditor.style.padding = '20px';
+            }
+        }
+
+        // Update styled preview with beautiful LinkedIn styles
+        function updateStyledPreview() {
+            const quillContent = quill.getContents();
+            const htmlContent = quill.root.innerHTML;
+            
+            // Apply beautiful styling transformations
+            const styledContent = applyLinkedInStyling(htmlContent);
+            document.getElementById('styledPreview').innerHTML = styledContent;
+        }
+
+        // Apply LinkedIn styling to content
+        function applyLinkedInStyling(html) {
+            // Create temporary div to process HTML
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = html;
+
+            // Style headers with gradients
+            const headers = tempDiv.querySelectorAll('h1, h2, h3, h4, h5, h6');
+            headers.forEach(header => {
+                header.style.background = 'linear-gradient(45deg, #d8b4fe, #fca5a5, #fde68a)';
+                header.style.backgroundClip = 'text';
+                header.style.webkitBackgroundClip = 'text';
+                header.style.color = 'transparent';
+                header.style.animation = 'hueShift 5s infinite linear';
+                header.style.fontWeight = '700';
+                header.style.margin = '1.5rem 0 1rem';
+            });
+
+            // Style code blocks with window design
+            const codeBlocks = tempDiv.querySelectorAll('pre');
+            codeBlocks.forEach(pre => {
+                pre.style.backgroundColor = '#1d1d1d';
+                pre.style.borderRadius = '8px';
+                pre.style.padding = '16px';
+                pre.style.position = 'relative';
+                pre.style.color = '#c2e5d9';
+                pre.style.fontFamily = "'Source Code Pro', monospace";
+                pre.style.fontSize = '1.1rem';
+                pre.style.lineHeight = '1.5';
+                pre.style.overflowX = 'auto';
+                pre.style.margin = '1.5rem 0';
+                
+                // Add window decorations
+                pre.setAttribute('data-windowed', 'true');
+            });
+
+            // Style tables with neon effects
+            const tables = tempDiv.querySelectorAll('table');
+            tables.forEach(table => {
+                table.style.width = '100%';
+                table.style.borderCollapse = 'separate';
+                table.style.borderSpacing = '0';
+                table.style.margin = '2rem 0';
+                table.style.fontFamily = "'Inter', sans-serif";
+                table.style.border = '2px solid rgba(102,126,234,0.8)';
+                table.style.boxShadow = '0 0 20px rgba(102,126,234,0.6)';
+                table.style.borderRadius = '1rem';
+                table.style.overflow = 'hidden';
+
+                // Style table cells
+                const cells = table.querySelectorAll('th, td');
+                cells.forEach(cell => {
+                    cell.style.padding = '1rem 1.5rem';
+                    cell.style.border = '1px solid rgba(102,126,234,0.3)';
+                });
+
+                // Style headers
+                const headers = table.querySelectorAll('th');
+                headers.forEach(th => {
+                    th.style.background = 'linear-gradient(90deg, #667eea, #764ba2)';
+                    th.style.color = '#fff';
+                    th.style.textAlign = 'left';
+                    th.style.textShadow = '0 0 8px rgba(255,255,255,0.6)';
+                });
+
+                // Style alternating rows
+                const rows = table.querySelectorAll('tr');
+                rows.forEach((row, index) => {
+                    if (index % 2 === 0 && index > 0) {
+                        const cells = row.querySelectorAll('td');
+                        cells.forEach(cell => {
+                            cell.style.background = 'rgba(102,126,234,0.05)';
+                        });
+                    }
                 });
             });
 
-            // Generate button
-            document.getElementById('generateBtn').addEventListener('click', generateContent);
+            // Style blockquotes
+            const blockquotes = tempDiv.querySelectorAll('blockquote');
+            blockquotes.forEach(bq => {
+                bq.style.borderLeft = '4px solid #667eea';
+                bq.style.paddingLeft = '1rem';
+                bq.style.color = '#ccc';
+                bq.style.fontStyle = 'italic';
+                bq.style.margin = '1rem 0';
+                bq.style.background = 'rgba(102, 126, 234, 0.1)';
+            });
 
-            // Enter key in textarea
-            document.getElementById('promptInput').addEventListener('keydown', function(e) {
-                if (e.key === 'Enter' && e.ctrlKey) {
+            // Style images
+            const images = tempDiv.querySelectorAll('img');
+            images.forEach(img => {
+                img.style.maxWidth = '100%';
+                img.style.borderRadius = '0.75rem';
+                img.style.boxShadow = '0 8px 20px rgba(0,0,0,0.4)';
+                img.style.margin = '1rem 0';
+            });
+
+            return tempDiv.innerHTML;
+        }
+
+        // Layer switching functionality
+        function initializeLayerSwitching() {
+            const layerBtns = document.querySelectorAll('.layer-btn');
+            const layers = document.querySelectorAll('.editor-layer, .preview-layer');
+
+            layerBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const targetLayer = btn.dataset.layer;
+                    
+                    // Update button states
+                    layerBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+
+                    // Update layer visibility
+                    layers.forEach(layer => {
+                        layer.classList.remove('active');
+                    });
+
+                    if (targetLayer === 'editor') {
+                        document.getElementById('editorLayer').classList.add('active');
+                    } else {
+                        document.getElementById('previewLayer').classList.add('active');
+                        updateStyledPreview(); // Refresh preview when switching
+                    }
+                });
+            });
+        }
+
+        // Editor controls functionality
+        function initializeEditorControls() {
+            // Font family control
+            document.getElementById('fontFamily').addEventListener('change', (e) => {
+                quill.format('font', e.target.value);
+            });
+
+            // Font size control
+            document.getElementById('fontSize').addEventListener('change', (e) => {
+                quill.format('size', e.target.value);
+            });
+
+            // Insert table
+            document.getElementById('insertTable').addEventListener('click', () => {
+                const tableHTML = `
+                    <table>
+                        <thead>
+                            <tr><th>Header 1</th><th>Header 2</th><th>Header 3</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Row 1, Col 1</td><td>Row 1, Col 2</td><td>Row 1, Col 3</td></tr>
+                            <tr><td>Row 2, Col 1</td><td>Row 2, Col 2</td><td>Row 2, Col 3</td></tr>
+                        </tbody>
+                    </table>
+                `;
+                
+                const selection = quill.getSelection();
+                if (selection) {
+                    quill.clipboard.dangerouslyPasteHTML(selection.index, tableHTML);
+                }
+            });
+
+            // Insert image
+            document.getElementById('insertImage').addEventListener('click', () => {
+                document.getElementById('imageInput').click();
+            });
+
+            // Insert code block
+            document.getElementById('insertCode').addEventListener('click', () => {
+                const selection = quill.getSelection();
+                if (selection) {
+                    quill.formatText(selection.index, selection.length, 'code-block', true);
+                }
+            });
+
+            // Clear editor
+            document.getElementById('clearEditor').addEventListener('click', () => {
+                quill.setContents([]);
+                document.getElementById('styledPreview').innerHTML = '';
+            });
+
+            // Regenerate content
+            document.getElementById('regenerateContent').addEventListener('click', () => {
+                if (currentPrompt) {
                     generateContent();
+                }
+            });
+        }
+
+        // Image upload functionality
+        function initializeImageUpload() {
+            document.getElementById('imageInput').addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                if (!file || !file.type.startsWith('image/')) {
+                    alert('Please select a valid image file.');
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const imageUrl = e.target.result;
+                    const selection = quill.getSelection() || { index: quill.getLength() };
+                    
+                    quill.insertEmbed(selection.index, 'image', imageUrl);
+                    quill.setSelection(selection.index + 1);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // Download functionality
+        function initializeDownloadActions() {
+            // Download infographic
+            document.getElementById('downloadInfographic').addEventListener('click', async () => {
+                const preview = document.getElementById('styledPreview');
+                if (!preview || !preview.innerHTML.trim()) {
+                    alert('No content to download!');
+                    return;
+                }
+
+                try {
+                    // Add watermark
+                    const watermark = document.createElement('div');
+                    watermark.className = 'watermark';
+                    watermark.textContent = 'GeniusPost AI';
+                    preview.appendChild(watermark);
+
+                    const canvas = await html2canvas(preview, {
+                        backgroundColor: '#2a2a3d',
+                        scale: 2,
+                        useCORS: true,
+                        allowTaint: false,
+                        logging: false
+                    });
+
+                    // Download image
+                    canvas.toBlob(blob => {
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = 'linkedin-post.png';
+                        a.click();
+                        URL.revokeObjectURL(url);
+                    }, 'image/png', 1.0);
+
+                    // Remove watermark
+                    preview.removeChild(watermark);
+                } catch (error) {
+                    console.error('Download failed:', error);
+                    alert('Failed to download infographic.');
+                }
+            });
+
+            // Download PDF carousel
+            document.getElementById('downloadCarousel').addEventListener('click', async () => {
+                const preview = document.getElementById('styledPreview');
+                if (!preview || !preview.innerHTML.trim()) {
+                    alert('No content to download!');
+                    return;
+                }
+
+                try {
+                    // Add watermark
+                    const watermark = document.createElement('div');
+                    watermark.className = 'watermark';
+                    watermark.textContent = 'GeniusPost AI';
+                    preview.appendChild(watermark);
+
+                    const canvas = await html2canvas(preview, {
+                        backgroundColor: '#2a2a3d',
+                        scale: 1.5,
+                        useCORS: true,
+                        allowTaint: false,
+                        logging: false
+                    });
+
+                    const { jsPDF } = window.jspdf;
+                    const pdf = new jsPDF('p', 'mm', 'a4');
+                    
+                    const imgData = canvas.toDataURL('image/png');
+                    const pdfWidth = pdf.internal.pageSize.getWidth();
+                    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+                    
+                    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+                    pdf.save('linkedin-carousel.pdf');
+
+                    // Remove watermark
+                    preview.removeChild(watermark);
+                } catch (error) {
+                    console.error('PDF download failed:', error);
+                    alert('Failed to download PDF.');
                 }
             });
         }
@@ -479,7 +588,6 @@ select.editor-control {
             const btnText = generateBtn.querySelector('.btn-text');
             const loadingSpinner = document.getElementById('loadingSpinner');
             const outputSection = document.getElementById('outputSection');
-            const postContent = document.getElementById('postContent');
 
             currentPrompt = promptInput.value.trim();
 
@@ -492,593 +600,77 @@ select.editor-control {
                 return;
             }
 
-            // Start loading state
+            // Start loading
             generateBtn.classList.add('loading');
             btnText.style.display = 'none';
             loadingSpinner.style.display = 'block';
 
             try {
-                // Simulate API call with realistic delay 
-                await new Promise(resolve => setTimeout(resolve, 2000 + Math.random() * 2000));
-
                 const response = await mockApiCall(currentPrompt);
-                const markdown_parsed_to_html = marked.parse(response.content);
                 
-                // Process the HTML to wrap large tables for better responsiveness
-                const processedHtml = processTablesForResponsiveness(markdown_parsed_to_html);
+                // Convert markdown to HTML and insert into Quill
+                const markdownHTML = marked.parse(response.content);
                 
-                postContent.innerHTML = processedHtml;
+                isUpdatingPreview = true;
+                quill.clipboard.dangerouslyPasteHTML(markdownHTML);
+                isUpdatingPreview = false;
+                
+                // Update preview
+                updateStyledPreview();
+                
+                // Show output section and switch to editor
                 outputSection.classList.add('show');
+                document.getElementById('editorTab').click();
                 outputSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
             } catch (error) {
                 console.error('Error generating content:', error);
                 alert('Failed to generate content. Please try again.');
             } finally {
-                // End loading state
+                // End loading
                 generateBtn.classList.remove('loading');
                 btnText.style.display = 'block';
                 loadingSpinner.style.display = 'none';
             }
         }
 
-        // Function to process tables for better responsiveness
-        function processTablesForResponsiveness(html) {
-            // Create a temporary div to parse the HTML
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = html;
-            
-            // Find all tables and wrap them if they're large
-            const tables = tempDiv.querySelectorAll('table');
-            tables.forEach(table => {
-                const rows = table.querySelectorAll('tr');
-                const cols = rows[0] ? rows[0].querySelectorAll('td, th').length : 0;
-                
-                // If table has many columns (>6) or many rows (>8), wrap it for scrolling
-                if (cols > 6 || rows.length > 8) {
-                    const wrapper = document.createElement('div');
-                    wrapper.className = 'table-wrapper';
-                    table.parentNode.insertBefore(wrapper, table);
-                    wrapper.appendChild(table);
-                }
-            });
-            
-            return tempDiv.innerHTML;
-        }
-
+        // Mock API call
         async function mockApiCall(prompt) {
             try {
                 const res = await fetch('/generate', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ prompt })
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt })
                 });
 
                 if (!res.ok) {
-                // network/server error (e.g. 500)
-                const errText = await res.text();
-                throw new Error(`Server responded ${res.status}: ${errText}`);
+                    const errText = await res.text();
+                    throw new Error(`Server responded ${res.status}: ${errText}`);
                 }
 
                 const data = await res.json();
                 if (data.error) {
-                // API-level error
-                throw new Error(data.error);
+                    throw new Error(data.error);
                 }
 
-                // Return whatever you need downstream—here, the GPT raw result:
                 return { content: data.result };
             } catch (err) {
-                // Notify the user
                 alert('Error: ' + err.message);
-
-                // Re-throw if you want callers to catch it
                 throw err;
             }
-            }
-
-            
-            async function copyToClipboard() {
-            const preview = document.querySelector('.post-preview');
-            if (!preview) {
-                return alert('Nothing to capture!');
-            }
-
-            // ── ① TEMPORARILY ADD WATERMARK ──
-            const wm = document.createElement('div');
-            wm.className = 'watermark';
-            wm.innerText = 'GeniusPost AI';
-            preview.appendChild(wm);
-
-            // Override heading gradients for better capture
-            const headings = preview.querySelectorAll('h1, h2, h3, h4, h5, h6');
-            headings.forEach(h => {
-                h.dataset.origBg = h.style.background;
-                h.dataset.origClip = h.style.webkitBackgroundClip;
-                h.dataset.origColor = h.style.color;
-
-                h.style.background = 'none';
-                h.style.webkitBackgroundClip = 'unset';
-                h.style.color = '#fca5a5';
-            });
-
-            // Enhance all images for better capture
-            const images = preview.querySelectorAll('img');
-            const imageOverrides = [];
-            
-            images.forEach((img, index) => {
-                // Store original styles
-                imageOverrides[index] = {
-                origBackground: img.style.backgroundColor,
-                origOpacity: img.style.opacity,
-                origMixBlend: img.style.mixBlendMode
-                };
-                
-                // Force solid background and full opacity
-                img.style.backgroundColor = '#ffffff';
-                img.style.opacity = '1';
-                img.style.mixBlendMode = 'normal';
-                
-                // Ensure parent wrapper is also solid
-                const wrapper = img.parentElement;
-                if (wrapper && wrapper.style.background) {
-                wrapper.style.backgroundColor = '#ffffff';
-                wrapper.style.backgroundImage = 'none';
-                }
-            });
-
-            // Temporarily override the preview background
-            const origBg = preview.style.background;
-            preview.style.background = 'linear-gradient(135deg, #2a2a3d, #1e1e2f)';
-
-            try {
-                const canvas = await html2canvas(preview, {
-                backgroundColor: '#2a2a3d', // Solid background color
-                scale: 2,
-                useCORS: true,
-                allowTaint: false,
-                removeContainer: false,
-                imageTimeout: 0,
-                logging: false,
-                // Enhanced options for better image capture
-                foreignObjectRendering: false,
-                onclone: (clonedDoc) => {
-                    // Ensure all images in the cloned document have solid backgrounds
-                    const clonedImages = clonedDoc.querySelectorAll('img');
-                    clonedImages.forEach(img => {
-                    img.style.backgroundColor = '#ffffff';
-                    img.style.opacity = '1';
-                    img.style.mixBlendMode = 'normal';
-                    });
-                }
-                });
-
-                canvas.toBlob(blob => {
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'linkedin-post.png';
-                a.click();
-                URL.revokeObjectURL(url);
-                }, 'image/png', 1.0); // Maximum quality
-
-            } catch (err) {
-                console.error('Snapshot failed:', err);
-                alert('Unable to save snapshot.');
-            }
-
-            // Restore all original styles
-            headings.forEach(h => {
-                h.style.background = h.dataset.origBg;
-                h.style.webkitBackgroundClip = h.dataset.origClip;
-                h.style.color = h.dataset.origColor;
-                delete h.dataset.origBg;
-                delete h.dataset.origClip;
-                delete h.dataset.origColor;
-            });
-
-            // Restore image styles
-            images.forEach((img, index) => {
-                img.style.backgroundColor = imageOverrides[index].origBackground;
-                img.style.opacity = imageOverrides[index].origOpacity;
-                img.style.mixBlendMode = imageOverrides[index].origMixBlend;
-            });
-
-            preview.style.background = origBg;
-            preview.removeChild(wm);
-            }
-
-// PDF Export Function
-document.getElementById('exportPdfBtn').addEventListener('click', async () => {
-  const preview = document.querySelector('.post-preview');
-  if (!preview) return alert('Nothing to export!');
-
-  // ── ① TEMPORARILY ADD WATERMARK ──
-  const wm = document.createElement('div');
-  wm.className = 'watermark';
-  wm.innerText = 'GeniusPost AI';
-  preview.appendChild(wm);
-
-  // Temporarily override heading gradients
-  const headings = preview.querySelectorAll('h1, h2, h3, h4, h5, h6');
-  headings.forEach(h => {
-    h.dataset.origBg = h.style.background;
-    h.dataset.origClip = h.style.webkitBackgroundClip;
-    h.dataset.origColor = h.style.color;
-    h.style.background = 'none';
-    h.style.webkitBackgroundClip = 'unset';
-    h.style.color = '#fca5a5';
-  });
-
-  // Enhance all images for PDF capture
-  const images = preview.querySelectorAll('img');
-  const imageOverrides = [];
-  
-  images.forEach((img, index) => {
-    imageOverrides[index] = {
-      origBackground: img.style.backgroundColor,
-      origOpacity: img.style.opacity,
-      origMixBlend: img.style.mixBlendMode
-    };
-    
-    img.style.backgroundColor = '#ffffff';
-    img.style.opacity = '1';
-    img.style.mixBlendMode = 'normal';
-    
-    const wrapper = img.parentElement;
-    if (wrapper && wrapper.style.background) {
-      wrapper.style.backgroundColor = '#ffffff';
-      wrapper.style.backgroundImage = 'none';
-    }
-  });
-
-  // Temporarily darken background
-  const origBg = preview.style.background;
-  preview.style.background = 'linear-gradient(135deg, #2a2a3d, #1e1e2f)';
-
-  try {
-    const canvas = await html2canvas(preview, {
-      backgroundColor: '#2a2a3d',
-      scale: 1.5,
-      useCORS: true,
-      allowTaint: false,
-      removeContainer: false,
-      imageTimeout: 0,
-      logging: false,
-      foreignObjectRendering: false,
-      width: preview.offsetWidth,
-      height: preview.offsetHeight,
-      onclone: (clonedDoc) => {
-        const clonedImages = clonedDoc.querySelectorAll('img');
-        clonedImages.forEach(img => {
-          img.style.backgroundColor = '#ffffff';
-          img.style.opacity = '1';
-          img.style.mixBlendMode = 'normal';
-        });
-      }
-    });
-
-    const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF({ 
-      unit: 'px', 
-      format: 'a4',
-      compress: true
-    });
-    
-    const pdfW = pdf.internal.pageSize.getWidth();
-    const pdfH = pdf.internal.pageSize.getHeight();
-    const margin = 20;
-    const contentWidth = pdfW - (margin * 2);
-    const contentHeight = pdfH - (margin * 2);
-
-    const canvasW = canvas.width;
-    const canvasH = canvas.height;
-    const scale = contentWidth / canvasW;
-
-    // Smart content detection for page breaks
-    const contentElements = preview.querySelectorAll('h1, h2, h3, h4, h5, h6, p, table, pre, code, img, div');
-    const elementPositions = [];
-    
-    // Get positions of all major content elements
-    contentElements.forEach(el => {
-      const rect = el.getBoundingClientRect();
-      const previewRect = preview.getBoundingClientRect();
-      const relativeTop = rect.top - previewRect.top;
-      const relativeBottom = rect.bottom - previewRect.top;
-      
-      elementPositions.push({
-        element: el.tagName.toLowerCase(),
-        top: (relativeTop / preview.offsetHeight) * canvasH,
-        bottom: (relativeBottom / preview.offsetHeight) * canvasH,
-        height: relativeBottom - relativeTop
-      });
-    });
-
-    // Smart page breaking logic
-    let currentY = 0;
-    let pageNum = 0;
-    const pageContentHeight = contentHeight / scale;
-    
-    while (currentY < canvasH) {
-      if (pageNum > 0) pdf.addPage();
-      
-      // Fill page with background color
-      pdf.setFillColor(42, 42, 61);
-      pdf.rect(0, 0, pdfW, pdfH, 'F');
-
-      let nextY = currentY + pageContentHeight;
-      
-      // Check if we're about to cut through important content
-      const conflictingElements = elementPositions.filter(el => 
-        el.top < nextY && el.bottom > nextY && el.height > 20
-      );
-      
-      if (conflictingElements.length > 0 && pageNum > 0) {
-        // Find the best break point
-        const bestBreakPoint = conflictingElements.reduce((best, el) => {
-          const topDistance = Math.abs(el.top - currentY);
-          const currentBestDistance = Math.abs(best - currentY);
-          return topDistance < currentBestDistance ? el.top : best;
-        }, nextY);
-        
-        // Ensure we don't make pages too small (minimum 30% of normal page height)
-        const minPageHeight = pageContentHeight * 0.3;
-        if (bestBreakPoint - currentY > minPageHeight) {
-          nextY = bestBreakPoint;
         }
-      }
-      
-      const actualHeight = Math.min(nextY - currentY, canvasH - currentY);
-      
-      // Create temporary canvas for this page section
-      const tempCanvas = document.createElement('canvas');
-      tempCanvas.width = canvasW;
-      tempCanvas.height = actualHeight;
-      const tCtx = tempCanvas.getContext('2d');
-      
-      // Fill with background
-      tCtx.fillStyle = '#2a2a3d';
-      tCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
-      
-      // Draw the content slice
-      tCtx.drawImage(
-        canvas,
-        0, currentY,
-        canvasW, actualHeight,
-        0, 0,
-        canvasW, actualHeight
-      );
-      
-      // Add to PDF with proper scaling
-      const sliceData = tempCanvas.toDataURL('image/jpeg', 0.8);
-      pdf.addImage(sliceData, 'JPEG', margin, margin, contentWidth, actualHeight * scale);
-      
-      currentY = nextY;
-      pageNum++;
-      
-      // Safety break to prevent infinite loops
-      if (pageNum > 50) break;
-    }
-
-    pdf.save('linkedin-post.pdf', { 
-      compress: true,
-      precision: 2 
-    });
-
-  } catch (e) {
-    console.error('PDF export failed:', e);
-    alert('Could not export PDF.');
-  } finally {
-    // Restore all styles
-    headings.forEach(h => {
-      h.style.background = h.dataset.origBg;
-      h.style.webkitBackgroundClip = h.dataset.origClip;
-      h.style.color = h.dataset.origColor;
-      delete h.dataset.origBg;
-      delete h.dataset.origClip;
-      delete h.dataset.origColor;
-    });
-
-    images.forEach((img, index) => {
-      img.style.backgroundColor = imageOverrides[index].origBackground;
-      img.style.opacity = imageOverrides[index].origOpacity;
-      img.style.mixBlendMode = imageOverrides[index].origMixBlend;
-    });
-
-    preview.style.background = origBg;
-    preview.removeChild(wm);
-  }
-});
-
-        // Additional utility functions
-        function regenerateContent() {
-            if (currentPrompt) {
-                generateContent();
-            }
-        }
-
-        function clearContent() {
-            document.getElementById('postContent').innerHTML = '';
-            document.getElementById('outputSection').classList.remove('show');
-            document.getElementById('promptInput').value = '';
-            currentPrompt = '';
-        }
-
-        // Initialize everything when DOM loads
-        document.addEventListener('DOMContentLoaded', function() {
-            createParticles();
-            initializeEventListeners();
-            initializeBulletproofEditor();
-        });
-
-        // Add some interactive hover effects
-        document.addEventListener('mousemove', function(e) {
-            const particles = document.querySelectorAll('.particle');
-            particles.forEach(particle => {
-                const speed = Math.random() * 2 + 1;
-                const x = (e.clientX * speed) / 100;
-                const y = (e.clientY * speed) / 100;
-                
-                particle.style.transform = `translateX(${x}px) translateY(${y}px)`;
-            });
-        });
-
-        // Image upload functionality
-        document.getElementById('insertImageBtn').addEventListener('click', () => {
-            document.getElementById('imageInput').click();
-        });
-
-        document.getElementById('imageInput').addEventListener('change', async (event) => {
-            const file = event.target.files[0];
-            if (!file) return;
-            if (!file.type.startsWith('image/')) {
-                alert('Please select an image file.');
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = () => {
-                const imgDataUrl = reader.result;
-
-                // Create a canvas to ensure the image has a solid white background
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-                const tempImg = new Image();
-                
-                tempImg.onload = () => {
-                    // Set canvas size to match image
-                    canvas.width = tempImg.width;
-                    canvas.height = tempImg.height;
-                    
-                    // Fill with solid white background first
-                    ctx.fillStyle = '#ffffff';
-                    ctx.fillRect(0, 0, canvas.width, canvas.height);
-                    
-                    // Draw the image on top of the white background
-                    ctx.drawImage(tempImg, 0, 0);
-                    
-                    // Convert to data URL with solid background
-                    const processedImageUrl = canvas.toDataURL('image/png', 1.0);
-                    
-                    // Create the wrapper with enhanced styles for html2canvas
-                    const wrapper = document.createElement('div');
-                    wrapper.style.display = 'block';
-                    wrapper.style.background = '#ffffff';
-                    wrapper.style.padding = '0.5rem';
-                    wrapper.style.borderRadius = '0.75rem';
-                    wrapper.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
-                    wrapper.style.margin = '1rem auto';
-                    wrapper.style.maxWidth = '100%';
-                    wrapper.style.width = 'fit-content';
-                    wrapper.style.backgroundColor = '#ffffff';
-                    wrapper.style.backgroundImage = 'none';
-                    wrapper.style.opacity = '1';
-                    
-                    // Create the image element with enhanced properties
-                    const img = document.createElement('img');
-                    img.crossOrigin = 'anonymous';
-                    img.style.display = 'block';
-                    img.style.maxWidth = '100%';
-                    img.style.height = 'auto';
-                    img.style.border = 'none';
-                    img.style.outline = 'none';
-                    img.style.backgroundColor = '#ffffff';
-                    img.style.opacity = '1';
-                    img.style.mixBlendMode = 'normal';
-                    img.src = processedImageUrl;
-                    
-                    // Ensure image loads before proceeding
-                    img.onload = () => {
-                        wrapper.appendChild(img);
-                        
-                        // Insert at cursor position instead of at the end
-                        const postDiv = document.getElementById('postContent');
-                        const selection = window.getSelection();
-                        
-                        if (selection.rangeCount > 0) {
-                            const range = selection.getRangeAt(0);
-                            
-                            if (postDiv.contains(range.commonAncestorContainer)) {
-                                range.deleteContents();
-                                range.insertNode(document.createElement('br'));
-                                range.insertNode(wrapper);
-                                
-                                range.setStartAfter(wrapper);
-                                range.setEndAfter(wrapper);
-                                selection.removeAllRanges();
-                                selection.addRange(range);
-                            } else {
-                                postDiv.appendChild(wrapper);
-                                postDiv.appendChild(document.createElement('br'));
-                            }
-                        } else {
-                            postDiv.appendChild(wrapper);
-                            postDiv.appendChild(document.createElement('br'));
-                        }
-                        
-                        postDiv.focus();
-                    };
-                    
-                    event.target.value = '';
-                };
-                
-                tempImg.src = imgDataUrl;
-            };
-            reader.readAsDataURL(file);
-        });
-
-        // Profile functionality
-        document.addEventListener('DOMContentLoaded', () => {
-            const icon = document.getElementById('profileIcon');
-            const card = document.getElementById('profileCard');
-            if (!icon || !card) return;
-
-            icon.addEventListener('click', e => {
-                e.stopPropagation();
-                card.classList.toggle('visible');
-            });
-
-            document.addEventListener('click', () => {
-                card.classList.remove('visible');
-            });
-
-            card.addEventListener('click', e => e.stopPropagation());
-        });
-
-        // Action tracking
-        function trackAction(action) {
-            fetch("/track_action", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                credentials: "include",
-                body: JSON.stringify({ action })
-            }).catch(console.error);
-        }
-
-        const mapping = {
-            generateBtn: "generate_ai_content",
-            infographicBtn: "infographic",
-            exportPdfBtn: "export_pdf",
-            insertImageBtn: "insert_image",
-            regenerateBtn: "regenerate",
-            clearBtn: "clear",
-        };
-
-        Object.entries(mapping).forEach(([id, action]) => {
-            const btn = document.getElementById(id);
-            if (btn) btn.addEventListener("click", () => trackAction(action));
-        });
 
         // Dynamic placeholder functionality
-        document.addEventListener('DOMContentLoaded', () => {
+        function initializePlaceholder() {
             const textarea = document.getElementById('promptInput');
             const samples = [
-                'Write a short engaging post on ML systems using headings, subheadings. ',
+                'Write a short engaging post on ML systems using headings, subheadings.',
                 'Generate an infographic on finance with proper tables.',
-                'Write a carousel with 10 code snippets covering entire MCP workflow. ',
+                'Write a carousel with 10 code snippets covering entire MCP workflow.',
                 'Create a thought leadership post on Real estate, Leave [2-3] sentence blank for my insights.',
                 'Write, edit, style, format, add image and download stunning infographics and Carousels.'
             ];
+            
             let loopTimer, charTimer;
             let sampleIdx = 0, charIdx = 0, deleting = false;
 
@@ -1114,203 +706,87 @@ document.getElementById('exportPdfBtn').addEventListener('click', async () => {
                 clearTimeout(charTimer);
                 textarea.placeholder = '';
             });
-        });
+        }
 
-        // BULLETPROOF EDITOR FUNCTIONALITY
-        function initializeBulletproofEditor() {
-            const postContent = document.getElementById('postContent');
-            const fontSelect = document.getElementById('fontSelect');
-            const fontSizeInput = document.getElementById('fontSizeInput');
-            const decreaseBtn = document.getElementById('decreaseSize');
-            const increaseBtn = document.getElementById('increaseSize');
-            const alignLeftBtn = document.getElementById('alignLeft');
-            const alignCenterBtn = document.getElementById('alignCenter');
-            const alignRightBtn = document.getElementById('alignRight');
+        // Profile functionality
+        function initializeProfile() {
+            const icon = document.getElementById('profileIcon');
+            const card = document.getElementById('profileCard');
+            if (!icon || !card) return;
 
-            // Current editor state
-            let currentFont = fontSelect.value;
-            let currentSize = parseInt(fontSizeInput.value);
-            let currentAlign = 'left';
+            icon.addEventListener('click', e => {
+                e.stopPropagation();
+                card.classList.toggle('visible');
+            });
 
-            // Apply styles with maximum specificity
-            function forceApplyStyles(element, font, size, align) {
-                element.style.setProperty('font-family', font, 'important');
-                element.style.setProperty('font-size', size + 'px', 'important');
-                element.style.setProperty('text-align', align, 'important');
-                
-                // Also apply to all child elements except code blocks
-                const allElements = element.querySelectorAll('*:not(pre):not(code)');
-                allElements.forEach(el => {
-                    if (el.tagName !== 'PRE' && el.tagName !== 'CODE') {
-                        el.style.setProperty('font-family', font, 'important');
-                        el.style.setProperty('font-size', size + 'px', 'important');
-                        if (el.tagName !== 'TD' && el.tagName !== 'TH') {
-                            el.style.setProperty('text-align', align, 'important');
-                        }
-                    }
-                });
+            document.addEventListener('click', () => {
+                card.classList.remove('visible');
+            });
 
-                // Special handling for table cells
-                const tableCells = element.querySelectorAll('td, th');
-                tableCells.forEach(cell => {
-                    cell.style.setProperty('font-family', font, 'important');
-                    cell.style.setProperty('font-size', size + 'px', 'important');
-                });
-            }
+            card.addEventListener('click', e => e.stopPropagation());
+        }
 
-            // Apply styles to selected text or entire content
-            function applyToSelectionOrAll(property, value) {
-                const selection = window.getSelection();
-                
-                if (selection.rangeCount > 0 && !selection.isCollapsed) {
-                    // Apply to selection
-                    const range = selection.getRangeAt(0);
+        // Mouse effects
+        function initializeMouseEffects() {
+            document.addEventListener('mousemove', function(e) {
+                const particles = document.querySelectorAll('.particle');
+                particles.forEach(particle => {
+                    const speed = Math.random() * 2 + 1;
+                    const x = (e.clientX * speed) / 100;
+                    const y = (e.clientY * speed) / 100;
                     
-                    try {
-                        const span = document.createElement('span');
-                        span.className = 'editor-styled-element';
-                        
-                        if (property === 'font-family') {
-                            span.style.setProperty('font-family', value, 'important');
-                        } else if (property === 'font-size') {
-                            span.style.setProperty('font-size', value, 'important');
-                        } else if (property === 'text-align') {
-                            const div = document.createElement('div');
-                            div.className = 'editor-styled-element';
-                            div.style.setProperty('text-align', value, 'important');
-                            
-                            const contents = range.extractContents();
-                            div.appendChild(contents);
-                            range.insertNode(div);
-                            return;
-                        }
-                        
-                        const contents = range.extractContents();
-                        span.appendChild(contents);
-                        range.insertNode(span);
-                        
-                        // Restore selection
-                        const newRange = document.createRange();
-                        newRange.selectNodeContents(span);
-                        selection.removeAllRanges();
-                        selection.addRange(newRange);
-                        
-                    } catch (e) {
-                        console.warn('Selection styling failed, applying to all:', e);
-                        // Fallback to applying to entire content
-                        if (property === 'font-family') currentFont = value;
-                        if (property === 'font-size') currentSize = parseInt(value);
-                        if (property === 'text-align') currentAlign = value;
-                        forceApplyStyles(postContent, currentFont, currentSize, currentAlign);
-                    }
-                } else {
-                    // Apply to entire content
-                    if (property === 'font-family') currentFont = value;
-                    if (property === 'font-size') currentSize = parseInt(value);
-                    if (property === 'text-align') currentAlign = value;
-                    forceApplyStyles(postContent, currentFont, currentSize, currentAlign);
-                }
-            }
-
-            // Update alignment button states
-            function updateAlignmentButtons() {
-                [alignLeftBtn, alignCenterBtn, alignRightBtn].forEach(btn => 
-                    btn.classList.remove('active')
-                );
-                
-                switch (currentAlign) {
-                    case 'center':
-                        alignCenterBtn.classList.add('active');
-                        break;
-                    case 'right':
-                        alignRightBtn.classList.add('active');
-                        break;
-                    default:
-                        alignLeftBtn.classList.add('active');
-                }
-            }
-
-            // Font family change
-            fontSelect.addEventListener('change', () => {
-                applyToSelectionOrAll('font-family', fontSelect.value);
-            });
-
-            // Font size input change
-            fontSizeInput.addEventListener('input', () => {
-                const size = Math.max(10, Math.min(108, parseInt(fontSizeInput.value) || 16));
-                fontSizeInput.value = size;
-                applyToSelectionOrAll('font-size', size + 'px');
-            });
-
-            // Decrease font size
-            decreaseBtn.addEventListener('click', () => {
-                const newSize = Math.max(10, currentSize - 1);
-                fontSizeInput.value = newSize;
-                applyToSelectionOrAll('font-size', newSize + 'px');
-            });
-
-            // Increase font size
-            increaseBtn.addEventListener('click', () => {
-                const newSize = Math.min(108, currentSize + 1);
-                fontSizeInput.value = newSize;
-                applyToSelectionOrAll('font-size', newSize + 'px');
-            });
-
-            // Alignment buttons
-            alignLeftBtn.addEventListener('click', () => {
-                currentAlign = 'left';
-                applyToSelectionOrAll('text-align', 'left');
-                updateAlignmentButtons();
-            });
-
-            alignCenterBtn.addEventListener('click', () => {
-                currentAlign = 'center';
-                applyToSelectionOrAll('text-align', 'center');
-                updateAlignmentButtons();
-            });
-
-            alignRightBtn.addEventListener('click', () => {
-                currentAlign = 'right';
-                applyToSelectionOrAll('text-align', 'right');
-                updateAlignmentButtons();
-            });
-
-            // Keyboard shortcuts
-            postContent.addEventListener('keydown', (e) => {
-                if (e.ctrlKey || e.metaKey) {
-                    if (e.key === '=' || e.key === '+') {
-                        e.preventDefault();
-                        increaseBtn.click();
-                    } else if (e.key === '-') {
-                        e.preventDefault();
-                        decreaseBtn.click();
-                    }
-                }
-            });
-
-            // Apply initial styles
-            forceApplyStyles(postContent, currentFont, currentSize, currentAlign);
-            updateAlignmentButtons();
-
-            // Monitor content changes and reapply styles
-            const observer = new MutationObserver((mutations) => {
-                mutations.forEach((mutation) => {
-                    if (mutation.type === 'childList') {
-                        mutation.addedNodes.forEach((node) => {
-                            if (node.nodeType === Node.ELEMENT_NODE) {
-                                // Reapply styles to new content
-                                forceApplyStyles(node, currentFont, currentSize, currentAlign);
-                            }
-                        });
-                    }
+                    particle.style.transform = `translateX(${x}px) translateY(${y}px)`;
                 });
-            });
-
-            observer.observe(postContent, {
-                childList: true,
-                subtree: true
             });
         }
+
+        // Action tracking
+        function trackAction(action) {
+            fetch("/track_action", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({ action })
+            }).catch(console.error);
+        }
+
+        // Initialize everything
+        document.addEventListener('DOMContentLoaded', function() {
+            createParticles();
+            initializePlaceholder();
+            initializeProfile();
+            initializeMouseEffects();
+            
+            // Initialize editor system
+            initializeQuillEditor();
+            initializeLayerSwitching();
+            initializeEditorControls();
+            initializeImageUpload();
+            initializeDownloadActions();
+
+            // Bind generate button
+            document.getElementById('generateBtn').addEventListener('click', generateContent);
+            document.getElementById('promptInput').addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && e.ctrlKey) {
+                    generateContent();
+                }
+            });
+
+            // Track actions
+            const actionMapping = {
+                generateBtn: "generate_ai_content",
+                downloadInfographic: "infographic",
+                downloadCarousel: "export_pdf",
+                insertImage: "insert_image",
+                regenerateContent: "regenerate",
+                clearEditor: "clear",
+            };
+
+            Object.entries(actionMapping).forEach(([id, action]) => {
+                const btn = document.getElementById(id);
+                if (btn) btn.addEventListener("click", () => trackAction(action));
+            });
+        });
     </script>
 </body>
 </html>
