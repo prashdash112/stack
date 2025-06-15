@@ -97,7 +97,7 @@
     padding: 8px 12px;
     font-size: 0.9rem;
     transition: all 0.3s ease;
-    min-width: 60px;
+    min-width: 80px;
     text-align: center;
 }
 
@@ -175,12 +175,77 @@ select.editor-control {
     .editor-control {
         padding: 6px 10px;
         font-size: 0.85rem;
-        min-width: 50px;
+        min-width: 70px;
     }
     
     .size-btn {
         padding: 5px 8px;
         font-size: 0.8rem;
+    }
+}
+
+/* Enhanced font select styling */
+select.editor-control {
+    min-width: 140px; /* Wider to accommodate longer font names */
+}
+
+/* Responsive font select */
+@media (max-width: 768px) {
+    select.editor-control {
+        min-width: 120px;
+        font-size: 0.8rem;
+    }
+}
+
+/* Text Alignment Styles */
+.alignment-buttons {
+    display: flex;
+    gap: 2px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 2px;
+}
+
+.align-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 6px;
+    color: #fff;
+    padding: 8px 12px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    height: 36px;
+}
+
+.align-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fca5a5;
+}
+
+.align-btn.active {
+    background: rgba(252, 165, 165, 0.2);
+    color: #fca5a5;
+    border: 1px solid rgba(252, 165, 165, 0.3);
+}
+
+.align-btn:active {
+    transform: scale(0.95);
+}
+
+/* Responsive alignment buttons */
+@media (max-width: 768px) {
+    .align-btn {
+        padding: 6px 8px;
+        font-size: 0.8rem;
+        min-width: 32px;
+        height: 32px;
     }
 }
     </style>
@@ -298,17 +363,35 @@ select.editor-control {
                         <option value="Georgia, serif">Georgia</option>
                         <option value="'Times New Roman', serif">Times New Roman</option>
                         <option value="'Courier New', monospace">Courier New</option>
+                        <option value="Helvetica, Arial, sans-serif">Helvetica</option>
+                        <option value="'Segoe UI', Tahoma, Geneva, Verdana, sans-serif">Segoe UI</option>
+                        <option value="Verdana, Geneva, Tahoma, sans-serif">Verdana</option>
+                        <option value="'Trebuchet MS', Helvetica, sans-serif">Trebuchet MS</option>
+                        <option value="'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', sans-serif">Lucida Sans</option>
+                        <option value="Tahoma, Verdana, sans-serif">Tahoma</option>
+                        <option value="'Palatino Linotype', 'Book Antiqua', Palatino, serif">Palatino</option>
+                        <option value="'Book Antiqua', Palatino, 'Palatino Linotype', serif">Book Antiqua</option>
+                        <option value="'Century Gothic', CenturyGothic, AppleGothic, sans-serif">Century Gothic</option>
+                        <option value="'Franklin Gothic Medium', 'Franklin Gothic', 'ITC Franklin Gothic', Arial, sans-serif">Franklin Gothic</option>
                     </select>
                 </div>
                 
                 <div class="editor-group">
                     <span class="editor-label">Size:</span>
-                    <input type="number" class="editor-control" id="fontSizeInput" value="16" min="10" max="32" step="1">
+                    <input type="number" class="editor-control" id="fontSizeInput" value="16" min="10" max="108" step="1">
                     <div class="size-buttons">
                         <button class="size-btn" id="decreaseSize">A-</button>
                         <button class="size-btn" id="increaseSize">A+</button>
                     </div>
                 </div>
+                <div class="editor-group">
+                <span class="editor-label">Align:</span>
+                <div class="alignment-buttons">
+                    <button class="align-btn" id="alignLeft" title="Align Left">⬅</button>
+                    <button class="align-btn" id="alignCenter" title="Align Center">⬆</button>
+                    <button class="align-btn" id="alignRight" title="Align Right">➡</button>
+                </div>
+            </div>
             </div>
 
 <div class="post-preview">
@@ -1046,43 +1129,104 @@ document.getElementById('exportPdfBtn').addEventListener('click', async () => {
     });
   });
     // Editor Tab Functionality
-    document.addEventListener('DOMContentLoaded', () => {
+    // Editor Tab Functionality
+document.addEventListener('DOMContentLoaded', () => {
     const postContent = document.getElementById('postContent');
     const fontSelect = document.getElementById('fontSelect');
     const fontSizeInput = document.getElementById('fontSizeInput');
     const decreaseBtn = document.getElementById('decreaseSize');
     const increaseBtn = document.getElementById('increaseSize');
     
-    // Set initial font family
+    // Set initial font family and size for entire content
     postContent.style.fontFamily = fontSelect.value;
     postContent.style.fontSize = fontSizeInput.value + 'px';
     
+    // Helper function to apply styles to selection or entire content
+    function applyStyle(property, value) {
+        const selection = window.getSelection();
+        
+        if (selection.rangeCount > 0 && !selection.isCollapsed) {
+            // There's a text selection - apply to selected text only
+            const range = selection.getRangeAt(0);
+            
+            // Create a span to wrap the selected content
+            const span = document.createElement('span');
+            span.style[property] = value;
+            
+            try {
+                // Extract the selected content
+                const contents = range.extractContents();
+                span.appendChild(contents);
+                range.insertNode(span);
+                
+                // Clear selection
+                selection.removeAllRanges();
+            } catch (e) {
+                // Fallback: apply to entire content if selection fails
+                postContent.style[property] = value;
+            }
+        } else {
+            // No selection - apply to entire content
+            postContent.style[property] = value;
+        }
+    }
+    
     // Font family change
     fontSelect.addEventListener('change', () => {
-        postContent.style.fontFamily = fontSelect.value;
+        applyStyle('fontFamily', fontSelect.value);
     });
     
     // Font size input change
     fontSizeInput.addEventListener('input', () => {
-        const size = Math.max(10, Math.min(32, parseInt(fontSizeInput.value) || 16));
+        const size = Math.max(10, Math.min(108, parseInt(fontSizeInput.value) || 16));
         fontSizeInput.value = size;
-        postContent.style.fontSize = size + 'px';
+        applyStyle('fontSize', size + 'px');
     });
     
     // Decrease font size
     decreaseBtn.addEventListener('click', () => {
-        const currentSize = parseInt(fontSizeInput.value) || 16;
+        const selection = window.getSelection();
+        let currentSize = 16;
+        
+        if (selection.rangeCount > 0 && !selection.isCollapsed) {
+            // Get size from selected text
+            const range = selection.getRangeAt(0);
+            const parentElement = range.commonAncestorContainer.nodeType === Node.TEXT_NODE 
+                ? range.commonAncestorContainer.parentElement 
+                : range.commonAncestorContainer;
+            const computedStyle = window.getComputedStyle(parentElement);
+            currentSize = parseInt(computedStyle.fontSize) || 16;
+        } else {
+            // Get size from input or entire content
+            currentSize = parseInt(fontSizeInput.value) || 16;
+        }
+        
         const newSize = Math.max(10, currentSize - 1);
         fontSizeInput.value = newSize;
-        postContent.style.fontSize = newSize + 'px';
+        applyStyle('fontSize', newSize + 'px');
     });
     
     // Increase font size
     increaseBtn.addEventListener('click', () => {
-        const currentSize = parseInt(fontSizeInput.value) || 16;
-        const newSize = Math.min(32, currentSize + 1);
+        const selection = window.getSelection();
+        let currentSize = 16;
+        
+        if (selection.rangeCount > 0 && !selection.isCollapsed) {
+            // Get size from selected text
+            const range = selection.getRangeAt(0);
+            const parentElement = range.commonAncestorContainer.nodeType === Node.TEXT_NODE 
+                ? range.commonAncestorContainer.parentElement 
+                : range.commonAncestorContainer;
+            const computedStyle = window.getComputedStyle(parentElement);
+            currentSize = parseInt(computedStyle.fontSize) || 16;
+        } else {
+            // Get size from input or entire content
+            currentSize = parseInt(fontSizeInput.value) || 16;
+        }
+        
+        const newSize = Math.min(108, currentSize + 1);
         fontSizeInput.value = newSize;
-        postContent.style.fontSize = newSize + 'px';
+        applyStyle('fontSize', newSize + 'px');
     });
     
     // Keyboard shortcuts for font size
@@ -1097,7 +1241,140 @@ document.getElementById('exportPdfBtn').addEventListener('click', async () => {
             }
         }
     });
+    
+    // Update input field when clicking on differently sized text
+    postContent.addEventListener('click', () => {
+        setTimeout(() => {
+            const selection = window.getSelection();
+            if (selection.rangeCount > 0) {
+                const range = selection.getRangeAt(0);
+                const element = range.commonAncestorContainer.nodeType === Node.TEXT_NODE 
+                    ? range.commonAncestorContainer.parentElement 
+                    : range.commonAncestorContainer;
+                const computedStyle = window.getComputedStyle(element);
+                const fontSize = parseInt(computedStyle.fontSize);
+                if (fontSize && fontSize !== parseInt(fontSizeInput.value)) {
+                    fontSizeInput.value = fontSize;
+                }
+            }
+        }, 10);
+    });
 });
+
+// Text Alignment Functionality
+    const alignLeftBtn = document.getElementById('alignLeft');
+    const alignCenterBtn = document.getElementById('alignCenter');
+    const alignRightBtn = document.getElementById('alignRight');
+    
+    // Helper function to apply text alignment
+    function applyAlignment(alignment) {
+        const selection = window.getSelection();
+        
+        if (selection.rangeCount > 0 && !selection.isCollapsed) {
+            // There's a text selection - wrap in div with alignment
+            const range = selection.getRangeAt(0);
+            
+            try {
+                // Check if selection is already in an aligned container
+                let container = range.commonAncestorContainer;
+                if (container.nodeType === Node.TEXT_NODE) {
+                    container = container.parentElement;
+                }
+                
+                // Look for existing alignment div
+                let alignDiv = container.closest('div[style*="text-align"]');
+                
+                if (alignDiv && alignDiv !== postContent) {
+                    // Update existing alignment
+                    alignDiv.style.textAlign = alignment;
+                } else {
+                    // Create new alignment container
+                    const div = document.createElement('div');
+                    div.style.textAlign = alignment;
+                    div.style.margin = '0.5rem 0';
+                    
+                    const contents = range.extractContents();
+                    div.appendChild(contents);
+                    range.insertNode(div);
+                }
+                
+                // Clear selection
+                selection.removeAllRanges();
+                updateAlignmentButtons();
+                
+            } catch (e) {
+                console.error('Alignment failed:', e);
+            }
+        } else {
+            // No selection - apply to entire content
+            postContent.style.textAlign = alignment;
+            updateAlignmentButtons();
+        }
+    }
+    
+    // Update button states based on current alignment
+    function updateAlignmentButtons() {
+        // Remove active class from all buttons
+        [alignLeftBtn, alignCenterBtn, alignRightBtn].forEach(btn => 
+            btn.classList.remove('active')
+        );
+        
+        const selection = window.getSelection();
+        let currentAlign = 'left'; // default
+        
+        if (selection.rangeCount > 0) {
+            let element = selection.anchorNode;
+            if (element.nodeType === Node.TEXT_NODE) {
+                element = element.parentElement;
+            }
+            
+            // Check for text-align in element or its parents
+            while (element && element !== document.body) {
+                const style = window.getComputedStyle(element);
+                if (style.textAlign && style.textAlign !== 'start') {
+                    currentAlign = style.textAlign;
+                    break;
+                }
+                element = element.parentElement;
+            }
+        } else {
+            // Check entire content alignment
+            const style = window.getComputedStyle(postContent);
+            currentAlign = style.textAlign || 'left';
+        }
+        
+        // Set active button
+        switch (currentAlign) {
+            case 'center':
+                alignCenterBtn.classList.add('active');
+                break;
+            case 'right':
+                alignRightBtn.classList.add('active');
+                break;
+            default:
+                alignLeftBtn.classList.add('active');
+        }
+    }
+    
+    // Event listeners for alignment buttons
+    alignLeftBtn.addEventListener('click', () => applyAlignment('left'));
+    alignCenterBtn.addEventListener('click', () => applyAlignment('center'));
+    alignRightBtn.addEventListener('click', () => applyAlignment('right'));
+    
+    // Update alignment buttons when clicking in content
+    postContent.addEventListener('click', () => {
+        setTimeout(updateAlignmentButtons, 10);
+    });
+    
+    // Update alignment buttons when selection changes
+    document.addEventListener('selectionchange', () => {
+        if (document.activeElement === postContent) {
+            setTimeout(updateAlignmentButtons, 10);
+        }
+    });
+    
+    // Initialize alignment buttons
+    updateAlignmentButtons();
 
     </script>
 </body>
