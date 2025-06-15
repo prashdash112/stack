@@ -62,6 +62,127 @@
                 max-width: 100px;
             }
         }
+        /* Editor Tab Styles */
+.editor-tab {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px 12px 0 0;
+    padding: 12px 20px;
+    margin-bottom: -1px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    backdrop-filter: blur(10px);
+    border-bottom: none;
+}
+
+.editor-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.editor-label {
+    font-size: 0.9rem;
+    color: #cbd5e1;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.editor-control {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    color: #fff;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    min-width: 60px;
+    text-align: center;
+}
+
+.editor-control:focus {
+    outline: none;
+    border-color: #fca5a5;
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 0 2px rgba(252, 165, 165, 0.2);
+}
+
+.editor-control:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+select.editor-control {
+    cursor: pointer;
+    padding-right: 30px;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 16px;
+    appearance: none;
+}
+
+.size-buttons {
+    display: flex;
+    gap: 4px;
+}
+
+.size-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    color: #fff;
+    padding: 6px 10px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.size-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: #fca5a5;
+}
+
+.size-btn:active {
+    transform: scale(0.95);
+}
+
+/* Update post-preview to have rounded corners that connect with editor tab */
+.post-preview {
+    border-radius: 0 0 12px 12px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .editor-tab {
+        flex-wrap: wrap;
+        gap: 15px;
+        padding: 10px 15px;
+    }
+    
+    .editor-group {
+        gap: 6px;
+    }
+    
+    .editor-label {
+        font-size: 0.85rem;
+    }
+    
+    .editor-control {
+        padding: 6px 10px;
+        font-size: 0.85rem;
+        min-width: 50px;
+    }
+    
+    .size-btn {
+        padding: 5px 8px;
+        font-size: 0.8rem;
+    }
+}
     </style>
 </head>
 <body>
@@ -162,11 +283,37 @@
         <!-- Output Section -->
         <div class="output-section" id="outputSection">
             <h2 class="section-title">Your Generated Content</h2>
-            <div class="post-preview">
-                <!-- <textarea class="post-content" id="postContent" placeholder="Your generated content will appear here..."></textarea> -->
-                <div class="post-content" id="postContent" contenteditable="true" spellcheck="false"></div>
+            <!-- <div class="post-preview"> -->
+                <!-- <div class="post-content" id="postContent" contenteditable="true" spellcheck="false"></div>
 
+            </div> -->
+            <!-- Editor Tab -->
+            <div class="editor-tab">
+                <div class="editor-group">
+                    <span class="editor-label">Font:</span>
+                    <select class="editor-control" id="fontSelect">
+                        <option value="Inter, system-ui, sans-serif">Inter</option>
+                        <option value="Arial, sans-serif">Arial</option>
+                        <option value="Calibri, sans-serif">Calibri</option>
+                        <option value="Georgia, serif">Georgia</option>
+                        <option value="'Times New Roman', serif">Times New Roman</option>
+                        <option value="'Courier New', monospace">Courier New</option>
+                    </select>
+                </div>
+                
+                <div class="editor-group">
+                    <span class="editor-label">Size:</span>
+                    <input type="number" class="editor-control" id="fontSizeInput" value="16" min="10" max="32" step="1">
+                    <div class="size-buttons">
+                        <button class="size-btn" id="decreaseSize">A-</button>
+                        <button class="size-btn" id="increaseSize">A+</button>
+                    </div>
+                </div>
             </div>
+
+<div class="post-preview">
+    <div class="post-content" id="postContent" contenteditable="true" spellcheck="false"></div>
+</div>
             <div class="post-actions">
                 <button id="infographicBtn" class="action-btn primary" onclick="copyToClipboard()">📋 Infographic</button>
                 <button class="action-btn" id="exportPdfBtn">📄 Export PDF</button>
@@ -447,155 +594,6 @@
             preview.removeChild(wm);
             }
             // /////////////////////////////// PDF ////////////////////////////////////////////////////////////
-                    
-//                         document.getElementById('exportPdfBtn').addEventListener('click', async () => {
-//   const preview = document.querySelector('.post-preview');
-//   if (!preview) return alert('Nothing to export!');
-
-//   // ── ① TEMPORARILY ADD WATERMARK ──
-//   const wm = document.createElement('div');
-//   wm.className = 'watermark';
-//   wm.innerText = 'GeniusPost AI';
-//   preview.appendChild(wm);
-
-//   // Temporarily override heading gradients
-//   const headings = preview.querySelectorAll('h1, h2, h3, h4, h5, h6');
-//   headings.forEach(h => {
-//     h.dataset.origBg = h.style.background;
-//     h.dataset.origClip = h.style.webkitBackgroundClip;
-//     h.dataset.origColor = h.style.color;
-//     h.style.background = 'none';
-//     h.style.webkitBackgroundClip = 'unset';
-//     h.style.color = '#fca5a5';
-//   });
-
-//   // Enhance all images for PDF capture
-//   const images = preview.querySelectorAll('img');
-//   const imageOverrides = [];
-  
-//   images.forEach((img, index) => {
-//     imageOverrides[index] = {
-//       origBackground: img.style.backgroundColor,
-//       origOpacity: img.style.opacity,
-//       origMixBlend: img.style.mixBlendMode
-//     };
-    
-//     img.style.backgroundColor = '#ffffff';
-//     img.style.opacity = '1';
-//     img.style.mixBlendMode = 'normal';
-    
-//     const wrapper = img.parentElement;
-//     if (wrapper && wrapper.style.background) {
-//       wrapper.style.backgroundColor = '#ffffff';
-//       wrapper.style.backgroundImage = 'none';
-//     }
-//   });
-
-//   // Temporarily darken background
-//   const origBg = preview.style.background;
-//   preview.style.background = 'linear-gradient(135deg, #2a2a3d, #1e1e2f)';
-
-//   try {
-//     // OPTIMIZED: Lower scale and better compression settings
-//     const canvas = await html2canvas(preview, {
-//       backgroundColor: '#2a2a3d',
-//       scale: 1.5, // Reduced from 2 to 1.5 (25% smaller)
-//       useCORS: true,
-//       allowTaint: false,
-//       removeContainer: false,
-//       imageTimeout: 0,
-//       logging: false,
-//       foreignObjectRendering: false,
-//       // Additional optimization options
-//       width: preview.offsetWidth,
-//       height: preview.offsetHeight,
-//       onclone: (clonedDoc) => {
-//         const clonedImages = clonedDoc.querySelectorAll('img');
-//         clonedImages.forEach(img => {
-//           img.style.backgroundColor = '#ffffff';
-//           img.style.opacity = '1';
-//           img.style.mixBlendMode = 'normal';
-//         });
-//       }
-//     });
-
-//     const { jsPDF } = window.jspdf;
-//     const pdf = new jsPDF({ 
-//       unit: 'px', 
-//       format: 'a4',
-//       compress: true // Enable PDF compression
-//     });
-    
-//     const pdfW = pdf.internal.pageSize.getWidth();
-//     const pdfH = pdf.internal.pageSize.getHeight();
-
-//     const canvasW = canvas.width;
-//     const canvasH = canvas.height;
-//     const scale = (pdfW - 40) / canvasW;
-//     const pageCanvasH = Math.floor(pdfH / scale);
-
-//     let renderedH = 0;
-//     while (renderedH < canvasH) {
-//       // Fill page with background color
-//       pdf.setFillColor(42, 42, 61); // #2a2a3d in RGB
-//       pdf.rect(0, 0, pdfW, pdfH, 'F');
-
-//       const tempCanvas = document.createElement('canvas');
-//       tempCanvas.width = canvasW;
-//       tempCanvas.height = Math.min(pageCanvasH, canvasH - renderedH);
-//       const tCtx = tempCanvas.getContext('2d');
-      
-//       // Fill temp canvas with solid background
-//       tCtx.fillStyle = '#2a2a3d';
-//       tCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
-      
-//       // Draw the slice
-//       tCtx.drawImage(
-//         canvas,
-//         0, renderedH,
-//         canvasW, tempCanvas.height,
-//         0, 0,
-//         canvasW, tempCanvas.height
-//       );
-      
-//       // OPTIMIZED: Use JPEG with moderate compression instead of PNG
-//       const sliceData = tempCanvas.toDataURL('image/jpeg', 0.75); // 75% quality for balance
-//       pdf.addImage(sliceData, 'JPEG', 20, 20, canvasW * scale, tempCanvas.height * scale);
-      
-//       renderedH += pageCanvasH;
-//       if (renderedH < canvasH) pdf.addPage();
-//     }
-
-//     // OPTIMIZED: Use PDF compression and output options
-//     pdf.save('linkedin-post.pdf', { 
-//       compress: true,
-//       precision: 2 
-//     });
-
-//   } catch (e) {
-//     console.error('PDF export failed:', e);
-//     alert('Could not export PDF.');
-//   } finally {
-//     // Restore all styles
-//     headings.forEach(h => {
-//       h.style.background = h.dataset.origBg;
-//       h.style.webkitBackgroundClip = h.dataset.origClip;
-//       h.style.color = h.dataset.origColor;
-//       delete h.dataset.origBg;
-//       delete h.dataset.origClip;
-//       delete h.dataset.origColor;
-//     });
-
-//     images.forEach((img, index) => {
-//       img.style.backgroundColor = imageOverrides[index].origBackground;
-//       img.style.opacity = imageOverrides[index].origOpacity;
-//       img.style.mixBlendMode = imageOverrides[index].origMixBlend;
-//     });
-
-//     preview.style.background = origBg;
-//     preview.removeChild(wm);
-//   }
-// });
 
 document.getElementById('exportPdfBtn').addEventListener('click', async () => {
   const preview = document.querySelector('.post-preview');
@@ -1047,6 +1045,59 @@ document.getElementById('exportPdfBtn').addEventListener('click', async () => {
       textarea.placeholder = '';
     });
   });
+    // Editor Tab Functionality
+    document.addEventListener('DOMContentLoaded', () => {
+    const postContent = document.getElementById('postContent');
+    const fontSelect = document.getElementById('fontSelect');
+    const fontSizeInput = document.getElementById('fontSizeInput');
+    const decreaseBtn = document.getElementById('decreaseSize');
+    const increaseBtn = document.getElementById('increaseSize');
+    
+    // Set initial font family
+    postContent.style.fontFamily = fontSelect.value;
+    postContent.style.fontSize = fontSizeInput.value + 'px';
+    
+    // Font family change
+    fontSelect.addEventListener('change', () => {
+        postContent.style.fontFamily = fontSelect.value;
+    });
+    
+    // Font size input change
+    fontSizeInput.addEventListener('input', () => {
+        const size = Math.max(10, Math.min(32, parseInt(fontSizeInput.value) || 16));
+        fontSizeInput.value = size;
+        postContent.style.fontSize = size + 'px';
+    });
+    
+    // Decrease font size
+    decreaseBtn.addEventListener('click', () => {
+        const currentSize = parseInt(fontSizeInput.value) || 16;
+        const newSize = Math.max(10, currentSize - 1);
+        fontSizeInput.value = newSize;
+        postContent.style.fontSize = newSize + 'px';
+    });
+    
+    // Increase font size
+    increaseBtn.addEventListener('click', () => {
+        const currentSize = parseInt(fontSizeInput.value) || 16;
+        const newSize = Math.min(32, currentSize + 1);
+        fontSizeInput.value = newSize;
+        postContent.style.fontSize = newSize + 'px';
+    });
+    
+    // Keyboard shortcuts for font size
+    postContent.addEventListener('keydown', (e) => {
+        if (e.ctrlKey || e.metaKey) {
+            if (e.key === '=' || e.key === '+') {
+                e.preventDefault();
+                increaseBtn.click();
+            } else if (e.key === '-') {
+                e.preventDefault();
+                decreaseBtn.click();
+            }
+        }
+    });
+});
 
     </script>
 </body>
