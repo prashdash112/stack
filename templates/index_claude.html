@@ -160,9 +160,6 @@
                         <button class="control-btn" id="insertImage" title="Insert Image">
                             🖼️ Image
                         </button>
-                        <button class="control-btn" id="insertCode" title="Insert Code Block">
-                            💻 Code
-                        </button>
                     </div>
 
                     <div class="editor-actions">
@@ -238,13 +235,15 @@
                 [{ 'align': [] }],
                 ['blockquote', 'code-block'],
                 ['link'],
+                ['table'],  // Add table to toolbar
                 ['clean']
             ];
 
             quill = new Quill('#quillEditor', {
                 theme: 'snow',
                 modules: {
-                    toolbar: toolbarOptions
+                    toolbar: toolbarOptions,
+                    table: true  // Enable table module
                 },
                 placeholder: 'Your AI-generated content will appear here for editing...'
             });
@@ -454,12 +453,7 @@
             });
 
             // Insert code block
-            document.getElementById('insertCode').addEventListener('click', () => {
-                const selection = quill.getSelection();
-                if (selection) {
-                    quill.formatText(selection.index, selection.length, 'code-block', true);
-                }
-            });
+            
 
             // Clear editor
             document.getElementById('clearEditor').addEventListener('click', () => {
@@ -580,7 +574,106 @@
                 }
             });
         }
+        // Clean and format HTML for better Quill display
+    function cleanAndFormatHTML(html) {
+    // Create temporary div to process HTML
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = html;
+    
+    // Fix paragraphs and line breaks
+    const paragraphs = tempDiv.querySelectorAll('p');
+    paragraphs.forEach(p => {
+        if (p.innerHTML.trim() === '') {
+            p.remove();
+        } else {
+            // Ensure proper punctuation spacing
+            p.innerHTML = p.innerHTML.replace(/([.!?])\s*([A-Z])/g, '$1 $2');
+            p.innerHTML = p.innerHTML.replace(/,(\S)/g, ', $1');
+            p.innerHTML = p.innerHTML.replace(/(\w)'(\w)/g, "$1'$2"); // Fix apostrophes
+        }
+    });
+    
+    // Convert markdown tables to proper HTML tables
+    const tableRegex = /\|(.+)\|/g;
+    let tableHTML = tempDiv.innerHTML;
+    
+    // Find and convert markdown tables
+    const lines = tableHTML.split('\n');
+    let inTable = false;
+    let tableRows = [];
+    
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i].trim();
+        
+        if (line.includes('|') && line.split('|').length > 2) {
+            if (!inTable) {
+                inTable = true;
+                tableRows = [];
+            }
+            
+            const cells = line.split('|').filter(cell => cell.trim() !== '');
+            const cleanCells = cells.map(cell => cell.trim());
+            
+            // Skip separator rows (like |---|---|)
+            if (!cleanCells.some(cell => cell.match(/^-+$/))) {
+                tableRows.push(cleanCells);
+            }
+        } else if (inTable && line === '') {
+            // End of table
+            if (tableRows.length > 0) {
+                const tableElement = createHTMLTable(tableRows);
+                tableHTML = tableHTML.replace(
+                    new RegExp(tableRows.map(row => '\\|' + row.join('\\|') + '\\|').join('\\s*\\n\\s*')),
+                    tableElement
+                );
+            }
+            inTable = false;
+            tableRows = [];
+        }
+    }
+    
+    // Handle remaining table if file ends with table
+    if (inTable && tableRows.length > 0) {
+        const tableElement = createHTMLTable(tableRows);
+        // Replace the last table occurrence
+        const lastTableMatch = tableHTML.lastIndexOf('|');
+        if (lastTableMatch !== -1) {
+            tableHTML = tableHTML.substring(0, tableHTML.indexOf('|')) + tableElement + tableHTML.substring(tableHTML.lastIndexOf('\n'));
+        }
+    }
+    
+    return tableHTML;
+}
 
+// Create proper HTML table from array of rows
+function createHTMLTable(rows) {
+    if (rows.length === 0) return '';
+    
+    let tableHTML = '<table>';
+    
+    // First row as header
+    tableHTML += '<thead><tr>';
+    rows[0].forEach(cell => {
+        tableHTML += `<th>${cell}</th>`;
+    });
+    tableHTML += '</tr></thead>';
+    
+    // Remaining rows as body
+    if (rows.length > 1) {
+        tableHTML += '<tbody>';
+        for (let i = 1; i < rows.length; i++) {
+            tableHTML += '<tr>';
+            rows[i].forEach(cell => {
+                tableHTML += `<td>${cell}</td>`;
+            });
+            tableHTML += '</tr>';
+        }
+        tableHTML += '</tbody>';
+    }
+    
+    tableHTML += '</table>';
+    return tableHTML;
+}
         // Generate content function
         async function generateContent() {
             const promptInput = document.getElementById('promptInput');
@@ -608,11 +701,12 @@
             try {
                 const response = await mockApiCall(currentPrompt);
                 
-                // Convert markdown to HTML and insert into Quill
+                // Convert markdown to HTML with better formatting
                 const markdownHTML = marked.parse(response.content);
-                
+                const cleanedHTML = cleanAndFormatHTML(markdownHTML);
+
                 isUpdatingPreview = true;
-                quill.clipboard.dangerouslyPasteHTML(markdownHTML);
+                quill.clipboard.dangerouslyPasteHTML(cleanedHTML);
                 isUpdatingPreview = false;
                 
                 // Update preview
