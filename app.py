@@ -238,7 +238,11 @@ def generate():
         return jsonify({ 'result': text })
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-    
+
+@app.route('/markdown_editor.html')
+def markdown_editor():
+    return render_template('markdown_editor.html')
+
 @app.route("/track_action", methods=["POST"])
 @login_required
 def track_action():
