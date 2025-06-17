@@ -1,0 +1,2322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VisualSpark Pro - Screenshot Creator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #111827;
+            color: white;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: #1f2937;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid #374151;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #8b5cf6, #ec4899);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .logo-text {
+            font-size: 1.25rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #a78bfa, #f472b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        .main-container {
+            display: flex;
+            height: calc(100vh - 73px);
+        }
+
+        .sidebar {
+            width: 320px;
+            background: #1f2937;
+            border-right: 1px solid #374151;
+            padding: 1.5rem;
+            overflow-y: auto;
+        }
+
+        .section {
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .canvas-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .canvas-controls {
+            background: #1f2937;
+            padding: 0.75rem 1.5rem;
+            border-bottom: 1px solid #374151;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .canvas-viewport {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            background: #111827;
+            overflow: auto;
+        }
+
+        .canvas {
+            border-radius: 12px;
+            position: relative;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+        }
+
+        .canvas-content {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .noise-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0.15;
+            pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            mix-blend-mode: overlay;
+        }
+
+        .gradient-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+        }
+
+        .gradient-btn {
+            height: 64px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .gradient-btn.active {
+            ring: 2px solid white;
+            box-shadow: 0 0 0 2px white;
+        }
+
+        .gradient-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .preset-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .preset-btn {
+            background: #374151;
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem;
+            color: white;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s;
+        }
+
+        .preset-btn:hover {
+            background: #4b5563;
+        }
+
+        .preset-name {
+            font-weight: 500;
+        }
+
+        .preset-size {
+            font-size: 0.875rem;
+            color: #9ca3af;
+        }
+
+        .upload-area {
+            border: 2px dashed #4b5563;
+            border-radius: 8px;
+            padding: 2rem 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .upload-area:hover {
+            border-color: #6b7280;
+        }
+
+        .upload-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-text {
+            color: #9ca3af;
+            font-size: 0.875rem;
+        }
+
+        .checkbox-group {
+            margin-bottom: 1rem;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .slider-group {
+            margin-left: 1.5rem;
+        }
+
+        .slider-label {
+            font-size: 0.875rem;
+            color: #9ca3af;
+            margin-bottom: 0.25rem;
+            display: block;
+        }
+
+        .slider {
+            width: 100%;
+            margin-bottom: 0.75rem;
+        }
+
+        .uploaded-image {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: calc(100% - 4rem);
+            max-height: calc(100% - 4rem);
+            object-fit: contain;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        /* Gradients */
+        .bg-gradient-1 { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .bg-gradient-2 { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .bg-gradient-3 { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .bg-gradient-4 { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+        .bg-gradient-5 { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+        .bg-gradient-6 { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); }
+        .bg-gradient-7 { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); }
+        .bg-gradient-8 { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        /* iPhone Display Style Gradients */
+        .bg-gradient-iphone-1 { background: linear-gradient(135deg, #FF6B6B 0%, #4ECDC4 100%); }
+        .bg-gradient-iphone-2 { background: linear-gradient(135deg, #A8E6CF 0%, #FFD93D 100%); }
+        .bg-gradient-iphone-3 { background: linear-gradient(135deg, #6C5CE7 0%, #74B9FF 100%); }
+        .bg-gradient-iphone-4 { background: linear-gradient(135deg, #FD79A8 0%, #FDCB6E 100%); }
+        .bg-gradient-iphone-5 { background: linear-gradient(135deg, #00B894 0%, #00CEC9 100%); }
+
+        /* Super Grainy Texture Backgrounds */
+        .bg-gradient-grain-1 { 
+            background: url('https://images.unsplash.com/photo-1557683316-973673baf926?w=3840&h=2160&fit=crop&crop=center') center/cover; 
+        }
+        .bg-gradient-grain-2 { 
+            background: url('https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=3840&h=2160&fit=crop&crop=center') center/cover; 
+        }
+        .bg-gradient-grain-3 { 
+            background: url('https://images.unsplash.com/photo-1557683311-eac922347aa1?w=3840&h=2160&fit=crop&crop=center') center/cover; 
+        }
+        
+        .bg-gradient-grain-5 { 
+            background: url('https://images.unsplash.com/photo-1557683304-673a23048d34?w=3840&h=2160&fit=crop&crop=center') center/cover; 
+        }
+
+        /* Elegant Photo Backgrounds */
+        .bg-photo-1 { 
+            background: linear-gradient(135deg, rgba(0,0,0,0.4), rgba(0,0,0,0.6)), 
+                        url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&h=1080&fit=crop&crop=center') center/cover; 
+        }
+        .bg-photo-2 { 
+            background: linear-gradient(135deg, rgba(0,0,0,0.3), rgba(0,0,0,0.5)), 
+                        url('https://images.unsplash.com/photo-1447433819943-74a20887a81e?w=1920&h=1080&fit=crop&crop=center') center/cover; 
+        }
+        .bg-photo-3 { 
+            background: linear-gradient(135deg, rgba(0,0,0,0.4), rgba(0,0,0,0.6)), 
+                        url('https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?w=1920&h=1080&fit=crop&crop=center') center/cover; 
+        }
+        .bg-photo-4 { 
+            background: linear-gradient(135deg, rgba(0,0,0,0.3), rgba(0,0,0,0.5)), 
+                        url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1920&h=1080&fit=crop&crop=center') center/cover; 
+        }
+        .bg-photo-5 { 
+            background: linear-gradient(135deg, rgba(0,0,0,0.4), rgba(0,0,0,0.6)), 
+                        url('https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=1920&h=1080&fit=crop&crop=center') center/cover; 
+        }
+        .bg-photo-6 { 
+            background: linear-gradient(135deg, rgba(0,0,0,0.3), rgba(0,0,0,0.5)), 
+                        url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&h=1080&fit=crop&crop=center') center/cover; 
+        }
+        .bg-photo-7 { 
+            background: linear-gradient(135deg, rgba(0,0,0,0.4), rgba(0,0,0,0.6)), 
+                        url('https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=1920&h=1080&fit=crop&crop=center') center/cover; 
+        }
+        .bg-photo-8 { 
+            background: linear-gradient(135deg, rgba(0,0,0,0.3), rgba(0,0,0,0.5)), 
+                        url('https://images.unsplash.com/photo-1464822759844-d150065494cc?w=1920&h=1080&fit=crop&crop=center') center/cover; 
+        }
+        .bg-photo-9 { 
+            background: linear-gradient(135deg, rgba(0,0,0,0.4), rgba(0,0,0,0.6)), 
+                        url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&h=1080&fit=crop&crop=center') center/cover; 
+        }
+        .bg-photo-10 { 
+            background: linear-gradient(135deg, rgba(0,0,0,0.3), rgba(0,0,0,0.5)), 
+                        url('https://images.unsplash.com/photo-1533628635777-112b2239b1c7?w=1920&h=1080&fit=crop&crop=center') center/cover; 
+        }
+        .bg-photo-11 { 
+            background: linear-gradient(135deg, rgba(0,0,0,0.4), rgba(0,0,0,0.6)), 
+                        url('https://images.unsplash.com/photo-1494500764479-0c8f2919a3d8?w=1920&h=1080&fit=crop&crop=center') center/cover; 
+        }
+        .bg-photo-12 { 
+            background: linear-gradient(135deg, rgba(0,0,0,0.3), rgba(0,0,0,0.5)), 
+                        url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&h=1080&fit=crop&crop=center') center/cover; 
+        }
+
+        /* New 4K UHD Photo Backgrounds */
+        .bg-photo-13 { 
+            background: linear-gradient(135deg, rgba(0,0,0,0.3), rgba(0,0,0,0.5)), 
+                        url('https://images.unsplash.com/photo-1551632811-561732d1e306?w=3840&h=2160&fit=crop&crop=center') center/cover; 
+        }
+        .bg-photo-14 { 
+            background: linear-gradient(135deg, rgba(0,0,0,0.4), rgba(0,0,0,0.6)), 
+                        url('https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?w=3840&h=2160&fit=crop&crop=center') center/cover; 
+        }
+        .bg-photo-15 { 
+            background: linear-gradient(135deg, rgba(0,0,0,0.2), rgba(0,0,0,0.4)), 
+                        url('https://images.unsplash.com/photo-1522383225653-ed111181a951?w=3840&h=2160&fit=crop&crop=center') center/cover; 
+        }
+        .bg-photo-16 { 
+            background: linear-gradient(135deg, rgba(0,0,0,0.3), rgba(0,0,0,0.5)), 
+                        url('https://images.unsplash.com/photo-1500595046743-cd271d694d30?w=3840&h=2160&fit=crop&crop=center') center/cover; 
+        }
+        .bg-photo-17 { 
+            background: linear-gradient(135deg, rgba(0,0,0,0.4), rgba(0,0,0,0.6)), 
+                        url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=3840&h=2160&fit=crop&crop=center') center/cover; 
+        }
+        .bg-photo-18 { 
+            background: linear-gradient(135deg, rgba(0,0,0,0.3), rgba(0,0,0,0.5)), 
+                        url('https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=3840&h=2160&fit=crop&crop=center') center/cover; 
+        }
+        .bg-photo-19 { 
+            background: linear-gradient(135deg, rgba(0,0,0,0.4), rgba(0,0,0,0.6)), 
+                        url('https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=3840&h=2160&fit=crop&crop=center') center/cover; 
+        }
+        .bg-photo-20 { 
+            background: linear-gradient(135deg, rgba(0,0,0,0.3), rgba(0,0,0,0.5)), 
+                        url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=3840&h=2160&fit=crop&crop=center') center/cover; 
+        }
+        .bg-photo-21 { 
+            background: linear-gradient(135deg, rgba(0,0,0,0.4), rgba(0,0,0,0.6)), 
+                        url('https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=3840&h=2160&fit=crop&crop=center') center/cover; 
+        }
+        .bg-photo-22 { 
+            background: linear-gradient(135deg, rgba(0,0,0,0.3), rgba(0,0,0,0.5)), 
+                        url('https://images.unsplash.com/photo-1528127269322-539801943592?w=3840&h=2160&fit=crop&crop=center') center/cover; 
+        }
+
+        /* High-Quality Neon Abstract Image Backgrounds */
+.bg-abstract-1 { 
+    background: linear-gradient(135deg, rgba(0,0,0,0.3), rgba(0,0,0,0.5)), 
+                url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=3840&h=2160&fit=crop&crop=center') center/cover; 
+}
+.bg-abstract-2 { 
+    background: linear-gradient(135deg, rgba(0,0,0,0.2), rgba(0,0,0,0.4)), 
+                url('https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=3840&h=2160&fit=crop&crop=center') center/cover; 
+}
+.bg-abstract-3 { 
+    background: linear-gradient(135deg, rgba(0,0,0,0.3), rgba(0,0,0,0.5)), 
+                url('https://images.unsplash.com/photo-1563089145-599997674d42?w=3840&h=2160&fit=crop&crop=center') center/cover; 
+}
+.bg-abstract-4 { 
+    background: linear-gradient(135deg, rgba(0,0,0,0.2), rgba(0,0,0,0.4)), 
+                url('https://images.unsplash.com/photo-1557682250-33bd709cbe85?w=3840&h=2160&fit=crop&crop=center') center/cover; 
+}
+.bg-abstract-5 { 
+    background: linear-gradient(135deg, rgba(0,0,0,0.3), rgba(0,0,0,0.5)), 
+                url('https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=3840&h=2160&fit=crop&crop=center') center/cover; 
+}
+
+.bg-abstract-6 { 
+    background: linear-gradient(135deg, rgba(0,0,0,0.2), rgba(0,0,0,0.4)), 
+                url('https://images.unsplash.com/photo-1562408590-e32931084e23?w=3840&h=2160&fit=crop&crop=center') center/cover; 
+}
+.bg-abstract-7 { 
+    background: linear-gradient(135deg, rgba(0,0,0,0.3), rgba(0,0,0,0.5)), 
+                url('https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=3840&h=2160&fit=crop&crop=center') center/cover; 
+}
+.bg-abstract-8 { 
+    background: linear-gradient(135deg, rgba(0,0,0,0.2), rgba(0,0,0,0.4)), 
+                url('https://images.unsplash.com/photo-1573108037329-37aa135a142e?w=3840&h=2160&fit=crop&crop=center') center/cover; 
+}
+.bg-abstract-9 { 
+    background: linear-gradient(135deg, rgba(0,0,0,0.3), rgba(0,0,0,0.5)), 
+                url('https://images.unsplash.com/photo-1551432664-1e4c30f4bf06?w=3840&h=2160&fit=crop&crop=center') center/cover; 
+}
+.bg-abstract-10 { 
+    background: linear-gradient(135deg, rgba(0,0,0,0.2), rgba(0,0,0,0.4)), 
+                url('https://images.unsplash.com/photo-1558618666-9e3d6d1c4b8a?w=3840&h=2160&fit=crop&crop=center') center/cover; 
+}
+
+.bg-abstract-11 { 
+    background: linear-gradient(135deg, rgba(0,0,0,0.3), rgba(0,0,0,0.5)), 
+                url('https://images.unsplash.com/photo-1518640467707-6811f4a6ab73?w=3840&h=2160&fit=crop&crop=center') center/cover; 
+}
+.bg-abstract-12 { 
+    background: linear-gradient(135deg, rgba(0,0,0,0.2), rgba(0,0,0,0.4)), 
+                url('https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=3840&h=2160&fit=crop&crop=center') center/cover; 
+}
+.bg-abstract-13 { 
+    background: linear-gradient(135deg, rgba(0,0,0,0.3), rgba(0,0,0,0.5)), 
+                url('https://images.unsplash.com/photo-1535478044878-3ed83d5456ef?w=3840&h=2160&fit=crop&crop=center') center/cover; 
+}
+.bg-abstract-14 { 
+    background: linear-gradient(135deg, rgba(0,0,0,0.2), rgba(0,0,0,0.4)), 
+                url('https://images.unsplash.com/photo-1558244662-d26f0045fba4?w=3840&h=2160&fit=crop&crop=center') center/cover; 
+}
+.bg-abstract-15 { 
+    background: linear-gradient(135deg, rgba(0,0,0,0.3), rgba(0,0,0,0.5)), 
+                url('https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=3840&h=2160&fit=crop&crop=center') center/cover; 
+}
+
+.bg-abstract-16 { 
+    background: linear-gradient(135deg, rgba(0,0,0,0.2), rgba(0,0,0,0.4)), 
+                url('https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=3840&h=2160&fit=crop&crop=center') center/cover; 
+}
+.bg-abstract-17 { 
+    background: linear-gradient(135deg, rgba(0,0,0,0.3), rgba(0,0,0,0.5)), 
+                url('https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=3840&h=2160&fit=crop&crop=center') center/cover; 
+}
+.bg-abstract-18 { 
+    background: linear-gradient(135deg, rgba(0,0,0,0.2), rgba(0,0,0,0.4)), 
+                url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=3840&h=2160&fit=crop&crop=center') center/cover; 
+}
+.bg-abstract-19 { 
+    background: linear-gradient(135deg, rgba(0,0,0,0.3), rgba(0,0,0,0.5)), 
+                url('https://images.unsplash.com/photo-1515462277126-2dd0c162007a?w=3840&h=2160&fit=crop&crop=center') center/cover; 
+}
+.bg-abstract-20 { 
+    background: linear-gradient(135deg, rgba(0,0,0,0.2), rgba(0,0,0,0.4)), 
+                url('https://images.unsplash.com/photo-1558682596-dea673d65d00?w=3840&h=2160&fit=crop&crop=center') center/cover; 
+}
+
+        .background-tabs {
+            display: flex;
+            margin-bottom: 1rem;
+            background: #374151;
+            border-radius: 8px;
+            padding: 4px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 0.5rem 1rem;
+            border: none;
+            background: transparent;
+            color: #9ca3af;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            background: #1f2937;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .zoom-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .zoom-btn {
+            background: #374151;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .zoom-btn:hover {
+            background: #4b5563;
+        }
+
+        .zoom-display {
+            font-size: 0.875rem;
+            font-weight: 500;
+            min-width: 4rem;
+            text-align: center;
+        }
+
+        /* Add these CSS styles to your existing <style> section */
+
+/* Image Shape Controls */
+.shape-type-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.shape-type-btn {
+    background: #374151;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    padding: 0.75rem 0.5rem;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s;
+    font-size: 0.75rem;
+}
+
+.shape-type-btn:hover {
+    background: #4b5563;
+}
+
+.shape-type-btn.active {
+    border-color: #3b82f6;
+    background: #1e40af;
+}
+
+.shape-preview {
+    width: 24px;
+    height: 24px;
+    background: #60a5fa;
+    position: relative;
+}
+
+.rounded-preview {
+    border-radius: 6px;
+}
+
+.scissors-preview {
+    clip-path: polygon(0% 0%, 90% 0%, 100% 25%, 85% 50%, 100% 75%, 90% 100%, 0% 100%, 15% 75%, 0% 50%, 15% 25%);
+}
+
+.smooth-preview {
+    border-radius: 50% 20% 50% 20%;
+}
+
+.wiggly-preview {
+    clip-path: polygon(0% 20%, 20% 0%, 40% 20%, 60% 0%, 80% 20%, 100% 0%, 100% 30%, 80% 50%, 100% 70%, 80% 100%, 60% 80%, 40% 100%, 20% 80%, 0% 100%, 0% 70%, 20% 50%, 0% 30%);
+}
+
+.shape-controls {
+    position: relative;
+}
+
+.shape-control-group {
+    display: none;
+}
+
+.shape-control-group.active {
+    display: block;
+}
+
+.shape-control-group .slider-label {
+    font-size: 0.875rem;
+    color: #9ca3af;
+    margin-bottom: 0.25rem;
+    display: block;
+}
+
+.shape-control-group .slider {
+    width: 100%;
+    margin-bottom: 0.75rem;
+}
+
+/* Custom image shapes */
+.uploaded-image.shape-rounded {
+    border-radius: var(--shape-radius, 20px);
+}
+
+.uploaded-image.shape-scissors {
+    clip-path: var(--scissors-path);
+}
+
+.uploaded-image.shape-smooth {
+    clip-path: var(--smooth-path);
+}
+
+.uploaded-image.shape-wiggly {
+    clip-path: var(--wiggly-path);
+}
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">
+            <div class="logo-icon">✨</div>
+            <div class="logo-text">VisualSpark Pro</div>
+        </div>
+        <div class="header-buttons">
+            <button class="btn btn-success" onclick="exportImage()">
+                💾 Export
+            </button>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="sidebar">
+            <!-- Backgrounds -->
+            <div class="section">
+                <div class="section-title">
+                    🎨 Backgrounds
+                </div>
+                
+                <!-- Background Type Tabs -->
+                <div class="background-tabs">
+                    <button class="tab-btn active" onclick="openTab(event, 'gradients')" id="gradientsTab">
+                        <i class="fas fa-palette"></i>
+                        Gradients
+                    </button>
+                    <button class="tab-btn" onclick="openTab(event, 'photos')" id="photosTab">
+                        <i class="fas fa-image"></i>
+                        Photos
+                    </button>
+                    <button class="tab-btn" onclick="openTab(event, 'abstract')" id="abstractTab">
+                        <i class="fas fa-paint-brush"></i>
+                        Abstract
+                    </button>
+                </div>
+
+                <!-- Gradient Backgrounds -->
+                <div id="gradients" class="tab-content active">
+                    <div class="gradient-grid">
+                        <!-- Original Gradients -->
+                        <button class="gradient-btn bg-gradient-1 active" onclick="setBackground('bg-gradient-1', this)" title="Midnight Aurora"></button>
+                        <button class="gradient-btn bg-gradient-2" onclick="setBackground('bg-gradient-2', this)" title="Cosmic Fusion"></button>
+                        <button class="gradient-btn bg-gradient-3" onclick="setBackground('bg-gradient-3', this)" title="Ocean Depths"></button>
+                        <button class="gradient-btn bg-gradient-4" onclick="setBackground('bg-gradient-4', this)" title="Neon Dreams"></button>
+                        <button class="gradient-btn bg-gradient-5" onclick="setBackground('bg-gradient-5', this)" title="Sunset Glow"></button>
+                        <button class="gradient-btn bg-gradient-6" onclick="setBackground('bg-gradient-6', this)" title="Purple Haze"></button>
+                        <button class="gradient-btn bg-gradient-7" onclick="setBackground('bg-gradient-7', this)" title="Fire Storm"></button>
+                        <button class="gradient-btn bg-gradient-8" onclick="setBackground('bg-gradient-8', this)" title="Electric Blue"></button>
+                        
+                        <!-- iPhone Display Style Gradients -->
+                        <button class="gradient-btn bg-gradient-iphone-1" onclick="setBackground('bg-gradient-iphone-1', this)" title="iPhone Coral Teal"></button>
+                        <button class="gradient-btn bg-gradient-iphone-2" onclick="setBackground('bg-gradient-iphone-2', this)" title="iPhone Mint Gold"></button>
+                        <button class="gradient-btn bg-gradient-iphone-3" onclick="setBackground('bg-gradient-iphone-3', this)" title="iPhone Purple Blue"></button>
+                        <button class="gradient-btn bg-gradient-iphone-4" onclick="setBackground('bg-gradient-iphone-4', this)" title="iPhone Pink Orange"></button>
+                        <button class="gradient-btn bg-gradient-iphone-5" onclick="setBackground('bg-gradient-iphone-5', this)" title="iPhone Emerald Cyan"></button>
+                        
+                        <!-- Aesthetic Textured Grainy Gradients -->
+                        <button class="gradient-btn bg-gradient-grain-1" onclick="setBackground('bg-gradient-grain-1', this)" title="Forest Grain"></button>
+                        <button class="gradient-btn bg-gradient-grain-2" onclick="setBackground('bg-gradient-grain-2', this)" title="Purple Rain Grain"></button>
+                        <button class="gradient-btn bg-gradient-grain-3" onclick="setBackground('bg-gradient-grain-3', this)" title="Autumn Grain"></button>
+                        <button class="gradient-btn bg-gradient-grain-5" onclick="setBackground('bg-gradient-grain-5', this)" title="Storm Grain"></button>
+                    </div>
+                </div>
+
+                <!-- Photo Backgrounds -->
+                <div id="photos" class="tab-content">
+                    <div class="gradient-grid">
+                        <!-- Original Photos -->
+                        <button class="gradient-btn bg-photo-1" onclick="setBackground('bg-photo-1', this)" title="Mountain Peaks"></button>
+                        <button class="gradient-btn bg-photo-2" onclick="setBackground('bg-photo-2', this)" title="Ocean Waves"></button>
+                        <button class="gradient-btn bg-photo-3" onclick="setBackground('bg-photo-3', this)" title="Desert Dunes"></button>
+                        <button class="gradient-btn bg-photo-4" onclick="setBackground('bg-photo-4', this)" title="Forest Path"></button>
+                        <button class="gradient-btn bg-photo-5" onclick="setBackground('bg-photo-5', this)" title="City Skyline"></button>
+                        <button class="gradient-btn bg-photo-6" onclick="setBackground('bg-photo-6', this)" title="Rocky Cliffs"></button>
+                        <button class="gradient-btn bg-photo-7" onclick="setBackground('bg-photo-7', this)" title="Sunset Beach"></button>
+                        <button class="gradient-btn bg-photo-8" onclick="setBackground('bg-photo-8', this)" title="Mountain Lake"></button>
+                        <button class="gradient-btn bg-photo-9" onclick="setBackground('bg-photo-9', this)" title="Snowy Peaks"></button>
+                        <button class="gradient-btn bg-photo-10" onclick="setBackground('bg-photo-10', this)" title="Aurora Sky"></button>
+                        <button class="gradient-btn bg-photo-11" onclick="setBackground('bg-photo-11', this)" title="Tropical Island"></button>
+                        <button class="gradient-btn bg-photo-12" onclick="setBackground('bg-photo-12', this)" title="Urban Night"></button>
+                        
+                        <!-- New 4K UHD Photos -->
+                        <button class="gradient-btn bg-photo-13" onclick="setBackground('bg-photo-13', this)" title="Arctic Glacier"></button>
+                        <button class="gradient-btn bg-photo-14" onclick="setBackground('bg-photo-14', this)" title="Nebula Space"></button>
+                        <button class="gradient-btn bg-photo-15" onclick="setBackground('bg-photo-15', this)" title="Cherry Blossoms"></button>
+                        <button class="gradient-btn bg-photo-16" onclick="setBackground('bg-photo-16', this)" title="Golden Wheat"></button>
+                        <button class="gradient-btn bg-photo-17" onclick="setBackground('bg-photo-17', this)" title="Volcanic Landscape"></button>
+                        <button class="gradient-btn bg-photo-18" onclick="setBackground('bg-photo-18', this)" title="Misty Forest"></button>
+                        <button class="gradient-btn bg-photo-19" onclick="setBackground('bg-photo-19', this)" title="Crystal Cave"></button>
+                        <button class="gradient-btn bg-photo-20" onclick="setBackground('bg-photo-20', this)" title="Lighthouse Coast"></button>
+                        <button class="gradient-btn bg-photo-21" onclick="setBackground('bg-photo-21', this)" title="Starry Night"></button>
+                        <button class="gradient-btn bg-photo-22" onclick="setBackground('bg-photo-22', this)" title="Bamboo Grove"></button>
+                    </div>
+                </div>
+                <div id="abstract" class="tab-content">
+                    <div class="gradient-grid">
+                        <!-- High-Quality Neon Abstract Images -->
+                        <button class="gradient-btn bg-abstract-1" onclick="setBackground('bg-abstract-1', this)" title="Neon Waves"></button>
+                        <button class="gradient-btn bg-abstract-2" onclick="setBackground('bg-abstract-2', this)" title="Electric Storm"></button>
+                        <button class="gradient-btn bg-abstract-3" onclick="setBackground('bg-abstract-3', this)" title="Cyber Grid"></button>
+                        <button class="gradient-btn bg-abstract-4" onclick="setBackground('bg-abstract-4', this)" title="Digital Flow"></button>
+                        <button class="gradient-btn bg-abstract-5" onclick="setBackground('bg-abstract-5', this)" title="Neon Particles"></button>
+                        
+                        <button class="gradient-btn bg-abstract-6" onclick="setBackground('bg-abstract-6', this)" title="Holographic"></button>
+                        <button class="gradient-btn bg-abstract-7" onclick="setBackground('bg-abstract-7', this)" title="Plasma Energy"></button>
+                        <button class="gradient-btn bg-abstract-8" onclick="setBackground('bg-abstract-8', this)" title="Neural Network"></button>
+                        <button class="gradient-btn bg-abstract-9" onclick="setBackground('bg-abstract-9', this)" title="Laser Beams"></button>
+                        <button class="gradient-btn bg-abstract-10" onclick="setBackground('bg-abstract-10', this)" title="Quantum Field"></button>
+                        
+                        <button class="gradient-btn bg-abstract-11" onclick="setBackground('bg-abstract-11', this)" title="Neon Spiral"></button>
+                        <button class="gradient-btn bg-abstract-12" onclick="setBackground('bg-abstract-12', this)" title="Digital Rain"></button>
+                        <button class="gradient-btn bg-abstract-13" onclick="setBackground('bg-abstract-13', this)" title="Electric Web"></button>
+                        <button class="gradient-btn bg-abstract-14" onclick="setBackground('bg-abstract-14', this)" title="Cyber Tunnel"></button>
+                        <button class="gradient-btn bg-abstract-15" onclick="setBackground('bg-abstract-15', this)" title="Neon Circuit"></button>
+                        
+                        <button class="gradient-btn bg-abstract-16" onclick="setBackground('bg-abstract-16', this)" title="Light Trails"></button>
+                        <button class="gradient-btn bg-abstract-17" onclick="setBackground('bg-abstract-17', this)" title="Energy Burst"></button>
+                        <button class="gradient-btn bg-abstract-18" onclick="setBackground('bg-abstract-18', this)" title="Digital Galaxy"></button>
+                        <button class="gradient-btn bg-abstract-19" onclick="setBackground('bg-abstract-19', this)" title="Neon Smoke"></button>
+                        <button class="gradient-btn bg-abstract-20" onclick="setBackground('bg-abstract-20', this)" title="Electric Pulse"></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Canvas Size -->
+            <div class="section">
+                <div class="section-title">
+                    📐 Canvas Size
+                </div>
+                <div class="preset-grid">
+                    <button class="preset-btn" onclick="setCanvasSize(1080, 1080)">
+                        <div class="preset-name">Instagram Post</div>
+                        <div class="preset-size">1080 × 1080</div>
+                    </button>
+                    <button class="preset-btn" onclick="setCanvasSize(1500, 500)">
+                        <div class="preset-name">Twitter Header</div>
+                        <div class="preset-size">1500 × 500</div>
+                    </button>
+                    <button class="preset-btn" onclick="setCanvasSize(1200, 628)">
+                        <div class="preset-name">LinkedIn Post</div>
+                        <div class="preset-size">1200 × 628</div>
+                    </button>
+                    <button class="preset-btn" onclick="setCanvasSize(1280, 720)">
+                        <div class="preset-name">YouTube Thumbnail</div>
+                        <div class="preset-size">1280 × 720</div>
+                    </button>
+                    <button class="preset-btn" onclick="setCanvasSize(800, 600)">
+                        <div class="preset-name">Default</div>
+                        <div class="preset-size">800 × 600</div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Upload Image -->
+            <div class="section">
+                <div class="section-title">
+                    🖼️ Upload Image
+                </div>
+                <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+                    <div class="upload-icon">📤</div>
+                    <div class="upload-text">Click to upload image</div>
+                </div>
+                <input type="file" id="fileInput" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
+            </div>
+
+            <!-- Add this new section in your sidebar, after the Upload Image section -->
+
+<!-- Image Shape -->
+<div class="section">
+    <div class="section-title">
+        ✂️ Image Shape
+    </div>
+    
+    <!-- Shape Type Selection -->
+    <div style="margin-bottom: 1rem;">
+        <label style="font-size: 0.875rem; color: #9ca3af; margin-bottom: 0.5rem; display: block;">Shape Type:</label>
+        <div class="shape-type-grid">
+            <button class="shape-type-btn active" data-shape="rounded" onclick="selectShapeType('rounded', this)">
+                <div class="shape-preview rounded-preview"></div>
+                <span>Rounded</span>
+            </button>
+            <button class="shape-type-btn" data-shape="scissors" onclick="selectShapeType('scissors', this)">
+                <div class="shape-preview scissors-preview"></div>
+                <span>Scissors</span>
+            </button>
+            
+        </div>
+    </div>
+
+    <!-- Intensity Controls -->
+    <div class="shape-controls">
+        <!-- Rounded Controls -->
+        <div id="roundedControls" class="shape-control-group active">
+            <label class="slider-label">Corner Radius: <span id="roundedValue">20</span>px</label>
+            <input type="range" class="slider" id="roundedSlider" min="0" max="60" value="20" oninput="updateImageShape()">
+        </div>
+
+        <!-- Scissors Controls -->
+        <div id="scissorsControls" class="shape-control-group">
+            <label class="slider-label">Cut Depth: <span id="scissorsDepthValue">2</span>px</label>
+            <input type="range" class="slider" id="scissorsDepthSlider" min="1" max="10" value="2" oninput="updateImageShape()">
+            <label class="slider-label">Cut Frequency: <span id="scissorsFreqValue">20</span></label>
+            <input type="range" class="slider" id="scissorsFreqSlider" min="4" max="20" value="20" oninput="updateImageShape()">
+        </div>
+
+        <!-- Smooth Controls -->
+        <!-- <div id="smoothControls" class="shape-control-group">
+            <label class="slider-label">Wave Intensity: <span id="smoothIntensityValue">20</span>px</label>
+            <input type="range" class="slider" id="smoothIntensitySlider" min="5" max="50" value="20" oninput="updateImageShape()">
+            <label class="slider-label">Wave Frequency: <span id="smoothFreqValue">4</span></label>
+            <input type="range" class="slider" id="smoothFreqSlider" min="2" max="10" value="4" oninput="updateImageShape()">
+        </div> -->
+
+        <!-- Wiggly Controls -->
+        <!-- <div id="wigglyControls" class="shape-control-group">
+            <label class="slider-label">Wiggle Intensity: <span id="wigglyIntensityValue">25</span>px</label>
+            <input type="range" class="slider" id="wigglyIntensitySlider" min="10" max="60" value="25" oninput="updateImageShape()">
+            <label class="slider-label">Wiggle Frequency: <span id="wigglyFreqValue">12</span></label>
+            <input type="range" class="slider" id="wigglyFreqSlider" min="6" max="25" value="12" oninput="updateImageShape()">
+        </div> -->
+    </div>
+
+    <!-- Reset Button -->
+    <button class="btn btn-primary" onclick="resetImageShape()" style="width: 100%; margin-top: 1rem; font-size: 0.875rem;">
+        Reset Shape
+    </button>
+</div>
+
+            <!-- Effects -->
+            <div class="section">
+                <div class="section-title">✨ Effects</div>
+                
+                <!-- Shadows -->
+                <div class="checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="shadowEnabled" checked onchange="updateShadow()">
+                        Drop Shadow
+                    </label>
+                    <div class="slider-group" id="shadowControls">
+                        <label class="slider-label">Blur: <span id="shadowBlurValue">20</span>px</label>
+                        <input type="range" class="slider" id="shadowBlur" min="0" max="50" value="20" oninput="updateShadow()">
+                        <label class="slider-label">Opacity: <span id="shadowOpacityValue">30</span>%</label>
+                        <input type="range" class="slider" id="shadowOpacity" min="0" max="100" value="30" oninput="updateShadow()">
+                    </div>
+                </div>
+
+                <!-- Borders -->
+                <div class="checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="borderEnabled" onchange="updateBorder()">
+                        Border
+                    </label>
+                    <div class="slider-group" id="borderControls" style="display: none;">
+                        <label class="slider-label">Width: <span id="borderWidthValue">2</span>px</label>
+                        <input type="range" class="slider" id="borderWidth" min="1" max="20" value="2" oninput="updateBorder()">
+                        <label class="slider-label">Radius: <span id="borderRadiusValue">12</span>px</label>
+                        <input type="range" class="slider" id="borderRadius" min="0" max="50" value="12" oninput="updateBorder()">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="canvas-area">
+            <div class="canvas-controls">
+                <div class="control-group">
+                    <div class="zoom-controls">
+                        <button class="zoom-btn" onclick="changeZoom(-0.25)">−</button>
+                        <div class="zoom-display" id="zoomDisplay">100%</div>
+                        <button class="zoom-btn" onclick="changeZoom(0.25)">+</button>
+                    </div>
+                </div>
+                <div id="canvasDimensions">800 × 600</div>
+            </div>
+
+            <div class="canvas-viewport">
+                <div class="canvas bg-gradient-1" id="mainCanvas" style="width: 800px; height: 600px;">
+                    <div class="canvas-content">
+                        <div class="noise-overlay"></div>
+                        <img id="uploadedImage" class="uploaded-image" style="display: none;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentZoom = 1;
+        let currentBackground = 'bg-gradient-1';
+        let canvasWidth = 800;
+        let canvasHeight = 600;
+
+        // Background configurations for export
+        const backgroundConfigs = {
+            // Gradients
+            'bg-gradient-1': { type: 'gradient', colors: ['#667eea', '#764ba2'] },
+            'bg-gradient-2': { type: 'gradient', colors: ['#f093fb', '#f5576c'] },
+            'bg-gradient-3': { type: 'gradient', colors: ['#4facfe', '#00f2fe'] },
+            'bg-gradient-4': { type: 'gradient', colors: ['#43e97b', '#38f9d7'] },
+            'bg-gradient-5': { type: 'gradient', colors: ['#fa709a', '#fee140'] },
+            'bg-gradient-6': { type: 'gradient', colors: ['#a8edea', '#fed6e3'] },
+            'bg-gradient-7': { type: 'gradient', colors: ['#ff9a9e', '#fecfef'] },
+            'bg-gradient-8': { type: 'gradient', colors: ['#667eea', '#764ba2'] },
+            // iPhone Display Style Gradients
+            'bg-gradient-iphone-1': { type: 'gradient', colors: ['#FF6B6B', '#4ECDC4'] },
+            'bg-gradient-iphone-2': { type: 'gradient', colors: ['#A8E6CF', '#FFD93D'] },
+            'bg-gradient-iphone-3': { type: 'gradient', colors: ['#6C5CE7', '#74B9FF'] },
+            'bg-gradient-iphone-4': { type: 'gradient', colors: ['#FD79A8', '#FDCB6E'] },
+            'bg-gradient-iphone-5': { type: 'gradient', colors: ['#00B894', '#00CEC9'] },
+
+            // Aesthetic Textured Grainy Gradients
+            // Super Grainy Texture Images (replace existing bg-gradient-grain-* entries)
+            'bg-gradient-grain-1': { 
+                type: 'photo', 
+                url: 'https://images.unsplash.com/photo-1557683316-973673baf926?w=3840&h=2160&fit=crop&crop=center',
+                overlay: ['rgba(0,0,0,0)', 'rgba(0,0,0,0)'] // No overlay for pure texture
+            },
+            'bg-gradient-grain-2': { 
+                type: 'photo', 
+                url: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=3840&h=2160&fit=crop&crop=center',
+                overlay: ['rgba(0,0,0,0)', 'rgba(0,0,0,0)']
+            },
+            'bg-gradient-grain-3': { 
+                type: 'photo', 
+                url: 'https://images.unsplash.com/photo-1557683311-eac922347aa1?w=3840&h=2160&fit=crop&crop=center',
+                overlay: ['rgba(0,0,0,0)', 'rgba(0,0,0,0)']
+            },
+            
+            'bg-gradient-grain-5': { 
+                type: 'photo', 
+                url: 'https://images.unsplash.com/photo-1557683304-673a23048d34?w=3840&h=2160&fit=crop&crop=center',
+                overlay: ['rgba(0,0,0,0)', 'rgba(0,0,0,0)']
+            },
+            
+            // Photos with URLs and overlay colors
+            'bg-photo-1': { 
+                type: 'photo', 
+                url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&h=1080&fit=crop&crop=center',
+                overlay: ['rgba(0,0,0,0.4)', 'rgba(0,0,0,0.6)']
+            },
+            'bg-photo-2': { 
+                type: 'photo', 
+                url: 'https://images.unsplash.com/photo-1447433819943-74a20887a81e?w=1920&h=1080&fit=crop&crop=center',
+                overlay: ['rgba(0,0,0,0.3)', 'rgba(0,0,0,0.5)']
+            },
+            'bg-photo-3': { 
+                type: 'photo', 
+                url: 'https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?w=1920&h=1080&fit=crop&crop=center',
+                overlay: ['rgba(0,0,0,0.4)', 'rgba(0,0,0,0.6)']
+            },
+            'bg-photo-4': { 
+                type: 'photo', 
+                url: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1920&h=1080&fit=crop&crop=center',
+                overlay: ['rgba(0,0,0,0.3)', 'rgba(0,0,0,0.5)']
+            },
+            'bg-photo-5': { 
+                type: 'photo', 
+                url: 'https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=1920&h=1080&fit=crop&crop=center',
+                overlay: ['rgba(0,0,0,0.4)', 'rgba(0,0,0,0.6)']
+            },
+            'bg-photo-6': { 
+                type: 'photo', 
+                url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&h=1080&fit=crop&crop=center',
+                overlay: ['rgba(0,0,0,0.3)', 'rgba(0,0,0,0.5)']
+            },
+            'bg-photo-7': { 
+                type: 'photo', 
+                url: 'https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=1920&h=1080&fit=crop&crop=center',
+                overlay: ['rgba(0,0,0,0.4)', 'rgba(0,0,0,0.6)']
+            },
+            'bg-photo-8': { 
+                type: 'photo', 
+                url: 'https://images.unsplash.com/photo-1464822759844-d150065494cc?w=1920&h=1080&fit=crop&crop=center',
+                overlay: ['rgba(0,0,0,0.3)', 'rgba(0,0,0,0.5)']
+            },
+            'bg-photo-9': { 
+                type: 'photo', 
+                url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&h=1080&fit=crop&crop=center',
+                overlay: ['rgba(0,0,0,0.4)', 'rgba(0,0,0,0.6)']
+            },
+            'bg-photo-10': { 
+                type: 'photo', 
+                url: 'https://images.unsplash.com/photo-1533628635777-112b2239b1c7?w=1920&h=1080&fit=crop&crop=center',
+                overlay: ['rgba(0,0,0,0.3)', 'rgba(0,0,0,0.5)']
+            },
+            'bg-photo-11': { 
+                type: 'photo', 
+                url: 'https://images.unsplash.com/photo-1494500764479-0c8f2919a3d8?w=1920&h=1080&fit=crop&crop=center',
+                overlay: ['rgba(0,0,0,0.4)', 'rgba(0,0,0,0.6)']
+            },
+            'bg-photo-12': { 
+                type: 'photo', 
+                url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&h=1080&fit=crop&crop=center',
+                overlay: ['rgba(0,0,0,0.3)', 'rgba(0,0,0,0.5)']
+            },
+
+        // New 4K UHD Photos
+        'bg-photo-13': { 
+            type: 'photo', 
+            url: 'https://images.unsplash.com/photo-1551632811-561732d1e306?w=3840&h=2160&fit=crop&crop=center',
+            overlay: ['rgba(0,0,0,0.3)', 'rgba(0,0,0,0.5)']
+        },
+        'bg-photo-14': { 
+            type: 'photo', 
+            url: 'https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?w=3840&h=2160&fit=crop&crop=center',
+            overlay: ['rgba(0,0,0,0.4)', 'rgba(0,0,0,0.6)']
+        },
+        'bg-photo-15': { 
+            type: 'photo', 
+            url: 'https://images.unsplash.com/photo-1522383225653-ed111181a951?w=3840&h=2160&fit=crop&crop=center',
+            overlay: ['rgba(0,0,0,0.2)', 'rgba(0,0,0,0.4)']
+        },
+        'bg-photo-16': { 
+            type: 'photo', 
+            url: 'https://images.unsplash.com/photo-1500595046743-cd271d694d30?w=3840&h=2160&fit=crop&crop=center',
+            overlay: ['rgba(0,0,0,0.3)', 'rgba(0,0,0,0.5)']
+        },
+        'bg-photo-17': { 
+            type: 'photo', 
+            url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=3840&h=2160&fit=crop&crop=center',
+            overlay: ['rgba(0,0,0,0.4)', 'rgba(0,0,0,0.6)']
+        },
+        'bg-photo-18': { 
+            type: 'photo', 
+            url: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=3840&h=2160&fit=crop&crop=center',
+            overlay: ['rgba(0,0,0,0.5)', 'rgba(0,0,0,0.5)']
+        },
+        'bg-photo-19': { 
+            type: 'photo', 
+            url: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=3840&h=2160&fit=crop&crop=center',
+            overlay: ['rgba(0,0,0,0.4)', 'rgba(0,0,0,0.6)']
+        },
+        'bg-photo-20': { 
+            type: 'photo', 
+            url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=3840&h=2160&fit=crop&crop=center',
+            overlay: ['rgba(0,0,0,0.3)', 'rgba(0,0,0,0.5)']
+        },
+        'bg-photo-21': { 
+            type: 'photo', 
+            url: 'https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=3840&h=2160&fit=crop&crop=center',
+            overlay: ['rgba(0,0,0,0.4)', 'rgba(0,0,0,0.6)']
+        },
+        'bg-photo-22': { 
+            type: 'photo', 
+            url: 'https://images.unsplash.com/photo-1528127269322-539801943592?w=3840&h=2160&fit=crop&crop=center',
+            overlay: ['rgba(0,0,0,0.3)', 'rgba(0,0,0,0.5)']
+        },
+        // High-Quality Neon Abstract Images
+'bg-abstract-1': { 
+    type: 'photo', 
+    url: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=3840&h=2160&fit=crop&crop=center',
+    overlay: ['rgba(0,0,0,0.3)', 'rgba(0,0,0,0.5)']
+},
+'bg-abstract-2': { 
+    type: 'photo', 
+    url: 'https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=3840&h=2160&fit=crop&crop=center',
+    overlay: ['rgba(0,0,0,0.2)', 'rgba(0,0,0,0.4)']
+},
+'bg-abstract-3': { 
+    type: 'photo', 
+    url: 'https://images.unsplash.com/photo-1563089145-599997674d42?w=3840&h=2160&fit=crop&crop=center',
+    overlay: ['rgba(0,0,0,0.3)', 'rgba(0,0,0,0.5)']
+},
+'bg-abstract-4': { 
+    type: 'photo', 
+    url: 'https://images.unsplash.com/photo-1557682250-33bd709cbe85?w=3840&h=2160&fit=crop&crop=center',
+    overlay: ['rgba(0,0,0,0.2)', 'rgba(0,0,0,0.4)']
+},
+'bg-abstract-5': { 
+    type: 'photo', 
+    url: 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=3840&h=2160&fit=crop&crop=center',
+    overlay: ['rgba(0,0,0,0.3)', 'rgba(0,0,0,0.5)']
+},
+
+'bg-abstract-6': { 
+    type: 'photo', 
+    url: 'https://images.unsplash.com/photo-1562408590-e32931084e23?w=3840&h=2160&fit=crop&crop=center',
+    overlay: ['rgba(0,0,0,0.2)', 'rgba(0,0,0,0.4)']
+},
+'bg-abstract-7': { 
+    type: 'photo', 
+    url: 'https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=3840&h=2160&fit=crop&crop=center',
+    overlay: ['rgba(0,0,0,0.3)', 'rgba(0,0,0,0.5)']
+},
+'bg-abstract-8': { 
+    type: 'photo', 
+    url: 'https://images.unsplash.com/photo-1573108037329-37aa135a142e?w=3840&h=2160&fit=crop&crop=center',
+    overlay: ['rgba(0,0,0,0.2)', 'rgba(0,0,0,0.4)']
+},
+'bg-abstract-9': { 
+    type: 'photo', 
+    url: 'https://images.unsplash.com/photo-1551432664-1e4c30f4bf06?w=3840&h=2160&fit=crop&crop=center',
+    overlay: ['rgba(0,0,0,0.3)', 'rgba(0,0,0,0.5)']
+},
+'bg-abstract-10': { 
+    type: 'photo', 
+    url: 'https://images.unsplash.com/photo-1558618666-9e3d6d1c4b8a?w=3840&h=2160&fit=crop&crop=center',
+    overlay: ['rgba(0,0,0,0.2)', 'rgba(0,0,0,0.4)']
+},
+
+'bg-abstract-11': { 
+    type: 'photo', 
+    url: 'https://images.unsplash.com/photo-1518640467707-6811f4a6ab73?w=3840&h=2160&fit=crop&crop=center',
+    overlay: ['rgba(0,0,0,0.3)', 'rgba(0,0,0,0.5)']
+},
+'bg-abstract-12': { 
+    type: 'photo', 
+    url: 'https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=3840&h=2160&fit=crop&crop=center',
+    overlay: ['rgba(0,0,0,0.2)', 'rgba(0,0,0,0.4)']
+},
+'bg-abstract-13': { 
+    type: 'photo', 
+    url: 'https://images.unsplash.com/photo-1535478044878-3ed83d5456ef?w=3840&h=2160&fit=crop&crop=center',
+    overlay: ['rgba(0,0,0,0.3)', 'rgba(0,0,0,0.5)']
+},
+'bg-abstract-14': { 
+    type: 'photo', 
+    url: 'https://images.unsplash.com/photo-1558244662-d26f0045fba4?w=3840&h=2160&fit=crop&crop=center',
+    overlay: ['rgba(0,0,0,0.2)', 'rgba(0,0,0,0.4)']
+},
+'bg-abstract-15': { 
+    type: 'photo', 
+    url: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=3840&h=2160&fit=crop&crop=center',
+    overlay: ['rgba(0,0,0,0.3)', 'rgba(0,0,0,0.5)']
+},
+
+'bg-abstract-16': { 
+    type: 'photo', 
+    url: 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=3840&h=2160&fit=crop&crop=center',
+    overlay: ['rgba(0,0,0,0.2)', 'rgba(0,0,0,0.4)']
+},
+'bg-abstract-17': { 
+    type: 'photo', 
+    url: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=3840&h=2160&fit=crop&crop=center',
+    overlay: ['rgba(0,0,0,0.3)', 'rgba(0,0,0,0.5)']
+},
+'bg-abstract-18': { 
+    type: 'photo', 
+    url: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=3840&h=2160&fit=crop&crop=center',
+    overlay: ['rgba(0,0,0,0.2)', 'rgba(0,0,0,0.4)']
+},
+'bg-abstract-19': { 
+    type: 'photo', 
+    url: 'https://images.unsplash.com/photo-1515462277126-2dd0c162007a?w=3840&h=2160&fit=crop&crop=center',
+    overlay: ['rgba(0,0,0,0.3)', 'rgba(0,0,0,0.5)']
+},
+'bg-abstract-20': { 
+    type: 'photo', 
+    url: 'https://images.unsplash.com/photo-1558682596-dea673d65d00?w=3840&h=2160&fit=crop&crop=center',
+    overlay: ['rgba(0,0,0,0.2)', 'rgba(0,0,0,0.4)']
+}
+        };
+
+        function setBackground(className, button) {
+            // Remove active class from all gradient buttons in current tab
+            const currentTab = document.querySelector('.tab-content.active');
+            currentTab.querySelectorAll('.gradient-btn').forEach(btn => btn.classList.remove('active'));
+            
+            // Add active class to clicked button
+            button.classList.add('active');
+            
+            // Update canvas background
+            const canvas = document.getElementById('mainCanvas');
+            canvas.className = `canvas ${className}`;
+            currentBackground = className;
+        }
+
+        function setCanvasSize(width, height) {
+            canvasWidth = width;
+            canvasHeight = height;
+            
+            const canvas = document.getElementById('mainCanvas');
+            const maxDisplayWidth = 800;
+            const maxDisplayHeight = 600;
+            
+            let displayWidth = width;
+            let displayHeight = height;
+            
+            // Scale down for display if too large
+            if (width > maxDisplayWidth || height > maxDisplayHeight) {
+                const scaleX = maxDisplayWidth / width;
+                const scaleY = maxDisplayHeight / height;
+                const scale = Math.min(scaleX, scaleY);
+                displayWidth = width * scale;
+                displayHeight = height * scale;
+            }
+            
+            canvas.style.width = displayWidth + 'px';
+            canvas.style.height = displayHeight + 'px';
+            
+            document.getElementById('canvasDimensions').textContent = `${width} × ${height}`;
+            
+            // Recalculate uploaded image size if present
+            const uploadedImg = document.getElementById('uploadedImage');
+            if (uploadedImg.style.display !== 'none' && uploadedImg.src) {
+                const padding = 64;
+                const maxWidth = width - padding;
+                const maxHeight = height - padding;
+                
+                const img = new Image();
+                img.onload = function() {
+                    const aspectRatio = this.naturalWidth / this.naturalHeight;
+                    
+                    let newDisplayWidth = maxWidth;
+                    let newDisplayHeight = maxWidth / aspectRatio;
+                    
+                    if (newDisplayHeight > maxHeight) {
+                        newDisplayHeight = maxHeight;
+                        newDisplayWidth = maxHeight * aspectRatio;
+                    }
+                    
+                    // Scale for current display size
+                    if (width > maxDisplayWidth || height > maxDisplayHeight) {
+                        const scaleX = maxDisplayWidth / width;
+                        const scaleY = maxDisplayHeight / height;
+                        const scale = Math.min(scaleX, scaleY);
+                        newDisplayWidth *= scale;
+                        newDisplayHeight *= scale;
+                    }
+                    
+                    uploadedImg.style.width = newDisplayWidth + 'px';
+                    uploadedImg.style.height = newDisplayHeight + 'px';
+                };
+                img.src = uploadedImg.src;
+            }
+        }
+
+        // function handleImageUpload(event) {
+        //     const file = event.target.files[0];
+        //     if (file) {
+        //         const reader = new FileReader();
+        //         reader.onload = function(e) {
+        //             const img = document.getElementById('uploadedImage');
+        //             img.onload = function() {
+        //                 // Calculate optimal size to fit within canvas with padding
+        //                 const canvas = document.getElementById('mainCanvas');
+        //                 const canvasRect = canvas.getBoundingClientRect();
+        //                 const padding = 64; // 2rem on each side
+                        
+        //                 const maxWidth = canvasWidth - padding;
+        //                 const maxHeight = canvasHeight - padding;
+                        
+        //                 const aspectRatio = this.naturalWidth / this.naturalHeight;
+                        
+        //                 let displayWidth = maxWidth;
+        //                 let displayHeight = maxWidth / aspectRatio;
+                        
+        //                 if (displayHeight > maxHeight) {
+        //                     displayHeight = maxHeight;
+        //                     displayWidth = maxHeight * aspectRatio;
+        //                 }
+                        
+        //                 // Set the image size and apply shadow if enabled
+        //                 img.style.width = displayWidth + 'px';
+        //                 img.style.height = displayHeight + 'px';
+        //                 img.style.display = 'block';
+                        
+        //                 // Apply current shadow settings
+        //                 updateShadow();
+        //             };
+        //             img.src = e.target.result;
+        //         };
+        //         reader.readAsDataURL(file);
+        //     }
+        // }
+        function handleImageUpload(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = document.getElementById('uploadedImage');
+            img.onload = function() {
+                // Calculate optimal size to fit within canvas with padding
+                const canvas = document.getElementById('mainCanvas');
+                const canvasRect = canvas.getBoundingClientRect();
+                const padding = 64; // 2rem on each side
+                
+                const maxWidth = canvasWidth - padding;
+                const maxHeight = canvasHeight - padding;
+                
+                const aspectRatio = this.naturalWidth / this.naturalHeight;
+                
+                let displayWidth = maxWidth;
+                let displayHeight = maxWidth / aspectRatio;
+                
+                if (displayHeight > maxHeight) {
+                    displayHeight = maxHeight;
+                    displayWidth = maxHeight * aspectRatio;
+                }
+                
+                // Set the image size
+                img.style.width = displayWidth + 'px';
+                img.style.height = displayHeight + 'px';
+                img.style.display = 'block';
+                
+                // Apply current effects
+                updateShadow();
+                updateImageShape(); // Apply current shape settings
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+        function updateShadow() {
+            const enabled = document.getElementById('shadowEnabled').checked;
+            const controls = document.getElementById('shadowControls');
+            const uploadedImg = document.getElementById('uploadedImage');
+            
+            controls.style.display = enabled ? 'block' : 'none';
+            
+            if (enabled) {
+                const blur = document.getElementById('shadowBlur').value;
+                const opacity = document.getElementById('shadowOpacity').value / 100;
+                
+                document.getElementById('shadowBlurValue').textContent = blur;
+                document.getElementById('shadowOpacityValue').textContent = document.getElementById('shadowOpacity').value;
+                
+                // Apply shadow to the uploaded image, not the canvas
+                uploadedImg.style.filter = `drop-shadow(0px 10px ${blur}px rgba(0,0,0,${opacity}))`;
+            } else {
+                uploadedImg.style.filter = 'none';
+            }
+        }
+
+        function switchTab(tabName, button) {
+            // Update tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            
+            // Remove active state from all background buttons
+            document.querySelectorAll('.gradient-btn').forEach(btn => btn.classList.remove('active'));
+        }
+
+        function updateBorder() {
+            const enabled = document.getElementById('borderEnabled').checked;
+            const controls = document.getElementById('borderControls');
+            const canvas = document.getElementById('mainCanvas');
+            
+            controls.style.display = enabled ? 'block' : 'none';
+            
+            if (enabled) {
+                const width = document.getElementById('borderWidth').value;
+                const radius = document.getElementById('borderRadius').value;
+                
+                document.getElementById('borderWidthValue').textContent = width;
+                document.getElementById('borderRadiusValue').textContent = radius;
+                
+                canvas.style.border = `${width}px solid white`;
+                canvas.style.borderRadius = `${radius}px`;
+            } else {
+                canvas.style.border = 'none';
+                canvas.style.borderRadius = '12px';
+            }
+        }
+
+        function changeZoom(delta) {
+            currentZoom = Math.max(0.25, Math.min(3, currentZoom + delta));
+            document.getElementById('zoomDisplay').textContent = Math.round(currentZoom * 100) + '%';
+            
+            const canvas = document.getElementById('mainCanvas');
+            canvas.style.transform = `scale(${currentZoom})`;
+        }
+
+        
+        function drawBackground(canvas, ctx) {
+            const config = backgroundConfigs[currentBackground];
+            
+            if (config.type === 'gradient') {
+                // Handle different gradient types based on CSS class
+                if (currentBackground.includes('abstract-2') || currentBackground.includes('abstract-5') || 
+                    currentBackground.includes('abstract-8') || currentBackground.includes('abstract-11') || 
+                    currentBackground.includes('abstract-14') || currentBackground.includes('abstract-17') || 
+                    currentBackground.includes('abstract-20') || currentBackground.includes('abstract-23') || 
+                    currentBackground.includes('abstract-26') || currentBackground.includes('abstract-29')) {
+                    // Conic gradients - convert to radial for canvas
+                    const gradient = ctx.createRadialGradient(canvasWidth/2, canvasHeight/2, 0, canvasWidth/2, canvasHeight/2, Math.max(canvasWidth, canvasHeight)/2);
+                    const colors = config.colors;
+                    for (let i = 0; i < colors.length; i++) {
+                        gradient.addColorStop(i / (colors.length - 1), colors[i]);
+                    }
+                    ctx.fillStyle = gradient;
+                } else if (currentBackground.includes('abstract-1') || currentBackground.includes('abstract-4') || 
+                        currentBackground.includes('abstract-7') || currentBackground.includes('abstract-10') || 
+                        currentBackground.includes('abstract-13') || currentBackground.includes('abstract-16') || 
+                        currentBackground.includes('abstract-19') || currentBackground.includes('abstract-22') || 
+                        currentBackground.includes('abstract-25') || currentBackground.includes('abstract-28')) {
+                    // Radial gradients
+                    const gradient = ctx.createRadialGradient(canvasWidth/2, canvasHeight/2, 0, canvasWidth/2, canvasHeight/2, Math.max(canvasWidth, canvasHeight)/2);
+                    const colors = config.colors;
+                    for (let i = 0; i < colors.length; i++) {
+                        gradient.addColorStop(i / (colors.length - 1), colors[i]);
+                    }
+                    ctx.fillStyle = gradient;
+                } else {
+                    // Linear gradients (default)
+                    const gradient = ctx.createLinearGradient(0, 0, canvasWidth, canvasHeight);
+                    const colors = config.colors;
+                    
+                    if (colors.length === 2) {
+                        // Simple 2-color gradient
+                        gradient.addColorStop(0, colors[0]);
+                        gradient.addColorStop(1, colors[1]);
+                    } else {
+                        // Multi-color gradient
+                        for (let i = 0; i < colors.length; i++) {
+                            gradient.addColorStop(i / (colors.length - 1), colors[i]);
+                        }
+                    }
+                    ctx.fillStyle = gradient;
+                }
+                
+                ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+                
+                // Add texture for grain gradients
+                if (config.textured) {
+                    // Create noise texture
+                    const imageData = ctx.getImageData(0, 0, canvasWidth, canvasHeight);
+                    const data = imageData.data;
+                    
+                    for (let i = 0; i < data.length; i += 4) {
+                        const noise = (Math.random() - 0.5) * 60; // Adjust intensity
+                        data[i] = Math.max(0, Math.min(255, data[i] + noise));     // Red
+                        data[i + 1] = Math.max(0, Math.min(255, data[i + 1] + noise)); // Green
+                        data[i + 2] = Math.max(0, Math.min(255, data[i + 2] + noise)); // Blue
+                    }
+                    
+                    ctx.putImageData(imageData, 0, 0);
+                }
+                
+            } else if (config.type === 'photo') {
+                // Load and draw photo background
+                return new Promise((resolve) => {
+                    const bgImg = new Image();
+                    bgImg.crossOrigin = 'anonymous';
+                    bgImg.onload = function() {
+                        // Calculate scaling to cover the entire canvas (like CSS background-size: cover)
+                        const imageAspectRatio = bgImg.naturalWidth / bgImg.naturalHeight;
+                        const canvasAspectRatio = canvasWidth / canvasHeight;
+                        
+                        let drawWidth, drawHeight, offsetX = 0, offsetY = 0;
+                        
+                        if (imageAspectRatio > canvasAspectRatio) {
+                            // Image is wider than canvas - scale by height and crop sides
+                            drawHeight = canvasHeight;
+                            drawWidth = canvasHeight * imageAspectRatio;
+                            offsetX = (canvasWidth - drawWidth) / 2;
+                        } else {
+                            // Image is taller than canvas - scale by width and crop top/bottom
+                            drawWidth = canvasWidth;
+                            drawHeight = canvasWidth / imageAspectRatio;
+                            offsetY = (canvasHeight - drawHeight) / 2;
+                        }
+                        
+                        // Draw the background image to cover entire canvas
+                        ctx.drawImage(bgImg, offsetX, offsetY, drawWidth, drawHeight);
+
+                        // Apply overlay gradient
+                        const overlayGradient = ctx.createLinearGradient(0, 0, canvasWidth, canvasHeight);
+                        overlayGradient.addColorStop(0, config.overlay[0]);
+                        overlayGradient.addColorStop(1, config.overlay[1]);
+                        ctx.fillStyle = overlayGradient;
+                        ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+                        
+                        resolve();
+                    };
+                    bgImg.onerror = function() {
+                        // Fallback to gradient if image fails to load
+                        const gradient = ctx.createLinearGradient(0, 0, canvasWidth, canvasHeight);
+                        gradient.addColorStop(0, '#667eea');
+                        gradient.addColorStop(1, '#764ba2'); 
+                        ctx.fillStyle = gradient;
+                        ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+                        resolve();
+                    };
+                    bgImg.src = config.url;
+                });
+            }
+            
+            return Promise.resolve();
+        }
+
+        // function exportImage() {
+        //     // Get device pixel ratio for high DPI displays
+        //     const pixelRatio = window.devicePixelRatio || 1;
+        //     const scaleFactor = 2; // Additional scale for ultra HD quality
+        //     const totalScale = pixelRatio * scaleFactor;
+            
+        //     const canvas = document.createElement('canvas');
+        //     const ctx = canvas.getContext('2d');
+            
+        //     // Set actual canvas size (scaled up for high resolution)
+        //     canvas.width = canvasWidth * totalScale;
+        //     canvas.height = canvasHeight * totalScale;
+            
+        //     // Scale the context to match the device pixel ratio
+        //     ctx.scale(totalScale, totalScale);
+            
+        //     // Enable high-quality image rendering
+        //     ctx.imageSmoothingEnabled = true;
+        //     ctx.imageSmoothingQuality = 'high';
+
+        //     // Add roundRect polyfill if not supported
+        //     if (!ctx.roundRect) {
+        //         ctx.roundRect = function(x, y, width, height, radius) {
+        //             this.beginPath();
+        //             this.moveTo(x + radius, y);
+        //             this.lineTo(x + width - radius, y);
+        //             this.quadraticCurveTo(x + width, y, x + width, y + radius);
+        //             this.lineTo(x + width, y + height - radius);
+        //             this.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+        //             this.lineTo(x + radius, y + height);
+        //             this.quadraticCurveTo(x, y + height, x, y + height - radius);
+        //             this.lineTo(x, y + radius);
+        //             this.quadraticCurveTo(x, y, x + radius, y);
+        //         };
+        //     }
+
+        //     // Draw background based on current selection
+        //     const drawPromise = drawBackground(canvas, ctx);
+            
+        //     Promise.resolve(drawPromise).then(() => {
+        //         // Add uploaded image if exists
+        //         const uploadedImg = document.getElementById('uploadedImage');
+        //         if (uploadedImg.style.display !== 'none' && uploadedImg.src) {
+        //             const img = new Image();
+        //             img.onload = function() {
+        //                 const padding = 64; // 2rem padding on each side (in original canvas units)
+        //                 const maxWidth = canvasWidth - padding; // Use original dimensions
+        //                 const maxHeight = canvasHeight - padding; // Use original dimensions
+                        
+        //                 const aspectRatio = img.naturalWidth / img.naturalHeight;
+        //                 let drawWidth = maxWidth;
+        //                 let drawHeight = maxWidth / aspectRatio;
+                        
+        //                 // Ensure image fits within the available space
+        //                 if (drawHeight > maxHeight) {
+        //                     drawHeight = maxHeight;
+        //                     drawWidth = maxHeight * aspectRatio;
+        //                 }
+                        
+        //                 // Center the image (in original canvas units)
+        //                 const x = (canvasWidth - drawWidth) / 2;
+        //                 const y = (canvasHeight - drawHeight) / 2;
+                        
+        //                 // Apply drop shadow if enabled
+        //                 const shadowEnabled = document.getElementById('shadowEnabled').checked;
+        //                 if (shadowEnabled) {
+        //                     const blur = parseInt(document.getElementById('shadowBlur').value);
+        //                     const opacity = document.getElementById('shadowOpacity').value / 100;
+                            
+        //                     // Save the current context
+        //                     ctx.save();
+                            
+        //                     // Set shadow properties
+        //                     ctx.shadowColor = `rgba(0, 0, 0, ${opacity})`;
+        //                     ctx.shadowBlur = blur;
+        //                     ctx.shadowOffsetX = 0;
+        //                     ctx.shadowOffsetY = 10;
+                            
+        //                     // Draw the image with shadow
+        //                     ctx.drawImage(img, x, y, drawWidth, drawHeight);
+                            
+        //                     // Restore context (removes shadow for subsequent drawing)
+        //                     ctx.restore();
+        //                 } else {
+        //                     // Draw image without shadow
+        //                     ctx.drawImage(img, x, y, drawWidth, drawHeight);
+        //                 }
+                        
+        //                 // Apply border if enabled (draw on top of everything)
+        //                 const borderEnabled = document.getElementById('borderEnabled').checked;
+        //                 if (borderEnabled) {
+        //                     const borderWidth = parseInt(document.getElementById('borderWidth').value);
+        //                     const borderRadius = parseInt(document.getElementById('borderRadius').value);
+                            
+        //                     ctx.strokeStyle = 'white';
+        //                     ctx.lineWidth = borderWidth;
+                            
+        //                     // Draw rounded rectangle border
+        //                     ctx.beginPath();
+        //                     // Draw rounded rectangle border (using original canvas dimensions)
+        //                     ctx.roundRect(
+        //                         borderWidth / 2, 
+        //                         borderWidth / 2, 
+        //                         canvasWidth - borderWidth,  // Use original width
+        //                         canvasHeight - borderWidth, // Use original height
+        //                         borderRadius
+        //                     );
+        //                     ctx.stroke();
+        //                 }
+                        
+        //                 // // Download the final image
+        //                 // const link = document.createElement('a');
+        //                 // link.download = 'visualspark-creation.png';
+        //                 // link.href = canvas.toDataURL();
+        //                 // link.click();
+        //                 // Download the final image (replace your existing download code)
+        //                 canvas.toBlob((blob) => {
+        //                     const link = document.createElement('a');
+        //                     link.download = 'visualspark-creation.png';
+        //                     link.href = URL.createObjectURL(blob);
+        //                     link.click();
+        //                     URL.revokeObjectURL(link.href); // Clean up
+        //                 }, 'image/png', 1.0); // 1.0 = maximum quality
+        //             };
+        //             img.src = uploadedImg.src;
+        //         } else {
+        //             // No uploaded image - just export background with border if enabled
+        //             const borderEnabled = document.getElementById('borderEnabled').checked;
+        //             if (borderEnabled) {
+        //                 const borderWidth = parseInt(document.getElementById('borderWidth').value);
+        //                 const borderRadius = parseInt(document.getElementById('borderRadius').value);
+                        
+        //                 ctx.strokeStyle = 'white';
+        //                 ctx.lineWidth = borderWidth;
+                        
+        //                 // Draw rounded rectangle border
+        //                 ctx.beginPath();
+        //                 // Draw rounded rectangle border (using original canvas dimensions)
+        //                 ctx.roundRect(
+        //                     borderWidth / 2, 
+        //                     borderWidth / 2, 
+        //                     canvasWidth - borderWidth,  // Use original width
+        //                     canvasHeight - borderWidth, // Use original height
+        //                     borderRadius
+        //                 );
+        //                 ctx.stroke();
+        //             }
+                    
+        //             // Download without image
+        //             const link = document.createElement('a');
+        //             link.download = 'visualspark-creation.png';
+        //             link.href = canvas.toDataURL();
+        //             link.click();
+        //         }
+        //     });
+        // }
+
+        // Replace your existing exportImage function with this updated version that supports shapes
+
+function exportImage() {
+    const pixelRatio = window.devicePixelRatio || 1;
+    const scaleFactor = 2;
+    const totalScale = pixelRatio * scaleFactor;
+    
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    
+    canvas.width = canvasWidth * totalScale;
+    canvas.height = canvasHeight * totalScale;
+    
+    ctx.scale(totalScale, totalScale);
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+
+    if (!ctx.roundRect) {
+        ctx.roundRect = function(x, y, width, height, radius) {
+            this.beginPath();
+            this.moveTo(x + radius, y);
+            this.lineTo(x + width - radius, y);
+            this.quadraticCurveTo(x + width, y, x + width, y + radius);
+            this.lineTo(x + width, y + height - radius);
+            this.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+            this.lineTo(x + radius, y + height);
+            this.quadraticCurveTo(x, y + height, x, y + height - radius);
+            this.lineTo(x, y + radius);
+            this.quadraticCurveTo(x, y, x + radius, y);
+        };
+    }
+
+    const drawPromise = drawBackground(canvas, ctx);
+    
+    Promise.resolve(drawPromise).then(() => {
+        const uploadedImg = document.getElementById('uploadedImage');
+        if (uploadedImg.style.display !== 'none' && uploadedImg.src) {
+            const img = new Image();
+            img.onload = function() {
+                const padding = 64;
+                const maxWidth = canvasWidth - padding;
+                const maxHeight = canvasHeight - padding;
+                
+                const aspectRatio = img.naturalWidth / img.naturalHeight;
+                let drawWidth = maxWidth;
+                let drawHeight = maxWidth / aspectRatio;
+                
+                if (drawHeight > maxHeight) {
+                    drawHeight = maxHeight;
+                    drawWidth = maxHeight * aspectRatio;
+                }
+                
+                const x = (canvasWidth - drawWidth) / 2;
+                const y = (canvasHeight - drawHeight) / 2;
+                
+                // Save context before applying shape clipping
+                ctx.save();
+                
+                // Apply shape clipping before drawing image
+                if (uploadedImg.classList.contains('shape-rounded') || 
+                    uploadedImg.classList.contains('shape-scissors') || 
+                    uploadedImg.classList.contains('shape-smooth') || 
+                    uploadedImg.classList.contains('shape-wiggly')) {
+                    
+                    // Translate to image position
+                    ctx.translate(x, y);
+                    
+                    if (uploadedImg.classList.contains('shape-rounded')) {
+                        const radius = parseInt(document.getElementById('roundedSlider').value);
+                        ctx.beginPath();
+                        ctx.roundRect(0, 0, drawWidth, drawHeight, radius);
+                        ctx.clip();
+                    } else if (uploadedImg.classList.contains('shape-scissors')) {
+                        applyScissorsClipToCanvas(ctx, drawWidth, drawHeight);
+                    } else if (uploadedImg.classList.contains('shape-smooth')) {
+                        applySmoothClipToCanvas(ctx, drawWidth, drawHeight);
+                    } else if (uploadedImg.classList.contains('shape-wiggly')) {
+                        applyWigglyClipToCanvas(ctx, drawWidth, drawHeight);
+                    }
+                    
+                    // Apply shadow if enabled
+                    const shadowEnabled = document.getElementById('shadowEnabled').checked;
+                    if (shadowEnabled) {
+                        const blur = parseInt(document.getElementById('shadowBlur').value);
+                        const opacity = document.getElementById('shadowOpacity').value / 100;
+                        
+                        ctx.shadowColor = `rgba(0, 0, 0, ${opacity})`;
+                        ctx.shadowBlur = blur;
+                        ctx.shadowOffsetX = 0;
+                        ctx.shadowOffsetY = 10;
+                    }
+                    
+                    // Draw image at origin (0,0) since we translated
+                    ctx.drawImage(img, 0, 0, drawWidth, drawHeight);
+                } else {
+                    // No shape clipping - draw normally
+                    const shadowEnabled = document.getElementById('shadowEnabled').checked;
+                    if (shadowEnabled) {
+                        const blur = parseInt(document.getElementById('shadowBlur').value);
+                        const opacity = document.getElementById('shadowOpacity').value / 100;
+                        
+                        ctx.shadowColor = `rgba(0, 0, 0, ${opacity})`;
+                        ctx.shadowBlur = blur;
+                        ctx.shadowOffsetX = 0;
+                        ctx.shadowOffsetY = 10;
+                    }
+                    
+                    ctx.drawImage(img, x, y, drawWidth, drawHeight);
+                }
+                
+                // Restore context
+                ctx.restore();
+                
+                // Apply border if enabled (draw on top of everything)
+                const borderEnabled = document.getElementById('borderEnabled').checked;
+                if (borderEnabled) {
+                    const borderWidth = parseInt(document.getElementById('borderWidth').value);
+                    const borderRadius = parseInt(document.getElementById('borderRadius').value);
+                    
+                    ctx.strokeStyle = 'white';
+                    ctx.lineWidth = borderWidth;
+                    
+                    ctx.beginPath();
+                    ctx.roundRect(
+                        borderWidth / 2, 
+                        borderWidth / 2, 
+                        canvasWidth - borderWidth,
+                        canvasHeight - borderWidth,
+                        borderRadius
+                    );
+                    ctx.stroke();
+                }
+                
+                canvas.toBlob((blob) => {
+                    const link = document.createElement('a');
+                    link.download = 'visualspark-creation.png';
+                    link.href = URL.createObjectURL(blob);
+                    link.click();
+                    URL.revokeObjectURL(link.href);
+                }, 'image/png', 1.0);
+            };
+            img.src = uploadedImg.src;
+        } else {
+            // No uploaded image - just export background with border if enabled
+            const borderEnabled = document.getElementById('borderEnabled').checked;
+            if (borderEnabled) {
+                const borderWidth = parseInt(document.getElementById('borderWidth').value);
+                const borderRadius = parseInt(document.getElementById('borderRadius').value);
+                
+                ctx.strokeStyle = 'white';
+                ctx.lineWidth = borderWidth;
+                
+                ctx.beginPath();
+                ctx.roundRect(
+                    borderWidth / 2, 
+                    borderWidth / 2, 
+                    canvasWidth - borderWidth,
+                    canvasHeight - borderWidth,
+                    borderRadius
+                );
+                ctx.stroke();
+            }
+            
+            const link = document.createElement('a');
+            link.download = 'visualspark-creation.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+    });
+}
+
+// Helper functions for canvas clipping
+function applyScissorsClipToCanvas(ctx, width, height) {
+    const frequency = parseInt(document.getElementById('scissorsFreqSlider').value);
+    const depth = parseInt(document.getElementById('scissorsDepthSlider').value);
+    
+    const step = width / frequency;
+    
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    
+    // Top edge with cuts
+    for (let i = 1; i <= frequency; i++) {
+        const x = i * step;
+        const y = i % 2 === 0 ? 0 : depth;
+        ctx.lineTo(x, y);
+    }
+    
+    // Right edge
+    ctx.lineTo(width, height);
+    
+    // Bottom edge with cuts (reverse)
+    for (let i = frequency; i >= 0; i--) {
+        const x = i * step;
+        const y = height - (i % 2 === 0 ? 0 : depth);
+        ctx.lineTo(x, y);
+    }
+    
+    // Left edge
+    ctx.lineTo(0, 0);
+    ctx.clip();
+}
+
+function applySmoothClipToCanvas(ctx, width, height) {
+    const intensity = parseInt(document.getElementById('smoothIntensitySlider').value);
+    const frequency = parseInt(document.getElementById('smoothFreqSlider').value);
+    
+    const points = 50; // Number of points for smooth curve
+    
+    ctx.beginPath();
+    
+    for (let i = 0; i <= points; i++) {
+        const progress = i / points;
+        const angle = progress * 2 * Math.PI;
+        
+        let x, y;
+        
+        if (i <= points / 4) {
+            // Top edge
+            x = (i / (points / 4)) * width;
+            y = Math.max(0, intensity * Math.sin(angle * frequency));
+        } else if (i <= points / 2) {
+            // Right edge
+            const localProgress = (i - points / 4) / (points / 4);
+            x = width - Math.max(0, intensity * Math.sin(angle * frequency));
+            y = localProgress * height;
+        } else if (i <= 3 * points / 4) {
+            // Bottom edge
+            const localProgress = (i - points / 2) / (points / 4);
+            x = width - localProgress * width;
+            y = height - Math.max(0, intensity * Math.sin(angle * frequency));
+        } else {
+            // Left edge
+            const localProgress = (i - 3 * points / 4) / (points / 4);
+            x = Math.max(0, intensity * Math.sin(angle * frequency));
+            y = height - localProgress * height;
+        }
+        
+        if (i === 0) {
+            ctx.moveTo(x, y);
+        } else {
+            ctx.lineTo(x, y);
+        }
+    }
+    
+    ctx.closePath();
+    ctx.clip();
+}
+
+function applyWigglyClipToCanvas(ctx, width, height) {
+    const intensity = parseInt(document.getElementById('wigglyIntensitySlider').value);
+    const frequency = parseInt(document.getElementById('wigglyFreqSlider').value);
+    
+    const points = frequency * 3; // More points for wiggly effect
+    
+    ctx.beginPath();
+    
+    for (let i = 0; i <= points * 4; i++) {
+        const side = Math.floor(i / points);
+        const progress = (i % points) / points;
+        
+        let x, y;
+        const randomWiggle = intensity * (Math.random() - 0.5) * 0.8;
+        
+        switch (side) {
+            case 0: // Top edge
+                x = progress * width;
+                y = Math.max(0, randomWiggle + intensity * Math.sin(progress * Math.PI * frequency) * 0.3);
+                break;
+            case 1: // Right edge  
+                x = width - Math.max(0, randomWiggle + intensity * Math.sin(progress * Math.PI * frequency) * 0.3);
+                y = progress * height;
+                break;
+            case 2: // Bottom edge
+                x = width - progress * width;
+                y = height - Math.max(0, randomWiggle + intensity * Math.sin(progress * Math.PI * frequency) * 0.3);
+                break;
+            case 3: // Left edge
+                x = Math.max(0, randomWiggle + intensity * Math.sin(progress * Math.PI * frequency) * 0.3);
+                y = height - progress * height;
+                break;
+        }
+        
+        if (i === 0) {
+            ctx.moveTo(x, y);
+        } else {
+            ctx.lineTo(x, y);
+        }
+    }
+    
+    ctx.closePath();
+    ctx.clip();
+}
+        function openTab(evt, tabName) {
+            // Hide all tab content
+            var tabcontent = document.getElementsByClassName("tab-content");
+            for (var i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            
+            // Remove active class from all tab buttons
+            var tablinks = document.getElementsByClassName("tab-btn");
+            for (var i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
+            }
+            
+            // Show the selected tab content and mark button as active
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.classList.add("active");
+        }
+
+        // Initialize the first tab as active when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Show the first tab by default (assuming it's 'gradients')
+            document.getElementById('gradients').style.display = "block";
+            document.querySelector('.tab-btn').classList.add("active");
+            // Initialize shape controls
+            updateImageShape();
+        });
+
+        // Add these JavaScript functions to your existing script section
+
+let currentShapeType = 'rounded';
+
+function selectShapeType(shapeType, button) {
+    // Update active button
+    document.querySelectorAll('.shape-type-btn').forEach(btn => btn.classList.remove('active'));
+    button.classList.add('active');
+    
+    // Update current shape type
+    currentShapeType = shapeType;
+    
+    // Show/hide appropriate controls
+    document.querySelectorAll('.shape-control-group').forEach(group => group.classList.remove('active'));
+    document.getElementById(shapeType + 'Controls').classList.add('active');
+    
+    // Apply the shape
+    updateImageShape();
+}
+
+function updateImageShape() {
+    const uploadedImg = document.getElementById('uploadedImage');
+    if (!uploadedImg || uploadedImg.style.display === 'none') return;
+    
+    // Remove all existing shape classes
+    uploadedImg.classList.remove('shape-rounded', 'shape-scissors', 'shape-smooth', 'shape-wiggly');
+    
+    // Apply current shape
+    uploadedImg.classList.add(`shape-${currentShapeType}`);
+    
+    switch (currentShapeType) {
+        case 'rounded':
+            applyRoundedShape(uploadedImg);
+            break;
+        case 'scissors':
+            applyScissorsShape(uploadedImg);
+            break;
+        case 'smooth':
+            applySmoothShape(uploadedImg);
+            break;
+        case 'wiggly':
+            applyWigglyShape(uploadedImg);
+            break;
+    }
+}
+
+function applyRoundedShape(img) {
+    const radius = document.getElementById('roundedSlider').value;
+    document.getElementById('roundedValue').textContent = radius;
+    img.style.setProperty('--shape-radius', radius + 'px');
+}
+
+function applyScissorsShape(img) {
+    const depth = document.getElementById('scissorsDepthSlider').value;
+    const frequency = document.getElementById('scissorsFreqSlider').value;
+    
+    document.getElementById('scissorsDepthValue').textContent = depth;
+    document.getElementById('scissorsFreqValue').textContent = frequency;
+    
+    // Generate scissors path
+    const scissorsPath = generateScissorsPath(parseInt(frequency), parseInt(depth));
+    img.style.setProperty('--scissors-path', scissorsPath);
+}
+
+function applySmoothShape(img) {
+    const intensity = document.getElementById('smoothIntensitySlider').value;
+    const frequency = document.getElementById('smoothFreqSlider').value;
+    
+    document.getElementById('smoothIntensityValue').textContent = intensity;
+    document.getElementById('smoothFreqValue').textContent = frequency;
+    
+    // Generate smooth wave path
+    const smoothPath = generateSmoothPath(parseInt(frequency), parseInt(intensity));
+    img.style.setProperty('--smooth-path', smoothPath);
+}
+
+function applyWigglyShape(img) {
+    const intensity = document.getElementById('wigglyIntensitySlider').value;
+    const frequency = document.getElementById('wigglyFreqSlider').value;
+    
+    document.getElementById('wigglyIntensityValue').textContent = intensity;
+    document.getElementById('wigglyFreqValue').textContent = frequency;
+    
+    // Generate wiggly path
+    const wigglyPath = generateWigglyPath(parseInt(frequency), parseInt(intensity));
+    img.style.setProperty('--wiggly-path', wigglyPath);
+}
+
+function generateScissorsPath(frequency, depth) {
+    let path = '';
+    const step = 100 / frequency;
+    
+    // Top edge
+    for (let i = 0; i <= frequency; i++) {
+        const x = i * step;
+        const y = i % 2 === 0 ? 0 : depth;
+        path += `${x}% ${y}%${i === frequency ? '' : ', '}`;
+    }
+    
+    // Right edge
+    path += `, 100% 100%`;
+    
+    // Bottom edge (reverse)
+    for (let i = frequency; i >= 0; i--) {
+        const x = i * step;
+        const y = 100 - (i % 2 === 0 ? 0 : depth);
+        path += `, ${x}% ${y}%`;
+    }
+    
+    // Left edge
+    path += `, 0% 0%`;
+    
+    return `polygon(${path})`;
+}
+
+function generateSmoothPath(frequency, intensity) {
+    let path = '';
+    const points = frequency * 4; // More points for smoother curves
+    
+    for (let i = 0; i <= points; i++) {
+        const angle = (i / points) * 2 * Math.PI;
+        const x = (i / points) * 100;
+        
+        // Create smooth waves on top and bottom
+        const topWave = intensity * Math.sin(angle * frequency) / 2;
+        const bottomWave = 100 - intensity * Math.sin(angle * frequency + Math.PI) / 2;
+        
+        if (i <= points / 4) {
+            // Top edge
+            const y = Math.max(0, topWave);
+            path += `${x}% ${y}%${i === points / 4 ? '' : ', '}`;
+        } else if (i <= points / 2) {
+            // Right edge
+            const progress = (i - points / 4) / (points / 4);
+            path += `, ${100}% ${progress * 100}%`;
+        } else if (i <= 3 * points / 4) {
+            // Bottom edge
+            const progress = (i - points / 2) / (points / 4);
+            const x = 100 - progress * 100;
+            const y = Math.min(100, bottomWave);
+            path += `, ${x}% ${y}%`;
+        } else {
+            // Left edge
+            const progress = (i - 3 * points / 4) / (points / 4);
+            path += `, 0% ${100 - progress * 100}%`;
+        }
+    }
+    
+    return `polygon(${path})`;
+}
+
+function generateWigglyPath(frequency, intensity) {
+    let path = '';
+    const points = frequency * 2;
+    
+    for (let i = 0; i <= points * 4; i++) {
+        const side = Math.floor(i / points); // 0=top, 1=right, 2=bottom, 3=left
+        const progress = (i % points) / points;
+        
+        let x, y;
+        
+        switch (side) {
+            case 0: // Top edge
+                x = progress * 100;
+                y = Math.max(0, intensity * Math.sin(progress * Math.PI * frequency) * Math.random() * 0.5 + intensity * 0.3);
+                break;
+            case 1: // Right edge  
+                x = 100 - Math.max(0, intensity * Math.sin(progress * Math.PI * frequency) * Math.random() * 0.5 + intensity * 0.3);
+                y = progress * 100;
+                break;
+            case 2: // Bottom edge
+                x = 100 - progress * 100;
+                y = 100 - Math.max(0, intensity * Math.sin(progress * Math.PI * frequency) * Math.random() * 0.5 + intensity * 0.3);
+                break;
+            case 3: // Left edge
+                x = Math.max(0, intensity * Math.sin(progress * Math.PI * frequency) * Math.random() * 0.5 + intensity * 0.3);
+                y = 100 - progress * 100;
+                break;
+        }
+        
+        path += `${x.toFixed(1)}% ${y.toFixed(1)}%${i === points * 4 ? '' : ', '}`;
+    }
+    
+    return `polygon(${path})`;
+}
+
+function resetImageShape() {
+    const uploadedImg = document.getElementById('uploadedImage');
+    if (!uploadedImg) return;
+    
+    // Remove all shape classes
+    uploadedImg.classList.remove('shape-rounded', 'shape-scissors', 'shape-smooth', 'shape-wiggly');
+    
+    // Reset all CSS properties
+    uploadedImg.style.removeProperty('--shape-radius');
+    uploadedImg.style.removeProperty('--scissors-path');
+    uploadedImg.style.removeProperty('--smooth-path');
+    uploadedImg.style.removeProperty('--wiggly-path');
+    
+    // Reset to rounded and default values
+    currentShapeType = 'rounded';
+    document.querySelectorAll('.shape-type-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelector('[data-shape="rounded"]').classList.add('active');
+    
+    document.querySelectorAll('.shape-control-group').forEach(group => group.classList.remove('active'));
+    document.getElementById('roundedControls').classList.add('active');
+    
+    // Reset slider values
+    document.getElementById('roundedSlider').value = 20;
+    document.getElementById('scissorsDepthSlider').value = 15;
+    document.getElementById('scissorsFreqSlider').value = 8;
+    document.getElementById('smoothIntensitySlider').value = 20;
+    document.getElementById('smoothFreqSlider').value = 4;
+    document.getElementById('wigglyIntensitySlider').value = 25;
+    document.getElementById('wigglyFreqSlider').value = 12;
+    
+    updateImageShape();
+}
+
+// Update the existing handleImageUpload function to apply default shape
+// Add this at the end of your existing handleImageUpload function:
+function handleImageUploadWithShape(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = document.getElementById('uploadedImage');
+            img.onload = function() {
+                // ... existing image upload code ...
+                
+                // Apply current shadow settings
+                updateShadow();
+                
+                // Apply current shape settings
+                updateImageShape();
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+// Update the export function to handle shapes in canvas
+// Add this helper function for export
+function applyShapeToCanvas(canvas, ctx, shapeType) {
+    const width = canvas.width;
+    const height = canvas.height;
+    
+    switch (shapeType) {
+        case 'rounded':
+            const radius = parseInt(document.getElementById('roundedSlider').value) * 2; // Scale for export
+            ctx.beginPath();
+            ctx.roundRect(0, 0, width, height, radius);
+            ctx.clip();
+            break;
+            
+        case 'scissors':
+        case 'smooth':
+        case 'wiggly':
+            // For complex shapes, we'll create a path based on the CSS clip-path
+            const pathData = getShapePathForCanvas(shapeType, width, height);
+            const path = new Path2D(pathData);
+            ctx.clip(path);
+            break;
+    }
+}
+
+function getShapePathForCanvas(shapeType, width, height) {
+    // Convert CSS polygon clip-path to canvas path
+    // This is a simplified version - you might want to enhance this
+    switch (shapeType) {
+        case 'scissors':
+            const frequency = parseInt(document.getElementById('scissorsFreqSlider').value);
+            const depth = parseInt(document.getElementById('scissorsDepthSlider').value);
+            return generateCanvasScissorsPath(width, height, frequency, depth);
+        case 'smooth':
+            return generateCanvasSmoothPath(width, height);
+        case 'wiggly':
+            return generateCanvasWigglyPath(width, height);
+    }
+}
+
+function generateCanvasScissorsPath(width, height, frequency, depth) {
+    const step = width / frequency;
+    let path = `M 0,${depth % 2 === 0 ? 0 : depth}`;
+    
+    for (let i = 1; i <= frequency; i++) {
+        const x = i * step;
+        const y = i % 2 === 0 ? 0 : depth;
+        path += ` L ${x},${y}`;
+    }
+    
+    path += ` L ${width},${height} L 0,${height} Z`;
+    return path;
+}
+        // Initialize
+        updateShadow();
+    </script>
+</body>
+</html>

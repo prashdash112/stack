@@ -1,0 +1,1282 @@
+        <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+
+        body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+}
+
+.markdown-editor-container {
+    background: transparent;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    height: 100vh;
+}
+
+        .editor-header {
+            background: linear-gradient(90deg, #2d3748, #4a5568);
+            color: white;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .editor-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .toolbar {
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 12px 16px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .toolbar-group {
+            display: flex;
+            gap: 4px;
+            padding: 0 8px;
+            border-right: 1px solid #e2e8f0;
+        }
+
+        .toolbar-group:last-child {
+            border-right: none;
+        }
+
+        .toolbar-btn {
+            background: white;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            padding: 8px 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+            transition: all 0.2s ease;
+            min-width: 40px;
+            justify-content: center;
+        }
+
+        .toolbar-btn:hover {
+            background: #f3f4f6;
+            border-color: #9ca3af;
+            transform: translateY(-1px);
+        }
+
+        .toolbar-btn.active {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+
+        .editor-main {
+            display: flex;
+            height: 600px;
+        }
+
+        .editor-pane {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .pane-header {
+            background: #f1f5f9;
+            padding: 12px 16px;
+            border-bottom: 1px solid #e2e8f0;
+            font-weight: 600;
+            color: #475569;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .editor-textarea {
+            flex: 1;
+            border: none;
+            outline: none;
+            padding: 20px;
+            font-family: 'JetBrains Mono', 'Consolas', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            resize: none;
+            background: #fafafa;
+            color: #2d3748;
+        }
+
+        .preview-pane {
+            flex: 1;
+            border-left: 1px solid #e2e8f0;
+            background: white;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .preview-content {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.7;
+            color: #2d3748;
+        }
+
+        /* Preview Content Styling */
+        .preview-content h1 {
+            font-size: 2em;
+            font-weight: 700;
+            margin: 0 0 16px 0;
+            color: #1a202c;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 8px;
+        }
+
+        .preview-content h2 {
+            font-size: 1.5em;
+            font-weight: 600;
+            margin: 24px 0 12px 0;
+            color: #2d3748;
+        }
+
+        .preview-content h3 {
+            font-size: 1.25em;
+            font-weight: 600;
+            margin: 20px 0 8px 0;
+            color: #4a5568;
+        }
+
+        .preview-content p {
+            margin-bottom: 16px;
+        }
+
+        .preview-content strong {
+            font-weight: 600;
+            color: #1a202c;
+        }
+
+        .preview-content em {
+            font-style: italic;
+            color: #4a5568;
+        }
+
+        .preview-content blockquote {
+            border-left: 4px solid #3b82f6;
+            padding-left: 16px;
+            margin: 16px 0;
+            color: #6b7280;
+            font-style: italic;
+            background: #f8fafc;
+            padding: 12px 16px;
+            border-radius: 4px;
+        }
+
+        .preview-content ul, .preview-content ol {
+            margin: 16px 0;
+            padding-left: 24px;
+        }
+
+        .preview-content li {
+            margin-bottom: 4px;
+        }
+
+        .preview-content code {
+            background: #f1f5f9;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9em;
+            color: #e53e3e;
+        }
+
+        .preview-content pre {
+            background: #1a202c;
+            color: #e2e8f0;
+            padding: 16px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 16px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .preview-content pre code {
+            background: none;
+            padding: 0;
+            color: inherit;
+        }
+
+        .preview-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .preview-content th,
+        .preview-content td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .preview-content th {
+            background: #f8fafc;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .preview-content tr:hover {
+            background: #f8fafc;
+        }
+
+        .preview-content hr {
+            border: none;
+            height: 2px;
+            background: linear-gradient(90deg, #e2e8f0, #cbd5e0, #e2e8f0);
+            margin: 24px 0;
+            border-radius: 1px;
+        }
+
+        .preview-content a {
+            color: #3b82f6;
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.2s ease;
+        }
+
+        .preview-content a:hover {
+            border-bottom-color: #3b82f6;
+        }
+
+        .preview-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 16px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Dropdown Styles */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background: white;
+            min-width: 200px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            z-index: 1000;
+            top: 100%;
+            left: 0;
+            margin-top: 4px;
+        }
+
+        .dropdown-content.show {
+            display: block;
+        }
+
+        .dropdown-item {
+            padding: 12px 16px;
+            cursor: pointer;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 14px;
+            color: #374151;
+            transition: background-color 0.2s ease;
+        }
+
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-item:hover {
+            background: #f8fafc;
+        }
+
+        /* Table Dialog Styles */
+        .table-dialog {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            backdrop-filter: blur(4px);
+        }
+
+        .table-dialog.show {
+            display: flex;
+        }
+
+        .table-dialog-content {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .table-dialog-header {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .table-selector {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 2px;
+            margin: 16px 0;
+            background: #f8fafc;
+            padding: 8px;
+            border-radius: 8px;
+        }
+
+        .table-cell {
+            aspect-ratio: 1;
+            background: #e2e8f0;
+            border-radius: 2px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .table-cell:hover,
+        .table-cell.selected {
+            background: #3b82f6;
+        }
+
+        .table-cell.hover-preview {
+            background: #93c5fd;
+        }
+
+        .table-info {
+            text-align: center;
+            margin: 12px 0;
+            font-size: 14px;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .table-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 16px 0;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .input-group label {
+            font-size: 12px;
+            font-weight: 500;
+            color: #374151;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .input-group input {
+            padding: 8px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #374151;
+            transition: border-color 0.2s ease;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .table-dialog-actions {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .dialog-btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+        }
+
+        .dialog-btn-cancel {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .dialog-btn-cancel:hover {
+            background: #e5e7eb;
+        }
+
+        .dialog-btn-create {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .dialog-btn-create:hover {
+            background: #2563eb;
+        }
+
+        .dialog-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .status-bar {
+            background: #f8fafc;
+            border-top: 1px solid #e2e8f0;
+            padding: 8px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .editor-main {
+                flex-direction: column;
+                height: auto;
+            }
+            
+            .preview-pane {
+                border-left: none;
+                border-top: 1px solid #e2e8f0;
+                min-height: 300px;
+            }
+            
+            .toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .toolbar-group {
+                border-right: none;
+                border-bottom: 1px solid #e2e8f0;
+                padding: 8px 0;
+            }
+
+            .table-selector {
+                grid-template-columns: repeat(8, 1fr);
+            }
+        }
+    </style>
+        <!-- Header -->
+        <div class="editor-header">
+            <div class="editor-title">📝 Advanced Markdown Editor</div>
+            <div style="margin-left: auto; font-size: 14px; opacity: 0.8;">
+                Word-like editing with markdown power
+            </div>
+        </div>
+
+        <!-- Toolbar -->
+        <div class="toolbar">
+            <!-- Formatting Group -->
+            <div class="toolbar-group">
+                <div class="dropdown">
+                    <button class="toolbar-btn" id="headingBtn">
+                        <span>H</span> ▼
+                    </button>
+                    <div class="dropdown-content" id="headingDropdown">
+                        <div class="dropdown-item" data-action="heading" data-level="1">Heading 1</div>
+                        <div class="dropdown-item" data-action="heading" data-level="2">Heading 2</div>
+                        <div class="dropdown-item" data-action="heading" data-level="3">Heading 3</div>
+                        <div class="dropdown-item" data-action="heading" data-level="4">Heading 4</div>
+                        <div class="dropdown-item" data-action="heading" data-level="5">Heading 5</div>
+                        <div class="dropdown-item" data-action="heading" data-level="6">Heading 6</div>
+                    </div>
+                </div>
+                <button class="toolbar-btn" data-action="bold" title="Bold (Ctrl+B)">
+                    <strong>B</strong>
+                </button>
+                <button class="toolbar-btn" data-action="italic" title="Italic (Ctrl+I)">
+                    <em>I</em>
+                </button>
+                <button class="toolbar-btn" data-action="strikethrough" title="Strikethrough">
+                    <s>S</s>
+                </button>
+            </div>
+
+            <!-- List Group -->
+            <div class="toolbar-group">
+                <button class="toolbar-btn" data-action="unordered-list" title="Bullet List">
+                    • List
+                </button>
+                <button class="toolbar-btn" data-action="ordered-list" title="Numbered List">
+                    1. List
+                </button>
+                <button class="toolbar-btn" data-action="task-list" title="Task List">
+                    ☑ Task
+                </button>
+            </div>
+
+            <!-- Insert Group -->
+            <div class="toolbar-group">
+                <button class="toolbar-btn" data-action="link" title="Link">
+                    🔗 Link
+                </button>
+                <button class="toolbar-btn" data-action="image" title="Image">
+                    🖼️ Image
+                </button>
+                <button class="toolbar-btn" data-action="table" title="Table (Ctrl+T)">
+                    📊 Table
+                </button>
+                <button class="toolbar-btn" data-action="code-block" title="Code Block">
+                    💻 Code
+                </button>
+            </div>
+
+            <!-- More Group -->
+            <div class="toolbar-group">
+                <button class="toolbar-btn" data-action="blockquote" title="Quote">
+                    💬 Quote
+                </button>
+                <button class="toolbar-btn" data-action="horizontal-rule" title="Horizontal Rule">
+                    ➖ HR
+                </button>
+                <button class="toolbar-btn" data-action="highlight" title="Highlight">
+                    🖍️ Mark
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Editor -->
+        <div class="editor-main">
+            <!-- Editor Pane -->
+            <div class="editor-pane">
+                <div class="pane-header">
+                    ✏️ Markdown Editor
+                </div>
+                <textarea 
+                    class="editor-textarea" 
+                    id="markdownEditor"
+                    placeholder="Start typing your markdown here...
+
+Try these:
+# Heading 1
+## Heading 2
+**Bold text**
+*Italic text*
+- List item
+[Link](url)
+`inline code`
+
+```javascript
+// Code block
+console.log('Hello World');
+```"
+                ></textarea>
+            </div>
+
+            <!-- Preview Pane -->
+            <div class="preview-pane">
+                <div class="pane-header">
+                    👁️ Live Preview
+                </div>
+                <div class="preview-content" id="previewContent">
+                    <h1>Welcome to Advanced Markdown Editor</h1>
+                    <p>Start typing in the editor to see live preview here.</p>
+                    <h2>Features</h2>
+                    <ul>
+                        <li><strong>Real-time preview</strong></li>
+                        <li><em>Word-like toolbar</em></li>
+                        <li>Full markdown support</li>
+                        <li>Tables, code blocks, and more</li>
+                    </ul>
+                </div>
+            </div>
+        </div> 
+
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <div>
+                <span id="wordCount">0 words</span> | 
+                <span id="charCount">0 characters</span> | 
+                <span id="lineCount">1 lines</span>
+            </div>
+            <div>
+                Ready
+            </div>
+        </div>
+    
+
+    <!-- Table Creation Dialog -->
+    <div class="table-dialog" id="tableDialog">
+        <div class="table-dialog-content">
+            <div class="table-dialog-header">
+                📊 Insert Table
+            </div>
+            
+            <div class="table-selector" id="tableSelector">
+                <!-- Grid cells will be generated by JavaScript -->
+            </div>
+            
+            <div class="table-info" id="tableInfo">
+                Select table size (1 × 1)
+            </div>
+            
+            <div class="table-inputs">
+                <div class="input-group">
+                    <label for="rowsInput">Rows</label>
+                    <input type="number" id="rowsInput" min="1" max="20" value="3">
+                </div>
+                <div class="input-group">
+                    <label for="colsInput">Columns</label>
+                    <input type="number" id="colsInput" min="1" max="20" value="3">
+                </div>
+            </div>
+            
+            <div class="table-dialog-actions">
+                <button class="dialog-btn dialog-btn-cancel" id="cancelTableBtn">
+                    Cancel
+                </button>
+                <button class="dialog-btn dialog-btn-create" id="createTableBtn">
+                    Create Table
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include marked.js for markdown parsing -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    <script>
+        class EmbeddedMarkdownEditor {
+            constructor() {
+                this.editor = document.getElementById('markdownEditor');
+                this.preview = document.getElementById('previewContent');
+                this.wordCount = document.getElementById('wordCount');
+                this.charCount = document.getElementById('charCount');
+                this.lineCount = document.getElementById('lineCount');
+                
+                // Table dialog elements
+                this.tableDialog = document.getElementById('tableDialog');
+                this.tableSelector = document.getElementById('tableSelector');
+                this.tableInfo = document.getElementById('tableInfo');
+                this.rowsInput = document.getElementById('rowsInput');
+                this.colsInput = document.getElementById('colsInput');
+                this.createTableBtn = document.getElementById('createTableBtn');
+                this.cancelTableBtn = document.getElementById('cancelTableBtn');
+                
+                this.selectedRows = 3;
+                this.selectedCols = 3;
+                
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.setupToolbar();
+                this.setupTableDialog();
+                this.updatePreview();
+                this.updateStats();
+                
+                // Configure marked for better rendering
+                marked.setOptions({
+                    breaks: true,
+                    gfm: true,
+                    highlight: function(code, lang) {
+                        return code; // Basic highlighting, can be enhanced
+                    }
+                });
+            }
+
+            setupEventListeners() {
+                // Real-time preview update
+                this.editor.addEventListener('input', () => {
+                    this.updatePreview();
+                    this.updateStats();
+                });
+
+                // Handle special key combinations
+                this.editor.addEventListener('keydown', (e) => {
+                    this.handleKeyDown(e);
+                });
+
+                // Handle paste events
+                this.editor.addEventListener('paste', (e) => {
+                    this.handlePaste(e);
+                });
+            }
+
+            setupToolbar() {
+                // Toolbar button clicks
+                document.querySelectorAll('.toolbar-btn[data-action]').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const action = btn.getAttribute('data-action');
+                        
+                        if (action === 'table') {
+                            this.showTableDialog();
+                        } else {
+                            this.executeAction(action, btn);
+                        }
+                    });
+                });
+
+                // Dropdown handling
+                const headingBtn = document.getElementById('headingBtn');
+                if (headingBtn) {
+                    headingBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        this.toggleDropdown('headingDropdown');
+                    });
+                }
+
+                // Dropdown item clicks
+                document.querySelectorAll('.dropdown-item').forEach(item => {
+                    item.addEventListener('click', (e) => {
+                        const action = item.getAttribute('data-action');
+                        const level = item.getAttribute('data-level');
+                        this.executeAction(action, item, { level });
+                        this.hideDropdowns();
+                    });
+                });
+
+                // Close dropdowns when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (!e.target.closest('.dropdown')) {
+                        this.hideDropdowns();
+                    }
+                });
+            }
+
+            setupTableDialog() {
+                // Generate table selector grid
+                this.generateTableGrid();
+                
+                // Table selector hover and click events
+                this.setupTableSelector();
+                
+                // Input field events
+                this.rowsInput.addEventListener('input', () => {
+                    this.updateTableFromInputs();
+                });
+                
+                this.colsInput.addEventListener('input', () => {
+                    this.updateTableFromInputs();
+                });
+                
+                // Dialog button events
+                this.createTableBtn.addEventListener('click', () => {
+                    this.createTableFromDialog();
+                });
+                
+                this.cancelTableBtn.addEventListener('click', () => {
+                    this.hideTableDialog();
+                });
+                
+                // Close dialog when clicking outside
+                this.tableDialog.addEventListener('click', (e) => {
+                    if (e.target === this.tableDialog) {
+                        this.hideTableDialog();
+                    }
+                });
+                
+                // Close dialog with Escape key
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && this.tableDialog.classList.contains('show')) {
+                        this.hideTableDialog();
+                    }
+                });
+            }
+
+            generateTableGrid() {
+                this.tableSelector.innerHTML = '';
+                
+                // Create 10x10 grid
+                for (let i = 0; i < 100; i++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'table-cell';
+                    cell.dataset.row = Math.floor(i / 10) + 1;
+                    cell.dataset.col = (i % 10) + 1;
+                    this.tableSelector.appendChild(cell);
+                }
+            }
+
+            setupTableSelector() {
+                const cells = this.tableSelector.querySelectorAll('.table-cell');
+                
+                cells.forEach(cell => {
+                    cell.addEventListener('mouseenter', (e) => {
+                        const row = parseInt(e.target.dataset.row);
+                        const col = parseInt(e.target.dataset.col);
+                        this.highlightTableCells(row, col);
+                        this.updateTableInfo(row, col);
+                    });
+                    
+                    cell.addEventListener('click', (e) => {
+                        const row = parseInt(e.target.dataset.row);
+                        const col = parseInt(e.target.dataset.col);
+                        this.selectTableSize(row, col);
+                    });
+                });
+                
+                this.tableSelector.addEventListener('mouseleave', () => {
+                    this.clearTableHighlight();
+                    this.updateTableInfo(this.selectedRows, this.selectedCols);
+                });
+            }
+
+            highlightTableCells(rows, cols) {
+                const cells = this.tableSelector.querySelectorAll('.table-cell');
+                
+                cells.forEach(cell => {
+                    const cellRow = parseInt(cell.dataset.row);
+                    const cellCol = parseInt(cell.dataset.col);
+                    
+                    cell.classList.remove('selected', 'hover-preview');
+                    
+                    if (cellRow <= rows && cellCol <= cols) {
+                        if (cellRow <= this.selectedRows && cellCol <= this.selectedCols) {
+                            cell.classList.add('selected');
+                        } else {
+                            cell.classList.add('hover-preview');
+                        }
+                    }
+                });
+            }
+
+            clearTableHighlight() {
+                const cells = this.tableSelector.querySelectorAll('.table-cell');
+                cells.forEach(cell => {
+                    cell.classList.remove('hover-preview');
+                });
+                this.highlightSelectedCells();
+            }
+
+            highlightSelectedCells() {
+                const cells = this.tableSelector.querySelectorAll('.table-cell');
+                
+                cells.forEach(cell => {
+                    const cellRow = parseInt(cell.dataset.row);
+                    const cellCol = parseInt(cell.dataset.col);
+                    
+                    cell.classList.remove('selected');
+                    
+                    if (cellRow <= this.selectedRows && cellCol <= this.selectedCols) {
+                        cell.classList.add('selected');
+                    }
+                });
+            }
+
+            selectTableSize(rows, cols) {
+                this.selectedRows = Math.max(1, Math.min(20, rows));
+                this.selectedCols = Math.max(1, Math.min(20, cols));
+                
+                // Update input fields
+                this.rowsInput.value = this.selectedRows;
+                this.colsInput.value = this.selectedCols;
+                
+                this.highlightSelectedCells();
+                this.updateTableInfo(this.selectedRows, this.selectedCols);
+            }
+
+            updateTableFromInputs() {
+                const rows = Math.max(1, Math.min(20, parseInt(this.rowsInput.value) || 1));
+                const cols = Math.max(1, Math.min(20, parseInt(this.colsInput.value) || 1));
+                
+                // Update inputs to ensure valid values
+                this.rowsInput.value = rows;
+                this.colsInput.value = cols;
+                
+                this.selectTableSize(rows, cols);
+            }
+
+            updateTableInfo(rows, cols) {
+                this.tableInfo.textContent = `Select table size (${rows} × ${cols})`;
+            }
+
+            showTableDialog() {
+                this.tableDialog.classList.add('show');
+                document.body.style.overflow = 'hidden';
+                
+                // Reset to default values
+                this.selectTableSize(3, 3);
+                
+                // Focus on rows input
+                setTimeout(() => {
+                    this.rowsInput.focus();
+                    this.rowsInput.select();
+                }, 100);
+            }
+
+            hideTableDialog() {
+                this.tableDialog.classList.remove('show');
+                document.body.style.overflow = '';
+                
+                // Return focus to editor
+                this.editor.focus();
+            }
+
+            createTableFromDialog() {
+                const rows = this.selectedRows;
+                const cols = this.selectedCols;
+                
+                if (rows >= 1 && cols >= 1 && rows <= 20 && cols <= 20) {
+                    const tableMarkdown = this.generateTableMarkdown(rows, cols);
+                    this.insertTableAtCursor(tableMarkdown);
+                    this.hideTableDialog();
+                    this.updatePreview();
+                }
+            }
+
+            generateTableMarkdown(rows, cols) {
+                let markdown = '\n';
+                
+                // Generate header row
+                const headers = Array.from({ length: cols }, (_, i) => `Header ${i + 1}`);
+                markdown += '| ' + headers.join(' | ') + ' |\n';
+                
+                // Generate separator row
+                const separators = Array.from({ length: cols }, () => '--------');
+                markdown += '| ' + separators.join(' | ') + ' |\n';
+                
+                // Generate data rows
+                for (let i = 0; i < rows - 1; i++) {
+                    const cells = Array.from({ length: cols }, (_, j) => `Cell ${i + 1}-${j + 1}`);
+                    markdown += '| ' + cells.join(' | ') + ' |\n';
+                }
+                
+                markdown += '\n';
+                return markdown;
+            }
+
+            insertTableAtCursor(tableMarkdown) {
+                const start = this.editor.selectionStart;
+                const end = this.editor.selectionEnd;
+                
+                // Get the text before and after cursor
+                const textBefore = this.editor.value.substring(0, start);
+                const textAfter = this.editor.value.substring(end);
+                
+                // Check if we need to add extra newlines for proper formatting
+                let prefix = '';
+                let suffix = '';
+                
+                // Add newline before if cursor is not at start of line or after whitespace
+                if (textBefore.length > 0 && !textBefore.endsWith('\n')) {
+                    prefix = '\n';
+                }
+                
+                // Add newline after if there's text after cursor and it doesn't start with newline
+                if (textAfter.length > 0 && !textAfter.startsWith('\n')) {
+                    suffix = '\n';
+                }
+                
+                const finalTable = prefix + tableMarkdown + suffix;
+                
+                // Insert the table
+                this.editor.value = textBefore + finalTable + textAfter;
+                
+                // Position cursor after the table
+                const newCursorPos = start + finalTable.length;
+                this.editor.setSelectionRange(newCursorPos, newCursorPos);
+                this.editor.focus();
+            }
+
+            handleKeyDown(e) {
+                // Handle keyboard shortcuts
+                if (e.ctrlKey || e.metaKey) {
+                    switch(e.key) {
+                        case 'b':
+                            e.preventDefault();
+                            this.executeAction('bold');
+                            break;
+                        case 'i':
+                            e.preventDefault();
+                            this.executeAction('italic');
+                            break;
+                        case 'k':
+                            e.preventDefault();
+                            this.executeAction('link');
+                            break;
+                        case 't':
+                            e.preventDefault();
+                            this.showTableDialog();
+                            break;
+                    }
+                }
+
+                // Handle Enter key for line breaks
+                if (e.key === 'Enter') {
+                    this.handleEnterKey(e);
+                }
+
+                // Handle Tab key for indentation
+                if (e.key === 'Tab') {
+                    e.preventDefault();
+                    this.insertAtCursor('    '); // 4 spaces
+                }
+            }
+
+            handleEnterKey(e) {
+                // For now, let default behavior handle Enter
+                // We'll enhance this for smart list continuation later
+            }
+
+            handlePaste(e) {
+                // Handle paste events - could add smart paste detection later
+            }
+
+            executeAction(action, element, options = {}) {
+                const start = this.editor.selectionStart;
+                const end = this.editor.selectionEnd;
+                const selectedText = this.editor.value.substring(start, end);
+                let replacement = '';
+
+                switch(action) {
+                    case 'heading':
+                        const level = options.level || 1;
+                        replacement = this.wrapWithHeading(selectedText, level);
+                        break;
+                    case 'bold':
+                        replacement = this.wrapText(selectedText, '**', '**');
+                        break;
+                    case 'italic':
+                        replacement = this.wrapText(selectedText, '*', '*');
+                        break;
+                    case 'strikethrough':
+                        replacement = this.wrapText(selectedText, '~~', '~~');
+                        break;
+                    case 'unordered-list':
+                        replacement = this.createList(selectedText, '-');
+                        break;
+                    case 'ordered-list':
+                        replacement = this.createList(selectedText, '1.');
+                        break;
+                    case 'task-list':
+                        replacement = this.createTaskList(selectedText);
+                        break;
+                    case 'link':
+                        replacement = this.createLink(selectedText);
+                        break;
+                    case 'image':
+                        replacement = this.createImage(selectedText);
+                        break;
+                    case 'table':
+                        // Table creation is handled separately via dialog
+                        return;
+                    case 'code-block':
+                        replacement = this.createCodeBlock(selectedText);
+                        break;
+                    case 'blockquote':
+                        replacement = this.createBlockquote(selectedText);
+                        break;
+                    case 'horizontal-rule':
+                        replacement = '\n\n---\n\n';
+                        break;
+                    case 'highlight':
+                        replacement = this.wrapText(selectedText, '==', '==');
+                        break;
+                }
+
+                if (replacement) {
+                    this.replaceSelection(replacement, start, end);
+                    this.updatePreview();
+                }
+            }
+
+            wrapWithHeading(text, level) {
+                const hashes = '#'.repeat(level);
+                if (text.includes('\n')) {
+                    return text.split('\n').map(line => 
+                        line.trim() ? `${hashes} ${line.trim()}` : line
+                    ).join('\n');
+                }
+                return `${hashes} ${text || 'Heading'}`;
+            }
+
+            wrapText(text, before, after) {
+                if (text) {
+                    return `${before}${text}${after}`;
+                }
+                return `${before}text${after}`;
+            }
+
+            createList(text, marker) {
+                if (text.includes('\n')) {
+                    return text.split('\n').map(line => 
+                        line.trim() ? `${marker} ${line.trim()}` : line
+                    ).join('\n');
+                }
+                return `${marker} ${text || 'List item'}`;
+            }
+
+            createTaskList(text) {
+                if (text.includes('\n')) {
+                    return text.split('\n').map(line => 
+                        line.trim() ? `- [ ] ${line.trim()}` : line
+                    ).join('\n');
+                }
+                return `- [ ] ${text || 'Task item'}`;
+            }
+
+            createLink(text) {
+                const linkText = text || 'Link text';
+                return `[${linkText}](https://example.com)`;
+            }
+
+            createImage(text) {
+                const altText = text || 'Alt text';
+                return `![${altText}](image.jpg)`;
+            }
+
+            createCodeBlock(text) {
+                if (text) {
+                    return `\`\`\`\n${text}\n\`\`\``;
+                }
+                return `\`\`\`javascript\n// Your code here\nconsole.log('Hello World');\n\`\`\``;
+            }
+
+            createBlockquote(text) {
+                if (text.includes('\n')) {
+                    return text.split('\n').map(line => 
+                        line.trim() ? `> ${line.trim()}` : '>'
+                    ).join('\n');
+                }
+                return `> ${text || 'Quote text'}`;
+            }
+
+            insertAtCursor(text) {
+                const start = this.editor.selectionStart;
+                const end = this.editor.selectionEnd;
+                this.replaceSelection(text, start, end);
+            }
+
+            replaceSelection(replacement, start, end) {
+                const value = this.editor.value;
+                const newValue = value.substring(0, start) + replacement + value.substring(end);
+                this.editor.value = newValue;
+                
+                // Set cursor position after replacement
+                const newCursorPos = start + replacement.length;
+                this.editor.setSelectionRange(newCursorPos, newCursorPos);
+                this.editor.focus();
+            }
+
+            toggleDropdown(dropdownId) {
+                this.hideDropdowns();
+                const dropdown = document.getElementById(dropdownId);
+                if (dropdown) {
+                    dropdown.classList.toggle('show');
+                }
+            }
+
+            hideDropdowns() {
+                document.querySelectorAll('.dropdown-content').forEach(dropdown => {
+                    dropdown.classList.remove('show');
+                });
+            }
+
+            updatePreview() {
+                const markdownText = this.editor.value;
+                
+                try {
+                    // Process the markdown with enhanced features
+                    let html = marked.parse(markdownText);
+                    
+                    // Add support for highlighting (==text==)
+                    html = html.replace(/==(.*?)==/g, '<mark>$1</mark>');
+                    
+                    // Add support for subscript (H~2~O)
+                    html = html.replace(/~(.*?)~/g, '<sub>$1</sub>');
+                    
+                    // Add support for superscript (X^2^)
+                    html = html.replace(/\^(.*?)\^/g, '<sup>$1</sup>');
+                    
+                    this.preview.innerHTML = html;
+                } catch (error) {
+                    console.error('Error parsing markdown:', error);
+                    this.preview.innerHTML = '<p>Error parsing markdown</p>';
+                }
+            }
+
+            updateStats() {
+                const text = this.editor.value;
+                const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+                const chars = text.length;
+                const lines = text.split('\n').length;
+
+                this.wordCount.textContent = `${words} words`;
+                this.charCount.textContent = `${chars} characters`;
+                this.lineCount.textContent = `${lines} lines`;
+            }
+
+            // Public method to set content
+            setContent(markdown) {
+                this.editor.value = markdown;
+                this.updatePreview();
+                this.updateStats();
+            }
+
+            // Public method to get content
+            getContent() {
+                return this.editor.value;
+            }
+
+            // Public method to get HTML
+            getHTML() {
+
+                return this.preview.innerHTML;
+            }
+            // Public method to set content
+            setMarkdownContent(content) {
+                this.editor.value = content;
+                this.updatePreview();
+                this.updateStats();
+            }
+        }
+
+        // Initialize the editor when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            window.markdownEditor = new EmbeddedMarkdownEditor();
+
+        });
+    </script>
