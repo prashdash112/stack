@@ -403,35 +403,31 @@
 //     });
 // }        
         // Image upload functionality
-        function initializeImageUpload() {
-            document.getElementById('imageInput').addEventListener('change', (event) => {
-                const file = event.target.files[0];
-                if (!file || !file.type.startsWith('image/')) {
-                    alert('Please select a valid image file.');
-                    return;
-                }
-
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const imageUrl = e.target.result;
-                    
-                    // Add to markdown editor as HTML (not markdown syntax)
-                    const iframe = document.getElementById('markdownEditorFrame');
-                    if (iframe.contentWindow && iframe.contentWindow.markdownEditor) {
-                        // Insert as HTML so it persists in the editor
-                        const imageHTML = `<img src="${imageUrl}" alt="${file.name}" style="max-width: 100%; border-radius: 0.75rem; box-shadow: 0 8px 20px rgba(0,0,0,0.4); margin: 1rem 0; animation: popIn 0.4s ease-out;" />`;
-                        iframe.contentWindow.markdownEditor.insertText(`\n${imageHTML}\n`);
-                        
-                        // Update the preview to show the image
-                        updateStyledPreviewFromMarkdown();
-                    }
-                };
-                reader.readAsDataURL(file);
-                
-                // Clear input
-                event.target.value = '';
-            });
+        // Image upload functionality  
+function initializeImageUpload() {
+    document.getElementById('imageInput').addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        if (!file || !file.type.startsWith('image/')) {
+            alert('Please select a valid image file.');
+            return;
         }
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const iframe = document.getElementById('markdownEditorFrame');
+            if (iframe.contentWindow && iframe.contentWindow.markdownEditor) {
+                // Log all available methods
+                console.log('Available markdownEditor methods:');
+                console.log(Object.getOwnPropertyNames(iframe.contentWindow.markdownEditor));
+                console.log('Available markdownEditor prototype methods:');
+                console.log(Object.getOwnPropertyNames(Object.getPrototypeOf(iframe.contentWindow.markdownEditor)));
+            }
+        };
+        
+        reader.readAsDataURL(file);
+        event.target.value = '';
+    });
+}
 
         // Download functionality
         function initializeDownloadActions() {
