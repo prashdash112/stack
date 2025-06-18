@@ -404,30 +404,44 @@
 // }        
         // Image upload functionality
         // Image upload functionality  
-function initializeImageUpload() {
-    document.getElementById('imageInput').addEventListener('change', (event) => {
-        const file = event.target.files[0];
-        if (!file || !file.type.startsWith('image/')) {
-            alert('Please select a valid image file.');
-            return;
-        }
+        // Image upload functionality
+        function initializeImageUpload() {
+            document.getElementById('imageInput').addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                if (!file || !file.type.startsWith('image/')) {
+                    alert('Please select a valid image file.');
+                    return;
+                }
 
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            const iframe = document.getElementById('markdownEditorFrame');
-            if (iframe.contentWindow && iframe.contentWindow.markdownEditor) {
-                // Log all available methods
-                console.log('Available markdownEditor methods:');
-                console.log(Object.getOwnPropertyNames(iframe.contentWindow.markdownEditor));
-                console.log('Available markdownEditor prototype methods:');
-                console.log(Object.getOwnPropertyNames(Object.getPrototypeOf(iframe.contentWindow.markdownEditor)));
-            }
-        };
-        
-        reader.readAsDataURL(file);
-        event.target.value = '';
-    });
-}
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const imageUrl = e.target.result;
+                    
+                    const iframe = document.getElementById('markdownEditorFrame');
+                    if (iframe.contentWindow && iframe.contentWindow.markdownEditor) {
+                        try {
+                            // Insert markdown image syntax that the editor understands
+                            const imageMarkdown = `![${file.name}](${imageUrl})`;
+                            iframe.contentWindow.markdownEditor.insertAtCursor(`\n${imageMarkdown}\n`);
+                            
+                            // Update preview
+                            updateStyledPreviewFromMarkdown();
+                            
+                        } catch (error) {
+                            console.error('Failed to insert image:', error);
+                            // Fallback method
+                            const currentContent = iframe.contentWindow.markdownEditor.getContent() || '';
+                            const imageMarkdown = `![${file.name}](${imageUrl})`;
+                            iframe.contentWindow.markdownEditor.setContent(currentContent + `\n${imageMarkdown}\n`);
+                            updateStyledPreviewFromMarkdown();
+                        }
+                    }
+                };
+                
+                reader.readAsDataURL(file);
+                event.target.value = '';
+            });
+        }
 
         // Download functionality
         function initializeDownloadActions() {
