@@ -111,7 +111,6 @@
             <h2 class="section-title">📝 Edit & Style Your Content</h2>
             
             <!-- Layer Switcher -->
-            <!-- Layer Switcher -->
             <div class="layer-switcher" style="position: sticky; top: 0; z-index: 10; background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(20px);">
                 <button class="layer-btn active" id="editorTab" data-layer="editor">
                     ✏️ Rich Editor
@@ -121,7 +120,6 @@
                 </button>
             </div>
 
-            <!-- Layer 1: Rich Text Editor -->
             <!-- Layer 1: Markdown Editor -->
             <div class="editor-layer active" id="editorLayer">
                 <iframe 
@@ -129,7 +127,6 @@
                     src="markdown_editor.html" 
                     style="width: 100%; height: 800px; border: none; border-radius: 12px;">
                 </iframe> 
-                <!-- Add these buttons in your editor section -->
             <div class="editor-controls" style="margin-top: 12px; display: flex; gap: 8px; justify-content: flex-end;">
                 <button class="action-btn secondary" id="clearEditor">
                     🗑️ Clear Editor
@@ -207,7 +204,6 @@
                 particlesContainer.appendChild(particle);
             }
         }
-        // Add required CSS animations
         function addRequiredStyles() {
             const style = document.createElement('style');
             style.textContent = `
@@ -247,9 +243,6 @@
             `;
             document.head.appendChild(style);
         }
-
-        // Apply LinkedIn styling to content
-        
 
         // Layer switching functionality
         function initializeLayerSwitching() {
@@ -294,39 +287,10 @@
                     generateContent();
                 }
             });
-        }
-
-        // Image upload functionality
-//         function initializeImageUpload() {
-//             document.getElementById('imageInput').addEventListener('change', (event) => {
-//         const file = event.target.files[0];
-//         if (!file || !file.type.startsWith('image/')) {
-//             alert('Please select a valid image file.');
-//             return;
-//         }
-
-//         const reader = new FileReader();
-//         reader.onload = (e) => {
-//             const imageUrl = e.target.result;
-            
-//             // Insert image into markdown editor instead of Quill
-//             const iframe = document.getElementById('markdownEditorFrame');
-//             if (iframe.contentWindow && iframe.contentWindow.markdownEditor) {
-//                 // Insert markdown image syntax
-//                 const imageMarkdown = `\n![Uploaded Image](${imageUrl})\n`;
-//                 iframe.contentWindow.markdownEditor.insertText(imageMarkdown);
-                
-//                 // Update the preview
-//                 updateStyledPreviewFromMarkdown();
-//             }
-//         };
-//         reader.readAsDataURL(file);
-//     });
-// }        
+        }    
        
         // Image upload functionality with compression
 function initializeImageUpload() {
-    // REPLACE WITH THIS CODE:
     document.getElementById('imageInput').addEventListener('change', (event) => {
     const file = event.target.files[0];
     if (!file || !file.type.startsWith('image/')) {
@@ -389,14 +353,11 @@ function compressImage(file, callback) {
             }
         }
         
-        // Set canvas size
         canvas.width = width;
         canvas.height = height;
         
-        // Draw and compress
         ctx.drawImage(img, 0, 0, width, height);
         
-        // Convert to compressed data URL
         const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7); // 70% quality
         callback(compressedDataUrl);
     };
@@ -409,7 +370,6 @@ function compressImage(file, callback) {
     reader.readAsDataURL(file);
 }
 
-// ADD THIS NEW FUNCTION (place it after your compressImage function)
 function createShortImageUrl(file, callback) {
     // Compress first (using your existing function)
     compressImage(file, (compressedDataUrl) => {
@@ -423,8 +383,6 @@ function createShortImageUrl(file, callback) {
             });
     });
 }
-        // Download functionality
-        // Download functionality
         function initializeDownloadActions() {
             // Download infographic
             document.getElementById('downloadInfographic').addEventListener('click', async () => {
@@ -454,8 +412,6 @@ function createShortImageUrl(file, callback) {
                 }, '*');
             });
         }
-        // Clean and format HTML for better Quill display
-        // Clean and format HTML for better Quill display
         function cleanAndFormatHTML(html) {
             // Create temporary div to process HTML
             const tempDiv = document.createElement('div');

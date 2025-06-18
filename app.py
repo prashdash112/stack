@@ -243,6 +243,11 @@ def generate():
 def markdown_editor():
     return render_template('markdown_editor.html')
 
+@app.route("/carousel_template.html")
+def carousel_template():
+    return render_template("carousel_template.html")
+
+
 @app.route("/track_action", methods=["POST"])
 @login_required
 def track_action():
