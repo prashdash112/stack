@@ -149,10 +149,28 @@
                     <span class="sync-icon">🔄</span>
                     <span class="sync-text">Live Sync Active</span>
                 </div>
-                
-                <div class="styled-preview" id="styledPreview">
-                    <!-- Styled content will be rendered here -->
+                <!-- Template Selector -->
+                <div class="template-selector" style="margin-bottom: 20px;">
+                    <h3 style="margin-bottom: 15px;">Choose Template Style:</h3>
+                    <div class="template-grid" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 20px;">
+                        <button class="template-option active" data-template="tech-neural">🧠 Neural</button>
+                        <button class="template-option" data-template="tech-quantum">⚛️ Quantum</button>
+                        <button class="template-option" data-template="product-modern">🚀 Modern</button>
+                        <button class="template-option" data-template="product-premium">👑 Premium</button>
+                        <button class="template-option" data-template="finance-gold">💰 Gold</button>
+                        <button class="template-option" data-template="finance-elite">🏦 Elite</button>
+                        <button class="template-option" data-template="health-care">🏥 Care</button>
+                        <button class="template-option" data-template="health-medical">🩺 Medical</button>
+                        <button class="template-option" data-template="saas-modern">💻 SaaS</button>
+                        <button class="template-option" data-template="saas-enterprise">🏢 Enterprise</button>
+                    </div>
                 </div>
+                <!-- Template Preview -->
+                <iframe 
+                    id="templatePreviewFrame" 
+                    src="carousel_template.html" 
+                    style="width: 100%; height: 1000px; border: none; border-radius: 12px; background: white;">
+                </iframe>
 
                 <!-- Preview Actions -->
                 <div class="preview-actions">
@@ -231,104 +249,7 @@
         }
 
         // Apply LinkedIn styling to content
-        function applyLinkedInStyling(html) {
-            // Create temporary div to process HTML
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = html;
-
-            // Style headers with gradients
-            const headers = tempDiv.querySelectorAll('h1, h2, h3, h4, h5, h6');
-            headers.forEach(header => {
-                header.style.background = 'linear-gradient(45deg, #d8b4fe, #fca5a5, #fde68a)';
-                header.style.backgroundClip = 'text';
-                header.style.webkitBackgroundClip = 'text';
-                header.style.color = 'transparent';
-                header.style.animation = 'hueShift 5s infinite linear';
-                header.style.fontWeight = '700';
-                header.style.margin = '1.5rem 0 1rem';
-            });
-
-            // Style code blocks with window design
-            const codeBlocks = tempDiv.querySelectorAll('pre');
-            codeBlocks.forEach(pre => {
-                pre.style.backgroundColor = '#1d1d1d';
-                pre.style.borderRadius = '8px';
-                pre.style.padding = '16px';
-                pre.style.position = 'relative';
-                pre.style.color = '#c2e5d9';
-                pre.style.fontFamily = "'Source Code Pro', monospace";
-                pre.style.fontSize = '1.1rem';
-                pre.style.lineHeight = '1.5';
-                pre.style.overflowX = 'auto';
-                pre.style.margin = '1.5rem 0';
-                
-                // Add window decorations
-                pre.setAttribute('data-windowed', 'true');
-            });
-
-            // Style tables with neon effects
-            const tables = tempDiv.querySelectorAll('table');
-            tables.forEach(table => {
-                table.style.width = '100%';
-                table.style.borderCollapse = 'separate';
-                table.style.borderSpacing = '0';
-                table.style.margin = '2rem 0';
-                table.style.fontFamily = "'Inter', sans-serif";
-                table.style.border = '2px solid rgba(102,126,234,0.8)';
-                table.style.boxShadow = '0 0 20px rgba(102,126,234,0.6)';
-                table.style.borderRadius = '1rem';
-                table.style.overflow = 'hidden';
-
-                // Style table cells
-                const cells = table.querySelectorAll('th, td');
-                cells.forEach(cell => {
-                    cell.style.padding = '1rem 1.5rem';
-                    cell.style.border = '1px solid rgba(102,126,234,0.3)';
-                });
-
-                // Style headers
-                const headers = table.querySelectorAll('th');
-                headers.forEach(th => {
-                    th.style.background = 'linear-gradient(90deg, #667eea, #764ba2)';
-                    th.style.color = '#fff';
-                    th.style.textAlign = 'left';
-                    th.style.textShadow = '0 0 8px rgba(255,255,255,0.6)';
-                });
-
-                // Style alternating rows
-                const rows = table.querySelectorAll('tr');
-                rows.forEach((row, index) => {
-                    if (index % 2 === 0 && index > 0) {
-                        const cells = row.querySelectorAll('td');
-                        cells.forEach(cell => {
-                            cell.style.background = 'rgba(102,126,234,0.05)';
-                        });
-                    }
-                });
-            });
-
-            // Style blockquotes
-            const blockquotes = tempDiv.querySelectorAll('blockquote');
-            blockquotes.forEach(bq => {
-                bq.style.borderLeft = '4px solid #667eea';
-                bq.style.paddingLeft = '1rem';
-                bq.style.color = '#ccc';
-                bq.style.fontStyle = 'italic';
-                bq.style.margin = '1rem 0';
-                bq.style.background = 'rgba(102, 126, 234, 0.1)';
-            });
-
-            // Style images
-            const images = tempDiv.querySelectorAll('img');
-            images.forEach(img => {
-                img.style.maxWidth = '100%';
-                img.style.borderRadius = '0.75rem';
-                img.style.boxShadow = '0 8px 20px rgba(0,0,0,0.4)';
-                img.style.margin = '1rem 0';
-            });
-
-            return tempDiv.innerHTML;
-        }
+        
 
         // Layer switching functionality
         function initializeLayerSwitching() {
@@ -503,87 +424,34 @@ function createShortImageUrl(file, callback) {
     });
 }
         // Download functionality
+        // Download functionality
         function initializeDownloadActions() {
             // Download infographic
             document.getElementById('downloadInfographic').addEventListener('click', async () => {
-                const preview = document.getElementById('styledPreview');
-                if (!preview || !preview.innerHTML.trim()) {
-                    alert('No content to download!');
+                const templateFrame = document.getElementById('templatePreviewFrame');
+                if (!templateFrame.contentWindow) {
+                    alert('Template not loaded yet!');
                     return;
                 }
-
-                try {
-                    // Add watermark
-                    const watermark = document.createElement('div');
-                    watermark.className = 'watermark';
-                    watermark.textContent = 'GeniusPost AI';
-                    preview.appendChild(watermark);
-
-                    const canvas = await html2canvas(preview, {
-                        backgroundColor: '#2a2a3d',
-                        scale: 2,
-                        useCORS: true,
-                        allowTaint: false,
-                        logging: false
-                    });
-
-                    // Download image
-                    canvas.toBlob(blob => {
-                        const url = URL.createObjectURL(blob);
-                        const a = document.createElement('a');
-                        a.href = url;
-                        a.download = 'linkedin-post.png';
-                        a.click();
-                        URL.revokeObjectURL(url);
-                    }, 'image/png', 1.0);
-
-                    // Remove watermark
-                    preview.removeChild(watermark);
-                } catch (error) {
-                    console.error('Download failed:', error);
-                    alert('Failed to download infographic.');
-                }
+                
+                // Trigger download from iframe
+                templateFrame.contentWindow.postMessage({
+                    action: 'downloadImage'
+                }, '*');
             });
 
             // Download PDF carousel
             document.getElementById('downloadCarousel').addEventListener('click', async () => {
-                const preview = document.getElementById('styledPreview');
-                if (!preview || !preview.innerHTML.trim()) {
-                    alert('No content to download!');
+                const templateFrame = document.getElementById('templatePreviewFrame');
+                if (!templateFrame.contentWindow) {
+                    alert('Template not loaded yet!');
                     return;
                 }
-
-                try {
-                    // Add watermark
-                    const watermark = document.createElement('div');
-                    watermark.className = 'watermark';
-                    watermark.textContent = 'GeniusPost AI';
-                    preview.appendChild(watermark);
-
-                    const canvas = await html2canvas(preview, {
-                        backgroundColor: '#2a2a3d',
-                        scale: 1.5,
-                        useCORS: true,
-                        allowTaint: false,
-                        logging: false
-                    });
-
-                    const { jsPDF } = window.jspdf;
-                    const pdf = new jsPDF('p', 'mm', 'a4');
-                    
-                    const imgData = canvas.toDataURL('image/png');
-                    const pdfWidth = pdf.internal.pageSize.getWidth();
-                    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-                    
-                    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-                    pdf.save('linkedin-carousel.pdf');
-
-                    // Remove watermark
-                    preview.removeChild(watermark);
-                } catch (error) {
-                    console.error('PDF download failed:', error);
-                    alert('Failed to download PDF.');
-                }
+                
+                // Trigger download from iframe
+                templateFrame.contentWindow.postMessage({
+                    action: 'downloadPDF'
+                }, '*');
             });
         }
         // Clean and format HTML for better Quill display
@@ -848,11 +716,43 @@ function createShortImageUrl(file, callback) {
             }).catch(console.error);
         }
 
+        let currentSelectedTemplate = 'tech-neural';
+
+        // Template selection functionality
+        function initializeTemplateSelection() {
+            const templateOptions = document.querySelectorAll('.template-option');
+            templateOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    // Update active state
+                    templateOptions.forEach(opt => opt.classList.remove('active'));
+                    option.classList.add('active');
+                    
+                    // Update current template
+                    currentSelectedTemplate = option.dataset.template;
+                    
+                    // Update preview
+                    updateTemplatePreview();
+                });
+            });
+        }
+
         function updateStyledPreviewFromMarkdown() {
+            updateTemplatePreview();
+        }
+
+        function updateTemplatePreview() {
             const iframe = document.getElementById('markdownEditorFrame');
-            if (iframe.contentWindow && iframe.contentWindow.markdownEditor) {
-                const htmlContent = iframe.contentWindow.markdownEditor.getHTML();
-                document.getElementById('styledPreview').innerHTML = htmlContent;
+            const templateFrame = document.getElementById('templatePreviewFrame');
+            
+            if (iframe.contentWindow && iframe.contentWindow.markdownEditor && templateFrame.contentWindow) {
+                const markdownContent = iframe.contentWindow.markdownEditor.getContent() || '';
+                
+                // Send content to template frame
+                templateFrame.contentWindow.postMessage({
+                    action: 'updateContent',
+                    content: markdownContent,
+                    template: currentSelectedTemplate
+                }, '*');
             }
         }
         // Initialize everything
@@ -868,7 +768,10 @@ function createShortImageUrl(file, callback) {
             initializeLayerSwitching();
             
             initializeImageUpload();
+            initializeTemplateSelection();
             initializeDownloadActions();
+            
+
 
             // Bind generate button
             document.getElementById('generateBtn').addEventListener('click', generateContent);
