@@ -405,43 +405,89 @@
         // Image upload functionality
         // Image upload functionality  
         // Image upload functionality
-        function initializeImageUpload() {
-            document.getElementById('imageInput').addEventListener('change', (event) => {
-                const file = event.target.files[0];
-                if (!file || !file.type.startsWith('image/')) {
-                    alert('Please select a valid image file.');
-                    return;
-                }
-
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const imageUrl = e.target.result;
-                    
-                    const iframe = document.getElementById('markdownEditorFrame');
-                    if (iframe.contentWindow && iframe.contentWindow.markdownEditor) {
-                        try {
-                            // Insert markdown image syntax that the editor understands
-                            const imageMarkdown = `![${file.name}](${imageUrl})`;
-                            iframe.contentWindow.markdownEditor.insertAtCursor(`\n${imageMarkdown}\n`);
-                            
-                            // Update preview
-                            updateStyledPreviewFromMarkdown();
-                            
-                        } catch (error) {
-                            console.error('Failed to insert image:', error);
-                            // Fallback method
-                            const currentContent = iframe.contentWindow.markdownEditor.getContent() || '';
-                            const imageMarkdown = `![${file.name}](${imageUrl})`;
-                            iframe.contentWindow.markdownEditor.setContent(currentContent + `\n${imageMarkdown}\n`);
-                            updateStyledPreviewFromMarkdown();
-                        }
-                    }
-                };
-                
-                reader.readAsDataURL(file);
-                event.target.value = '';
-            });
+        // Image upload functionality with compression
+function initializeImageUpload() {
+    document.getElementById('imageInput').addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        if (!file || !file.type.startsWith('image/')) {
+            alert('Please select a valid image file.');
+            return;
         }
+
+        // Compress and resize the image
+        compressImage(file, (compressedDataUrl) => {
+            const iframe = document.getElementById('markdownEditorFrame');
+            if (iframe.contentWindow && iframe.contentWindow.markdownEditor) {
+                try {
+                    const imageHTML = `<img src="${compressedDataUrl}" alt="${file.name}" style="max-width: 100%; height: auto; border-radius: 8px; margin: 10px 0; display: block;" />`;
+                    iframe.contentWindow.markdownEditor.insertAtCursor(`\n${imageHTML}\n`);
+                    
+                    setTimeout(() => {
+                        updateStyledPreviewFromMarkdown();
+                    }, 100);
+                    
+                } catch (error) {
+                    console.error('Failed to insert image:', error);
+                    const currentContent = iframe.contentWindow.markdownEditor.getContent() || '';
+                    const imageHTML = `<img src="${compressedDataUrl}" alt="${file.name}" style="max-width: 100%; height: auto; border-radius: 8px; margin: 10px 0; display: block;" />`;
+                    iframe.contentWindow.markdownEditor.setContent(currentContent + `\n${imageHTML}\n`);
+                    
+                    setTimeout(() => {
+                        updateStyledPreviewFromMarkdown();
+                    }, 100);
+                }
+            }
+        });
+        
+        event.target.value = '';
+    });
+}
+
+// Add this compression function
+function compressImage(file, callback) {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    const img = new Image();
+    
+    img.onload = function() {
+        // Set maximum dimensions
+        const MAX_WIDTH = 800;
+        const MAX_HEIGHT = 600;
+        
+        let { width, height } = img;
+        
+        // Calculate new dimensions
+        if (width > height) {
+            if (width > MAX_WIDTH) {
+                height = (height * MAX_WIDTH) / width;
+                width = MAX_WIDTH;
+            }
+        } else {
+            if (height > MAX_HEIGHT) {
+                width = (width * MAX_HEIGHT) / height;
+                height = MAX_HEIGHT;
+            }
+        }
+        
+        // Set canvas size
+        canvas.width = width;
+        canvas.height = height;
+        
+        // Draw and compress
+        ctx.drawImage(img, 0, 0, width, height);
+        
+        // Convert to compressed data URL
+        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7); // 70% quality
+        callback(compressedDataUrl);
+    };
+    
+    // Read the file
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+}
 
         // Download functionality
         function initializeDownloadActions() {
