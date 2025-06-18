@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Professional Carousel Templates</title>
+    <title>Carousel Templates</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.2/marked.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
@@ -17,52 +18,123 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #f5f5f5;
             min-height: 100vh;
-            padding: 20px;
+            padding: 0;
+            margin: 0;
         }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            overflow: hidden;
-        }
-
-
-
-        .output-section {
-            padding: 30px;
-            background: white;
-        }
-
-        .section-title {
-            font-size: 1.4rem;
-            font-weight: 700;
-            margin-bottom: 20px;
-            color: #2c3e50;
-        }
-
 
         .preview-container {
-            border: 2px solid #e9ecef;
-            border-radius: 12px;
-            min-height: 400px;
+            width: 100%;
+            min-height: 100vh;
             background: white;
             overflow: hidden;
         }
 
-        /* Technology Templates */
+        /* Common template styles */
+        .template-base {
+            padding: 40px;
+            min-height: 100vh;
+            line-height: 1.6;
+            position: relative;
+        }
+
+        .template-base h1, .template-base h2, .template-base h3, 
+        .template-base h4, .template-base h5, .template-base h6 {
+            margin: 20px 0 15px 0;
+            font-weight: 600;
+        }
+
+        .template-base p {
+            margin-bottom: 18px;
+        }
+
+        .template-base ul, .template-base ol {
+            margin: 20px 0;
+            padding-left: 0;
+        }
+
+        .template-base li {
+            list-style: none;
+            margin: 12px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .template-base pre {
+            background: rgba(0,0,0,0.1);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .template-base code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9em;
+        }
+
+        .template-base p code {
+            background: rgba(0,0,0,0.1);
+            padding: 3px 6px;
+            border-radius: 4px;
+        }
+
+        .template-base table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .template-base th, .template-base td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid;
+        }
+
+        .template-base th {
+            font-weight: 600;
+        }
+
+        .template-base blockquote {
+            margin: 20px 0;
+            padding: 15px 20px;
+            border-radius: 8px;
+            font-style: italic;
+            border-left: 4px solid;
+        }
+
+        .template-base a {
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .template-base a:hover {
+            text-decoration: underline;
+        }
+
+        .template-base hr {
+            border: none;
+            height: 2px;
+            margin: 30px 0;
+        }
+
+        .template-base strong {
+            font-weight: 700;
+        }
+
+        .template-base em {
+            font-style: italic;
+        }
+
+        /* Tech Neural Template */
         .tech-neural-template {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 40px;
             font-family: 'Space Grotesk', sans-serif;
-            line-height: 1.6;
-            position: relative;
-            overflow: hidden;
         }
 
         .tech-neural-template::before {
@@ -85,44 +157,20 @@
 
         .tech-neural-template h1 {
             font-size: 2.4rem;
-            font-weight: 700;
-            margin-bottom: 25px;
             color: #ffffff;
             text-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
 
         .tech-neural-template h2 {
             font-size: 1.8rem;
-            font-weight: 600;
             color: #e8f4fd;
-            margin: 30px 0 20px 0;
             border-bottom: 2px solid rgba(255,255,255,0.3);
             padding-bottom: 8px;
         }
 
         .tech-neural-template h3 {
             font-size: 1.4rem;
-            font-weight: 500;
             color: #d1ecf1;
-            margin: 25px 0 15px 0;
-        }
-
-        .tech-neural-template p {
-            font-size: 1.05rem;
-            margin-bottom: 18px;
-            color: rgba(255,255,255,0.95);
-        }
-
-        .tech-neural-template ul, .tech-neural-template ol {
-            margin: 20px 0;
-            padding-left: 0;
-        }
-
-        .tech-neural-template li {
-            list-style: none;
-            margin: 12px 0;
-            padding-left: 30px;
-            position: relative;
         }
 
         .tech-neural-template li::before {
@@ -130,79 +178,49 @@
             position: absolute;
             left: 0;
             color: #ffd700;
-            font-size: 0.9rem;
         }
 
-        .tech-neural-template code {
+        .tech-neural-template pre, .tech-neural-template p code {
             background: rgba(255,255,255,0.1);
             border: 1px solid rgba(255,255,255,0.2);
-            padding: 12px;
-            border-radius: 6px;
-            display: block;
-            font-family: 'JetBrains Mono', monospace;
             color: #e8f4fd;
-            margin: 15px 0;
-            white-space: pre-wrap;
-            overflow-x: auto;
-            line-height: 1.4;
         }
 
         .tech-neural-template table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 25px 0;
             background: rgba(255,255,255,0.1);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        .tech-neural-template th, .tech-neural-template td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid rgba(255,255,255,0.2);
         }
 
         .tech-neural-template th {
             background: rgba(255,255,255,0.2);
             color: #ffffff;
-            font-weight: 600;
+        }
+
+        .tech-neural-template th, .tech-neural-template td {
+            border-bottom: 1px solid rgba(255,255,255,0.2);
         }
 
         .tech-neural-template blockquote {
-            border-left: 4px solid #ffd700;
-            padding-left: 20px;
-            margin: 20px 0;
-            font-style: italic;
+            border-left-color: #ffd700;
             background: rgba(255,255,255,0.05);
-            padding: 15px 20px;
-            border-radius: 0 8px 8px 0;
         }
 
         .tech-neural-template strong {
             color: #ffd700;
-            font-weight: 700;
         }
 
-        .tech-neural-template em {
-            color: #e8f4fd;
-            font-style: italic;
+        .tech-neural-template a {
+            color: #ffd700;
         }
 
         .tech-neural-template hr {
-            border: none;
-            height: 2px;
             background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            margin: 30px 0;
         }
 
-        /* Technology Quantum Template */
+        /* Tech Quantum Template */
         .tech-quantum-template {
             background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
             color: #00d4ff;
-            padding: 40px;
             font-family: 'JetBrains Mono', monospace;
-            line-height: 1.7;
-            position: relative;
         }
 
         .tech-quantum-template::before {
@@ -230,121 +248,73 @@
 
         .tech-quantum-template h1 {
             font-size: 2.6rem;
-            font-weight: 600;
             color: #00d4ff;
-            margin-bottom: 25px;
             text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
             font-family: 'Space Grotesk', sans-serif;
         }
 
         .tech-quantum-template h2 {
             font-size: 1.9rem;
-            font-weight: 500;
             color: #ff006e;
-            margin: 30px 0 20px 0;
             text-shadow: 0 0 15px rgba(255, 0, 110, 0.4);
         }
 
         .tech-quantum-template h3 {
-            font-size: 1.5rem;
-            font-weight: 400;
             color: #8338ec;
-            margin: 25px 0 15px 0;
         }
 
         .tech-quantum-template p {
-            font-size: 1rem;
-            margin-bottom: 18px;
             color: #b8c6db;
-        }
-
-        .tech-quantum-template ul, .tech-quantum-template ol {
-            margin: 20px 0;
-            padding-left: 0;
-        }
-
-        .tech-quantum-template li {
-            list-style: none;
-            margin: 12px 0;
-            padding-left: 25px;
-            position: relative;
         }
 
         .tech-quantum-template li::before {
             content: '>';
-            position: absolute;
-            left: 0;
             color: #00d4ff;
             font-weight: bold;
         }
 
-        .tech-quantum-template code {
+        .tech-quantum-template pre, .tech-quantum-template p code {
             background: rgba(0, 212, 255, 0.1);
             border: 1px solid rgba(0, 212, 255, 0.3);
-            padding: 15px;
-            border-radius: 4px;
-            display: block;
-            font-family: 'JetBrains Mono', monospace;
             color: #00d4ff;
-            margin: 15px 0;
-            white-space: pre-wrap;
-            overflow-x: auto;
-            line-height: 1.4;
         }
 
         .tech-quantum-template table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 25px 0;
             background: rgba(0, 212, 255, 0.05);
-            border: 1px solid rgba(0, 212, 255, 0.2);
-        }
-
-        .tech-quantum-template th, .tech-quantum-template td {
-            padding: 12px 15px;
-            text-align: left;
             border: 1px solid rgba(0, 212, 255, 0.2);
         }
 
         .tech-quantum-template th {
             background: rgba(0, 212, 255, 0.2);
             color: #ffffff;
-            font-weight: 600;
+        }
+
+        .tech-quantum-template th, .tech-quantum-template td {
+            border: 1px solid rgba(0, 212, 255, 0.2);
         }
 
         .tech-quantum-template blockquote {
-            border-left: 3px solid #ff006e;
-            padding-left: 20px;
-            margin: 20px 0;
+            border-left-color: #ff006e;
             background: rgba(255, 0, 110, 0.05);
-            padding: 15px 20px;
         }
 
         .tech-quantum-template strong {
             color: #ff006e;
-            font-weight: 600;
         }
 
-        .tech-quantum-template em {
+        .tech-quantum-template a {
             color: #8338ec;
-            font-style: italic;
         }
 
         .tech-quantum-template hr {
-            border: none;
-            height: 1px;
             background: linear-gradient(90deg, transparent, #00d4ff, transparent);
-            margin: 30px 0;
         }
 
-        /* Product Demo Modern Template */
+        /* Product Modern Template */
         .product-modern-template {
             background: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%);
             color: #2c3e50;
-            padding: 40px;
             font-family: 'Inter', sans-serif;
-            line-height: 1.6;
-            position: relative;
         }
 
         .product-modern-template::before {
@@ -369,7 +339,6 @@
             font-size: 2.8rem;
             font-weight: 800;
             color: #ffffff;
-            margin-bottom: 25px;
             text-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
@@ -377,114 +346,61 @@
             font-size: 2rem;
             font-weight: 700;
             color: #2c3e50;
-            margin: 30px 0 20px 0;
         }
 
         .product-modern-template h3 {
-            font-size: 1.5rem;
-            font-weight: 600;
             color: #34495e;
-            margin: 25px 0 15px 0;
-        }
-
-        .product-modern-template p {
-            font-size: 1.1rem;
-            margin-bottom: 18px;
-            color: #2c3e50;
-        }
-
-        .product-modern-template ul, .product-modern-template ol {
-            margin: 20px 0;
-            padding-left: 0;
-        }
-
-        .product-modern-template li {
-            list-style: none;
-            margin: 12px 0;
-            padding-left: 30px;
-            position: relative;
         }
 
         .product-modern-template li::before {
             content: '✓';
-            position: absolute;
-            left: 0;
             color: #27ae60;
             font-weight: bold;
             font-size: 1.2rem;
         }
 
-        .product-modern-template code {
+        .product-modern-template pre, .product-modern-template p code {
             background: rgba(255,255,255,0.8);
             border: 1px solid rgba(44, 62, 80, 0.2);
-            padding: 12px;
-            border-radius: 6px;
-            display: block;
-            font-family: 'JetBrains Mono', monospace;
             color: #2c3e50;
-            margin: 15px 0;
-            white-space: pre-wrap;
-            overflow-x: auto;
-            line-height: 1.4;
         }
 
         .product-modern-template table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 25px 0;
             background: rgba(255,255,255,0.9);
-            border-radius: 8px;
-            overflow: hidden;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-
-        .product-modern-template th, .product-modern-template td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid rgba(44, 62, 80, 0.1);
         }
 
         .product-modern-template th {
             background: rgba(44, 62, 80, 0.8);
             color: #ffffff;
-            font-weight: 600;
+        }
+
+        .product-modern-template th, .product-modern-template td {
+            border-bottom: 1px solid rgba(44, 62, 80, 0.1);
         }
 
         .product-modern-template blockquote {
-            border-left: 4px solid #27ae60;
-            padding-left: 20px;
-            margin: 20px 0;
+            border-left-color: #27ae60;
             background: rgba(255,255,255,0.6);
-            padding: 15px 20px;
-            border-radius: 0 8px 8px 0;
-            font-style: italic;
         }
 
         .product-modern-template strong {
             color: #e74c3c;
-            font-weight: 700;
         }
 
-        .product-modern-template em {
-            color: #8e44ad;
-            font-style: italic;
+        .product-modern-template a {
+            color: #3498db;
         }
 
         .product-modern-template hr {
-            border: none;
-            height: 3px;
             background: linear-gradient(90deg, transparent, rgba(44, 62, 80, 0.3), transparent);
-            margin: 30px 0;
         }
 
         /* Product Premium Template */
         .product-premium-template {
             background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
             color: #ecf0f1;
-            padding: 50px;
             font-family: 'Playfair Display', serif;
-            line-height: 1.7;
-            position: relative;
         }
 
         .product-premium-template::before {
@@ -508,126 +424,77 @@
             font-size: 3rem;
             font-weight: 700;
             color: #f1c40f;
-            margin-bottom: 30px;
             text-align: center;
             font-family: 'Playfair Display', serif;
         }
 
         .product-premium-template h2 {
             font-size: 2.2rem;
-            font-weight: 600;
             color: #e67e22;
-            margin: 35px 0 25px 0;
             font-family: 'Playfair Display', serif;
         }
 
         .product-premium-template h3 {
-            font-size: 1.7rem;
-            font-weight: 500;
             color: #95a5a6;
-            margin: 25px 0 15px 0;
         }
 
         .product-premium-template p {
-            font-size: 1.1rem;
-            margin-bottom: 20px;
-            color: #ecf0f1;
             font-family: 'Inter', sans-serif;
         }
 
-        .product-premium-template ul, .product-premium-template ol {
-            margin: 25px 0;
-            padding-left: 0;
-        }
-
         .product-premium-template li {
-            list-style: none;
-            margin: 15px 0;
-            padding-left: 35px;
-            position: relative;
             font-family: 'Inter', sans-serif;
         }
 
         .product-premium-template li::before {
             content: '◆';
-            position: absolute;
-            left: 0;
             color: #f1c40f;
-            font-size: 1rem;
         }
 
-        .product-premium-template code {
+        .product-premium-template pre, .product-premium-template p code {
             background: rgba(236, 240, 241, 0.1);
             border: 1px solid rgba(241, 196, 15, 0.3);
-            padding: 15px;
-            border-radius: 8px;
-            display: block;
-            font-family: 'JetBrains Mono', monospace;
             color: #f1c40f;
-            margin: 20px 0;
-            white-space: pre-wrap;
-            overflow-x: auto;
-            line-height: 1.4;
         }
 
         .product-premium-template table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 30px 0;
             background: rgba(236, 240, 241, 0.05);
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        .product-premium-template th, .product-premium-template td {
-            padding: 16px 20px;
-            text-align: left;
-            border-bottom: 1px solid rgba(241, 196, 15, 0.2);
-            font-family: 'Inter', sans-serif;
         }
 
         .product-premium-template th {
             background: rgba(241, 196, 15, 0.2);
             color: #2c3e50;
-            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .product-premium-template th, .product-premium-template td {
+            border-bottom: 1px solid rgba(241, 196, 15, 0.2);
+            font-family: 'Inter', sans-serif;
         }
 
         .product-premium-template blockquote {
-            border-left: 4px solid #e67e22;
-            padding-left: 25px;
-            margin: 25px 0;
+            border-left-color: #e67e22;
             background: rgba(236, 240, 241, 0.05);
-            padding: 20px 25px;
-            border-radius: 0 10px 10px 0;
-            font-style: italic;
             font-family: 'Playfair Display', serif;
         }
 
         .product-premium-template strong {
             color: #f1c40f;
-            font-weight: 700;
         }
 
-        .product-premium-template em {
+        .product-premium-template a {
             color: #e67e22;
-            font-style: italic;
         }
 
         .product-premium-template hr {
-            border: none;
-            height: 2px;
             background: linear-gradient(90deg, transparent, #f1c40f, transparent);
-            margin: 35px 0;
         }
 
         /* Finance Gold Template */
         .finance-gold-template {
             background: linear-gradient(135deg, #f7931e 0%, #ffd700 100%);
             color: #2c3e50;
-            padding: 45px;
             font-family: 'Space Grotesk', sans-serif;
-            line-height: 1.6;
-            position: relative;
         }
 
         .finance-gold-template::before {
@@ -652,85 +519,42 @@
             font-size: 2.8rem;
             font-weight: 800;
             color: #1a1a1a;
-            margin-bottom: 25px;
             text-align: center;
             text-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .finance-gold-template h2 {
             font-size: 2rem;
-            font-weight: 700;
             color: #8b4513;
-            margin: 30px 0 20px 0;
             border-bottom: 3px solid #8b4513;
             padding-bottom: 8px;
         }
 
         .finance-gold-template h3 {
-            font-size: 1.5rem;
-            font-weight: 600;
             color: #2c3e50;
-            margin: 25px 0 15px 0;
         }
 
         .finance-gold-template p {
-            font-size: 1.1rem;
-            margin-bottom: 18px;
-            color: #2c3e50;
             font-weight: 500;
-        }
-
-        .finance-gold-template ul, .finance-gold-template ol {
-            margin: 20px 0;
-            padding-left: 0;
-        }
-
-        .finance-gold-template li {
-            list-style: none;
-            margin: 12px 0;
-            padding-left: 30px;
-            position: relative;
         }
 
         .finance-gold-template li::before {
             content: '$';
-            position: absolute;
-            left: 0;
             color: #8b4513;
             font-weight: bold;
             font-size: 1.2rem;
         }
 
-        .finance-gold-template code {
+        .finance-gold-template pre, .finance-gold-template p code {
             background: rgba(0,0,0,0.1);
             border: 2px solid #8b4513;
-            padding: 15px;
-            border-radius: 6px;
-            display: block;
-            font-family: 'JetBrains Mono', monospace;
             color: #2c3e50;
-            margin: 15px 0;
-            white-space: pre-wrap;
-            overflow-x: auto;
-            line-height: 1.4;
             font-weight: 600;
         }
 
         .finance-gold-template table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 25px 0;
             background: rgba(0,0,0,0.05);
             border: 2px solid #8b4513;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        .finance-gold-template th, .finance-gold-template td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid #8b4513;
-            font-weight: 500;
         }
 
         .finance-gold-template th {
@@ -741,14 +565,14 @@
             letter-spacing: 0.5px;
         }
 
+        .finance-gold-template th, .finance-gold-template td {
+            border-bottom: 1px solid #8b4513;
+            font-weight: 500;
+        }
+
         .finance-gold-template blockquote {
-            border-left: 5px solid #8b4513;
-            padding-left: 25px;
-            margin: 20px 0;
+            border-left-color: #8b4513;
             background: rgba(0,0,0,0.05);
-            padding: 20px 25px;
-            border-radius: 0 8px 8px 0;
-            font-style: italic;
             font-weight: 600;
         }
 
@@ -757,26 +581,19 @@
             font-weight: 800;
         }
 
-        .finance-gold-template em {
-            color: #2c3e50;
-            font-style: italic;
+        .finance-gold-template a {
+            color: #8b4513;
         }
 
         .finance-gold-template hr {
-            border: none;
-            height: 3px;
             background: linear-gradient(90deg, transparent, #8b4513, transparent);
-            margin: 30px 0;
         }
 
         /* Finance Elite Template */
         .finance-elite-template {
             background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             color: #ffffff;
-            padding: 50px;
             font-family: 'Inter', sans-serif;
-            line-height: 1.7;
-            position: relative;
         }
 
         .finance-elite-template::before {
@@ -806,9 +623,7 @@
 
         .finance-elite-template h1 {
             font-size: 2.6rem;
-            font-weight: 700;
             color: #ffd700;
-            margin-bottom: 30px;
             text-align: center;
             text-transform: uppercase;
             letter-spacing: 2px;
@@ -816,74 +631,29 @@
 
         .finance-elite-template h2 {
             font-size: 2rem;
-            font-weight: 600;
             color: #e8f4fd;
-            margin: 35px 0 25px 0;
             border-left: 4px solid #ffd700;
             padding-left: 20px;
         }
 
         .finance-elite-template h3 {
-            font-size: 1.5rem;
-            font-weight: 500;
             color: #b8dbd9;
-            margin: 25px 0 15px 0;
-        }
-
-        .finance-elite-template p {
-            font-size: 1.05rem;
-            margin-bottom: 20px;
-            color: #ffffff;
-        }
-
-        .finance-elite-template ul, .finance-elite-template ol {
-            margin: 25px 0;
-            padding-left: 0;
-        }
-
-        .finance-elite-template li {
-            list-style: none;
-            margin: 15px 0;
-            padding-left: 35px;
-            position: relative;
         }
 
         .finance-elite-template li::before {
             content: '■';
-            position: absolute;
-            left: 0;
             color: #ffd700;
-            font-size: 1rem;
         }
 
-        .finance-elite-template code {
+        .finance-elite-template pre, .finance-elite-template p code {
             background: rgba(255, 215, 0, 0.1);
             border: 1px solid rgba(255, 215, 0, 0.3);
-            padding: 18px;
-            border-radius: 8px;
-            display: block;
-            font-family: 'JetBrains Mono', monospace;
             color: #ffd700;
-            margin: 20px 0;
-            white-space: pre-wrap;
-            overflow-x: auto;
-            line-height: 1.4;
         }
 
         .finance-elite-template table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 30px 0;
             background: rgba(255, 215, 0, 0.05);
             border: 2px solid #ffd700;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        .finance-elite-template th, .finance-elite-template td {
-            padding: 18px 20px;
-            text-align: left;
-            border-bottom: 1px solid rgba(255, 215, 0, 0.3);
         }
 
         .finance-elite-template th {
@@ -894,42 +664,33 @@
             letter-spacing: 1px;
         }
 
+        .finance-elite-template th, .finance-elite-template td {
+            border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
         .finance-elite-template blockquote {
-            border-left: 4px solid #ffd700;
-            padding-left: 25px;
-            margin: 25px 0;
+            border-left-color: #ffd700;
             background: rgba(255, 215, 0, 0.05);
-            padding: 20px 25px;
-            border-radius: 0 10px 10px 0;
-            font-style: italic;
             font-size: 1.1rem;
         }
 
         .finance-elite-template strong {
             color: #ffd700;
-            font-weight: 700;
         }
 
-        .finance-elite-template em {
+        .finance-elite-template a {
             color: #e8f4fd;
-            font-style: italic;
         }
 
         .finance-elite-template hr {
-            border: none;
-            height: 2px;
             background: linear-gradient(90deg, transparent, #ffd700, transparent);
-            margin: 35px 0;
         }
 
-        /* Healthcare Care Template */
+        /* Health Care Template */
         .health-care-template {
             background: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%);
             color: #2c3e50;
-            padding: 45px;
             font-family: 'Inter', sans-serif;
-            line-height: 1.6;
-            position: relative;
         }
 
         .health-care-template::before {
@@ -952,127 +713,71 @@
 
         .health-care-template h1 {
             font-size: 2.7rem;
-            font-weight: 700;
             color: #ffffff;
-            margin-bottom: 25px;
             text-align: center;
             text-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
         .health-care-template h2 {
             font-size: 2rem;
-            font-weight: 600;
             color: #1e8449;
-            margin: 30px 0 20px 0;
             border-bottom: 2px solid #1e8449;
             padding-bottom: 8px;
         }
 
         .health-care-template h3 {
-            font-size: 1.5rem;
-            font-weight: 500;
             color: #239b56;
-            margin: 25px 0 15px 0;
-        }
-
-        .health-care-template p {
-            font-size: 1.1rem;
-            margin-bottom: 18px;
-            color: #2c3e50;
-        }
-
-        .health-care-template ul, .health-care-template ol {
-            margin: 20px 0;
-            padding-left: 0;
-        }
-
-        .health-care-template li {
-            list-style: none;
-            margin: 12px 0;
-            padding-left: 30px;
-            position: relative;
         }
 
         .health-care-template li::before {
             content: '♥';
-            position: absolute;
-            left: 0;
             color: #e74c3c;
             font-size: 1.2rem;
         }
 
-        .health-care-template code {
+        .health-care-template pre, .health-care-template p code {
             background: rgba(255,255,255,0.8);
             border: 2px solid #1e8449;
-            padding: 15px;
-            border-radius: 8px;
-            display: block;
-            font-family: 'JetBrains Mono', monospace;
             color: #1e8449;
-            margin: 15px 0;
-            white-space: pre-wrap;
-            overflow-x: auto;
-            line-height: 1.4;
         }
 
         .health-care-template table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 25px 0;
             background: rgba(255,255,255,0.9);
             border: 2px solid #1e8449;
-            border-radius: 10px;
-            overflow: hidden;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-
-        .health-care-template th, .health-care-template td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid #a8e6cf;
         }
 
         .health-care-template th {
             background: #1e8449;
             color: #ffffff;
-            font-weight: 600;
+        }
+
+        .health-care-template th, .health-care-template td {
+            border-bottom: 1px solid #a8e6cf;
         }
 
         .health-care-template blockquote {
-            border-left: 4px solid #e74c3c;
-            padding-left: 20px;
-            margin: 20px 0;
+            border-left-color: #e74c3c;
             background: rgba(255,255,255,0.7);
-            padding: 15px 20px;
-            border-radius: 0 8px 8px 0;
-            font-style: italic;
         }
 
         .health-care-template strong {
             color: #e74c3c;
-            font-weight: 700;
         }
 
-        .health-care-template em {
+        .health-care-template a {
             color: #1e8449;
-            font-style: italic;
         }
 
         .health-care-template hr {
-            border: none;
-            height: 3px;
             background: linear-gradient(90deg, transparent, #1e8449, transparent);
-            margin: 30px 0;
         }
 
-        /* Healthcare Medical Template */
+        /* Health Medical Template */
         .health-medical-template {
             background: linear-gradient(135deg, #0f4c75 0%, #3282b8 100%);
             color: #ffffff;
-            padding: 45px;
             font-family: 'Inter', sans-serif;
-            line-height: 1.7;
-            position: relative;
         }
 
         .health-medical-template::before {
@@ -1100,127 +805,71 @@
 
         .health-medical-template h1 {
             font-size: 2.6rem;
-            font-weight: 700;
             color: #bbe1fa;
-            margin-bottom: 30px;
             text-align: center;
             font-family: 'Space Grotesk', sans-serif;
         }
 
         .health-medical-template h2 {
             font-size: 2rem;
-            font-weight: 600;
             color: #7fb3d3;
-            margin: 35px 0 25px 0;
             border-left: 4px solid #bbe1fa;
             padding-left: 20px;
         }
 
         .health-medical-template h3 {
-            font-size: 1.5rem;
-            font-weight: 500;
             color: #c7d2fe;
-            margin: 25px 0 15px 0;
-        }
-
-        .health-medical-template p {
-            font-size: 1.05rem;
-            margin-bottom: 20px;
-            color: #ffffff;
-        }
-
-        .health-medical-template ul, .health-medical-template ol {
-            margin: 25px 0;
-            padding-left: 0;
-        }
-
-        .health-medical-template li {
-            list-style: none;
-            margin: 15px 0;
-            padding-left: 30px;
-            position: relative;
         }
 
         .health-medical-template li::before {
             content: '+';
-            position: absolute;
-            left: 0;
             color: #bbe1fa;
             font-weight: bold;
             font-size: 1.5rem;
         }
 
-        .health-medical-template code {
+        .health-medical-template pre, .health-medical-template p code {
             background: rgba(187, 225, 250, 0.1);
             border: 1px solid rgba(187, 225, 250, 0.3);
-            padding: 18px;
-            border-radius: 8px;
-            display: block;
-            font-family: 'JetBrains Mono', monospace;
             color: #bbe1fa;
-            margin: 20px 0;
-            white-space: pre-wrap;
-            overflow-x: auto;
-            line-height: 1.4;
         }
 
         .health-medical-template table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 30px 0;
             background: rgba(187, 225, 250, 0.05);
             border: 1px solid rgba(187, 225, 250, 0.3);
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        .health-medical-template th, .health-medical-template td {
-            padding: 16px 20px;
-            text-align: left;
-            border-bottom: 1px solid rgba(187, 225, 250, 0.2);
         }
 
         .health-medical-template th {
             background: rgba(187, 225, 250, 0.2);
             color: #0f4c75;
-            font-weight: 600;
+        }
+
+        .health-medical-template th, .health-medical-template td {
+            border-bottom: 1px solid rgba(187, 225, 250, 0.2);
         }
 
         .health-medical-template blockquote {
-            border-left: 4px solid #bbe1fa;
-            padding-left: 25px;
-            margin: 25px 0;
+            border-left-color: #bbe1fa;
             background: rgba(187, 225, 250, 0.05);
-            padding: 20px 25px;
-            border-radius: 0 10px 10px 0;
-            font-style: italic;
         }
 
         .health-medical-template strong {
             color: #bbe1fa;
-            font-weight: 700;
         }
 
-        .health-medical-template em {
+        .health-medical-template a {
             color: #7fb3d3;
-            font-style: italic;
         }
 
         .health-medical-template hr {
-            border: none;
-            height: 2px;
             background: linear-gradient(90deg, transparent, #bbe1fa, transparent);
-            margin: 35px 0;
         }
 
         /* SaaS Modern Template */
         .saas-modern-template {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: #ffffff;
-            padding: 40px;
             font-family: 'Space Grotesk', sans-serif;
-            line-height: 1.6;
-            position: relative;
         }
 
         .saas-modern-template::before {
@@ -1245,122 +894,71 @@
             font-size: 2.8rem;
             font-weight: 800;
             color: #ffffff;
-            margin-bottom: 25px;
             text-align: center;
             text-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
         .saas-modern-template h2 {
             font-size: 2rem;
-            font-weight: 700;
             color: #ffd700;
-            margin: 30px 0 20px 0;
         }
 
         .saas-modern-template h3 {
-            font-size: 1.5rem;
-            font-weight: 600;
             color: #e8f4fd;
-            margin: 25px 0 15px 0;
         }
 
         .saas-modern-template p {
-            font-size: 1.1rem;
-            margin-bottom: 18px;
             color: rgba(255,255,255,0.95);
-        }
-
-        .saas-modern-template ul, .saas-modern-template ol {
-            margin: 20px 0;
-            padding-left: 0;
-        }
-
-        .saas-modern-template li {
-            list-style: none;
-            margin: 12px 0;
-            padding-left: 30px;
-            position: relative;
         }
 
         .saas-modern-template li::before {
             content: '→';
-            position: absolute;
-            left: 0;
             color: #ffd700;
             font-weight: bold;
         }
 
-        .saas-modern-template code {
+        .saas-modern-template pre, .saas-modern-template p code {
             background: rgba(255,255,255,0.1);
             border: 1px solid rgba(255,215,0,0.3);
-            padding: 15px;
-            border-radius: 8px;
-            display: block;
-            font-family: 'JetBrains Mono', monospace;
             color: #ffd700;
-            margin: 15px 0;
-            white-space: pre-wrap;
-            overflow-x: auto;
-            line-height: 1.4;
         }
 
         .saas-modern-template table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 25px 0;
             background: rgba(255,255,255,0.05);
             border: 1px solid rgba(255,215,0,0.3);
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        .saas-modern-template th, .saas-modern-template td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
         .saas-modern-template th {
             background: rgba(255,215,0,0.2);
             color: #ffffff;
-            font-weight: 600;
+        }
+
+        .saas-modern-template th, .saas-modern-template td {
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
         .saas-modern-template blockquote {
-            border-left: 4px solid #ffd700;
-            padding-left: 20px;
-            margin: 20px 0;
+            border-left-color: #ffd700;
             background: rgba(255,255,255,0.05);
-            padding: 15px 20px;
-            border-radius: 0 8px 8px 0;
-            font-style: italic;
         }
 
         .saas-modern-template strong {
             color: #ffd700;
-            font-weight: 700;
         }
 
-        .saas-modern-template em {
+        .saas-modern-template a {
             color: #e8f4fd;
-            font-style: italic;
         }
 
         .saas-modern-template hr {
-            border: none;
-            height: 2px;
             background: linear-gradient(90deg, transparent, #ffd700, transparent);
-            margin: 30px 0;
         }
 
         /* SaaS Enterprise Template */
         .saas-enterprise-template {
             background: linear-gradient(135deg, #2c3e50 0%, #4a6741 100%);
             color: #ecf0f1;
-            padding: 50px;
             font-family: 'Inter', sans-serif;
-            line-height: 1.7;
-            position: relative;
         }
 
         .saas-enterprise-template::before {
@@ -1383,9 +981,7 @@
 
         .saas-enterprise-template h1 {
             font-size: 2.6rem;
-            font-weight: 700;
             color: #4caf50;
-            margin-bottom: 30px;
             text-align: center;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -1393,74 +989,29 @@
 
         .saas-enterprise-template h2 {
             font-size: 2rem;
-            font-weight: 600;
             color: #81c784;
-            margin: 35px 0 25px 0;
             border-bottom: 2px solid #4caf50;
             padding-bottom: 10px;
         }
 
         .saas-enterprise-template h3 {
-            font-size: 1.5rem;
-            font-weight: 500;
             color: #a5d6a7;
-            margin: 25px 0 15px 0;
-        }
-
-        .saas-enterprise-template p {
-            font-size: 1.05rem;
-            margin-bottom: 20px;
-            color: #ecf0f1;
-        }
-
-        .saas-enterprise-template ul, .saas-enterprise-template ol {
-            margin: 25px 0;
-            padding-left: 0;
-        }
-
-        .saas-enterprise-template li {
-            list-style: none;
-            margin: 15px 0;
-            padding-left: 35px;
-            position: relative;
         }
 
         .saas-enterprise-template li::before {
             content: '◉';
-            position: absolute;
-            left: 0;
             color: #4caf50;
-            font-size: 1rem;
         }
 
-        .saas-enterprise-template code {
+        .saas-enterprise-template pre, .saas-enterprise-template p code {
             background: rgba(76, 175, 80, 0.1);
             border: 1px solid rgba(76, 175, 80, 0.3);
-            padding: 18px;
-            border-radius: 8px;
-            display: block;
-            font-family: 'JetBrains Mono', monospace;
             color: #4caf50;
-            margin: 20px 0;
-            white-space: pre-wrap;
-            overflow-x: auto;
-            line-height: 1.4;
         }
 
         .saas-enterprise-template table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 30px 0;
             background: rgba(76, 175, 80, 0.05);
             border: 2px solid #4caf50;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        .saas-enterprise-template th, .saas-enterprise-template td {
-            padding: 18px 20px;
-            text-align: left;
-            border-bottom: 1px solid rgba(76, 175, 80, 0.2);
         }
 
         .saas-enterprise-template th {
@@ -1471,74 +1022,74 @@
             letter-spacing: 0.5px;
         }
 
+        .saas-enterprise-template th, .saas-enterprise-template td {
+            border-bottom: 1px solid rgba(76, 175, 80, 0.2);
+        }
+
         .saas-enterprise-template blockquote {
-            border-left: 4px solid #4caf50;
-            padding-left: 25px;
-            margin: 25px 0;
+            border-left-color: #4caf50;
             background: rgba(76, 175, 80, 0.05);
-            padding: 20px 25px;
-            border-radius: 0 10px 10px 0;
-            font-style: italic;
         }
 
         .saas-enterprise-template strong {
             color: #4caf50;
-            font-weight: 700;
         }
 
-        .saas-enterprise-template em {
+        .saas-enterprise-template a {
             color: #81c784;
-            font-style: italic;
         }
 
         .saas-enterprise-template hr {
-            border: none;
-            height: 2px;
             background: linear-gradient(90deg, transparent, #4caf50, transparent);
-            margin: 35px 0;
         }
 
         /* Responsive Design */
-        
-
         @media (max-width: 768px) {
-            .container {
-                margin: 10px;
-                border-radius: 15px;
+            .template-base {
+                padding: 20px;
             }
             
+            .template-base h1 {
+                font-size: 2rem !important;
+            }
             
+            .template-base h2 {
+                font-size: 1.5rem !important;
+            }
+            
+            .template-base h3 {
+                font-size: 1.2rem !important;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">    
-            <div class="output-section">
-                <h2 class="section-title">👀 Live Preview</h2>
-                <div class="preview-container" id="previewContainer">
-                    <div class="tech-neural-template" id="preview">
-                        <h1>Professional Carousel Templates 🚀</h1>
-                        <p>Choose from 10 industry-specific templates designed for maximum impact.</p>
-                        <h2>Features:</h2>
-                        <ul>
-                            <li>Complete markdown syntax support</li>
-                            <li>Industry-specific styling</li>
-                            <li>Professional export options</li>
-                            <li>Mobile-responsive design</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+    <div class="preview-container">
+        <div class="tech-neural-template template-base" id="preview">
+            <h1>Professional Carousel Templates 🚀</h1>
+            <p>Choose from 10 industry-specific templates designed for maximum impact.</p>
+            <h2>Features:</h2>
+            <ul>
+                <li>Complete markdown syntax support</li>
+                <li>Industry-specific styling</li>
+                <li>Professional export options</li>
+                <li>Mobile-responsive design</li>
+            </ul>
+        </div>
     </div>
 
     <script>
         let currentTemplate = 'tech-neural';
 
-
-
-
-        
-
+        // Configure marked options for proper markdown parsing
+        marked.setOptions({
+            breaks: true,
+            gfm: true,
+            tables: true,
+            sanitize: false,
+            smartLists: true,
+            smartypants: true
+        });
 
         async function downloadImage() {
             const preview = document.getElementById('preview');
@@ -1576,7 +1127,8 @@
                     useCORS: true,
                     allowTaint: true,
                     width: 800,
-                    height: null
+                    height: null,
+                    logging: false
                 });
                 
                 document.body.removeChild(tempContainer);
@@ -1584,7 +1136,7 @@
                 // Download the image
                 const link = document.createElement('a');
                 link.download = `carousel-${currentTemplate}-${Date.now()}.png`;
-                link.href = canvas.toDataURL();
+                link.href = canvas.toDataURL('image/png');
                 link.click();
                 
             } catch (error) {
@@ -1629,7 +1181,8 @@
                     useCORS: true,
                     allowTaint: true,
                     width: 800,
-                    height: null
+                    height: null,
+                    logging: false
                 });
                 
                 document.body.removeChild(tempContainer);
@@ -1663,24 +1216,38 @@
                 alert('Error generating PDF. Please try again.');
             }
         }
-const preview = document.getElementById('preview');
 
-window.addEventListener('message', async (event) => {
-  const { action, content, template } = event.data;
+        const preview = document.getElementById('preview');
 
-  if (action === 'updateContent') {
-    preview.innerHTML = content;
-    preview.className = template + '-template';
-    currentTemplate = template;
-  }
-  else if (action === 'downloadImage') {
-    await downloadImage();
-  }
-  else if (action === 'downloadPDF') {
-    await downloadPDF();
-  }
-});
+        window.addEventListener('message', async (event) => {
+            const { action, content, template } = event.data;
 
-</script>
+            if (action === 'updateContent') {
+                try {
+                    // Parse markdown to HTML first
+                    const htmlContent = marked.parse(content || '');
+                    preview.innerHTML = htmlContent;
+                    preview.className = template + '-template template-base';
+                    currentTemplate = template;
+                } catch (error) {
+                    console.error('Error parsing markdown:', error);
+                    preview.innerHTML = content || '';
+                    preview.className = template + '-template template-base';
+                    currentTemplate = template;
+                }
+            }
+            else if (action === 'downloadImage') {
+                await downloadImage();
+            }
+            else if (action === 'downloadPDF') {
+                await downloadPDF();
+            }
+        });
+
+        // Initialize with default content
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Carousel template loaded successfully');
+        });
+    </script>
 </body>
 </html>
