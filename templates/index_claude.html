@@ -402,45 +402,44 @@
 //         reader.readAsDataURL(file);
 //     });
 // }        
-        // Image upload functionality
-        // Image upload functionality  
-        // Image upload functionality
+       
         // Image upload functionality with compression
 function initializeImageUpload() {
+    // REPLACE WITH THIS CODE:
     document.getElementById('imageInput').addEventListener('change', (event) => {
-        const file = event.target.files[0];
-        if (!file || !file.type.startsWith('image/')) {
-            alert('Please select a valid image file.');
-            return;
-        }
+    const file = event.target.files[0];
+    if (!file || !file.type.startsWith('image/')) {
+        alert('Please select a valid image file.');
+        return;
+    }
 
-        // Compress and resize the image
-        compressImage(file, (compressedDataUrl) => {
-            const iframe = document.getElementById('markdownEditorFrame');
-            if (iframe.contentWindow && iframe.contentWindow.markdownEditor) {
-                try {
-                    const imageHTML = `<img src="${compressedDataUrl}" alt="${file.name}" style="max-width: 100%; height: auto; border-radius: 8px; margin: 10px 0; display: block;" />`;
-                    iframe.contentWindow.markdownEditor.insertAtCursor(`\n${imageHTML}\n`);
-                    
-                    setTimeout(() => {
-                        updateStyledPreviewFromMarkdown();
-                    }, 100);
-                    
-                } catch (error) {
-                    console.error('Failed to insert image:', error);
-                    const currentContent = iframe.contentWindow.markdownEditor.getContent() || '';
-                    const imageHTML = `<img src="${compressedDataUrl}" alt="${file.name}" style="max-width: 100%; height: auto; border-radius: 8px; margin: 10px 0; display: block;" />`;
-                    iframe.contentWindow.markdownEditor.setContent(currentContent + `\n${imageHTML}\n`);
-                    
-                    setTimeout(() => {
-                        updateStyledPreviewFromMarkdown();
-                    }, 100);
-                }
+    // Create short URL instead of long data URL
+    createShortImageUrl(file, (shortUrl) => {
+        const iframe = document.getElementById('markdownEditorFrame');
+        if (iframe.contentWindow && iframe.contentWindow.markdownEditor) {
+            try {
+                const imageHTML = `<img src="${shortUrl}" alt="${file.name}" style="max-width: 100%; height: auto; border-radius: 12px; margin: 12px 0; display: block;" />`;
+                iframe.contentWindow.markdownEditor.insertAtCursor(`\n${imageHTML}\n`);
+                
+                setTimeout(() => {
+                    updateStyledPreviewFromMarkdown();
+                }, 100);
+                
+            } catch (error) {
+                console.error('Failed to insert image:', error);
+                const currentContent = iframe.contentWindow.markdownEditor.getContent() || '';
+                const imageHTML = `<img src="${shortUrl}" alt="${file.name}" style="max-width: 100%; height: auto; border-radius: 12px; margin: 12px 0; display: block;" />`;
+                iframe.contentWindow.markdownEditor.setContent(currentContent + `\n${imageHTML}\n`);
+                
+                setTimeout(() => {
+                    updateStyledPreviewFromMarkdown();
+                }, 100);
             }
-        });
-        
-        event.target.value = '';
+        }
     });
+    
+    event.target.value = '';
+});
 }
 
 // Add this compression function
@@ -489,6 +488,20 @@ function compressImage(file, callback) {
     reader.readAsDataURL(file);
 }
 
+// ADD THIS NEW FUNCTION (place it after your compressImage function)
+function createShortImageUrl(file, callback) {
+    // Compress first (using your existing function)
+    compressImage(file, (compressedDataUrl) => {
+        // Convert data URL back to blob
+        fetch(compressedDataUrl)
+            .then(res => res.blob())
+            .then(blob => {
+                // Create short object URL
+                const shortUrl = URL.createObjectURL(blob);
+                callback(shortUrl);
+            });
+    });
+}
         // Download functionality
         function initializeDownloadActions() {
             // Download infographic
