@@ -90,9 +90,9 @@ body {
 
 /* Main Container */
 .container {
-    max-width: 1400px;
+    max-width: 1600px;
     margin: 0 auto;
-    padding: 10px;
+    padding: 5px; 
     position: relative;
     z-index: 1;
 }
@@ -146,8 +146,8 @@ body {
 /* Profile Container */
 .profile-container {
     position: absolute;
-    top: 1rem;
-    right: 1rem;
+    top: 0.5rem;
+    right: 0.5rem;
 }
 
 .profile-icon {
@@ -173,7 +173,7 @@ body {
     color: #fff;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 1.2rem;
     min-width: 140px;
     z-index: 10;
 }
@@ -1370,8 +1370,8 @@ body {
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    height: 75vh;
-    min-height: 600px;
+    height: 83vh;
+    min-height: 690px;
 }
 
 .workspace-tabs {
