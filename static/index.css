@@ -92,7 +92,7 @@ body {
 .container {
     max-width: 1400px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 10px;
     position: relative;
     z-index: 1;
 }
@@ -190,15 +190,36 @@ body {
 
 .profile-logout-btn {
     display: block;
-    text-align: right;
-    margin-top: 0.25rem;
+    text-align: center;
+    margin-top: 0.75rem;
+    padding: 0.6rem 1rem;
     font-size: 0.85rem;
-    color: #ff6b6b;
+    font-weight: 500;
+    color: #9ca3af;
     text-decoration: none;
+    
+    /* Elegant styling */
+    background: rgba(156, 163, 175, 0.1);
+    border: 1px solid rgba(156, 163, 175, 0.2);
+    border-radius: 8px;
+    
+    /* Smooth transitions */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* Subtle effects */
+    backdrop-filter: blur(10px);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    
+    /* Typography refinement */
+    letter-spacing: 0.025em;
+    
+    /* Hover effects */
+    position: relative;
+    overflow: hidden;
 }
 
 .profile-logout-btn:hover {
-    color: #ff5252;
+    color: #e7dfdf;
 }
 
 
@@ -273,33 +294,7 @@ body {
     color: #666;
 }
 
-.generate-btn {
-    width: 100%;
-    padding: 16px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border: none;
-    border-radius: 12px;
-    color: #ffffff;
-    font-size: 1.1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-}
 
-.generate-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
-}
-
-.generate-btn:active {
-    transform: translateY(0);
-}
-
-.generate-btn.loading {
-    pointer-events: none;
-}
 
 
 @keyframes spin {
@@ -667,13 +662,7 @@ body {
     text-shadow: 0 0 5px rgba(102, 126, 234, 0.5);
 }
 
-/* Preview Actions */
-.preview-actions {
-    display: flex;
-    gap: 15px;
-    margin-top: 20px;
-    justify-content: center;
-}
+
 
 /* Action Buttons */
 .action-btn {
@@ -1196,7 +1185,7 @@ body {
     cursor: pointer;
     transition: all 0.3s ease;
     font-weight: 600;
-    position: relative;
+    position: relative; /* ADD THIS LINE */
     flex: 1;
 }
 
@@ -1218,6 +1207,7 @@ body {
     border-radius: 50%;
     animation: spin 1s linear infinite;
     margin: 0 auto;
+    position: relative;
 }
 
 @keyframes spin {
@@ -1277,15 +1267,6 @@ body {
 }
 
 
-.preview-actions {
-    padding: 15px;
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    background: rgba(255, 255, 255, 0.05);
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
 .action-btn.primary {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
@@ -1318,11 +1299,12 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 20px;
+    padding: 10px 10px;
     background: rgba(255, 255, 255, 0.08);
     backdrop-filter: blur(20px);
     border-radius: 12px;
     margin-bottom: 20px;
+    border-radius: 20px;
     border: 1px solid rgba(255, 255, 255, 0.15);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
@@ -1401,7 +1383,7 @@ body {
 
 .tab-btn {
     flex: 0 0 auto;
-    padding: 15px 30px;
+    padding: 10px 10px;
     background: transparent;
     border: none;
     color: #a0a0a0;
@@ -1486,9 +1468,9 @@ body {
 }
 
 .preview-actions {
-    padding: 15px;
+    padding: 5px;
     display: flex;
-    gap: 15px;
+    gap: 10px;
     justify-content: center;
     background: rgba(255, 255, 255, 0.05);
     border-top: 1px solid rgba(255, 255, 255, 0.1);
@@ -1557,8 +1539,6 @@ body {
     }
 }
 
-/* ADD these missing styles to your CSS */
-
 /* Template selector in tab controls */
 .template-selector-compact select option {
     background: #333;
@@ -1567,8 +1547,8 @@ body {
 
 /* Focus states for accessibility */
 .tab-btn:focus {
-    outline: 2px solid #667eea;
-    outline-offset: 2px;
+    outline: 1px solid #667eea;
+    outline-offset: 1px;
 }
 
 /* Better mobile responsiveness for tabs */
@@ -1589,30 +1569,20 @@ body {
     opacity: 0;
 }
 
-.generate-btn.loading .loading-spinner {
-    display: inline-block;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-}
-
 /* AI Prompt Widget - FIXED VERSION */
 .ai-prompt-widget {
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: rgba(20, 20, 40, 0.95);
-    backdrop-filter: blur(20px);
+    background: rgba(10, 10, 21, 0.95);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 20px;
+    border-radius: 40px;
     padding: 30px;
     width: 500px;
     max-width: 90vw;
     z-index: 1000;
     display: none;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
 }
 
 .ai-prompt-widget.show {
@@ -1628,17 +1598,5 @@ body {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(0, 0, 0, 0.5);
     z-index: -1;
-    backdrop-filter: blur(5px);
-}
-
-/* Fix loading spinner in widget */
-.ai-prompt-widget .loading-spinner {
-    width: 20px;
-    height: 20px; 
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    border-top: 2px solid white;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
 }
