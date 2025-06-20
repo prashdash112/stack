@@ -17,11 +17,8 @@
     
     <!-- Floating Particles -->
     <div class="particles" id="particles"></div>
-
-    <div class="container">
-        <!-- Header -->
-        <div class="header">
-            <!-- <h1 class="logo">🚀 GeniusPost AI</h1> -->
+    <div class="header">
+            <!-- <h3 class="logo">🚀 GeniusPost AI</h3> -->
             <!-- <p class="tagline">Transform your ideas into engaging LinkedIn posts with AI magic</p> -->
             {% if current_user.is_authenticated %}
                 <div class="profile-container">
@@ -42,6 +39,9 @@
                 </div>
             {% endif %}
         </div>
+    <div class="container">
+        <!-- Header -->
+        
 
         <!-- AI Generate Toolbar (NEW) -->
 <div class="ai-toolbar">
@@ -51,7 +51,7 @@
     </button>
     <div class="toolbar-actions">
         <button class="toolbar-btn" onclick="document.getElementById('imageInput').click()">
-            🖼️ Add Image
+            🏞️ Add Visual
         </button>
         <button class="toolbar-btn" id="clearAllBtn">
             🗑️ Clear All
@@ -72,7 +72,7 @@
     ></textarea>
     <div class="widget-actions">
         <button class="generate-btn" id="generateBtn">
-            <span class="btn-text">Generate Content</span>
+            <span class="btn-text">⚡️Compose</span>
             <div class="loading-spinner" id="loadingSpinner"></div>
         </button>
         <button class="cancel-btn" id="cancelWidget">Cancel</button>
@@ -92,10 +92,10 @@
     <!-- Tab Navigation -->
     <div class="workspace-tabs">
         <button class="tab-btn active" data-tab="editor">
-            ✏️ Editor
+            ✏️ Studio
         </button>
         <button class="tab-btn" data-tab="preview">
-            👁️ Preview
+            🖼️ Stage
         </button>
         
         <!-- Template selector in tabs -->
@@ -140,10 +140,10 @@
             </iframe>
             <div class="preview-actions">
                 <button class="action-btn primary" id="downloadInfographic">
-                    📋 Download PNG
+                    📋 Save Image
                 </button>
                 <button class="action-btn primary" id="downloadCarousel">
-                    📄 Download PDF
+                    📄 Export Carousel
                 </button>
             </div>
         </div>

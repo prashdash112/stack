@@ -146,8 +146,8 @@ body {
 /* Profile Container */
 .profile-container {
     position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
+    top: 0.2rem;
+    right: 0.2rem;
 }
 
 .profile-icon {
@@ -173,8 +173,8 @@ body {
     color: #fff;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    padding: 0.5rem 1.2rem;
-    min-width: 140px;
+    padding: 0.5rem 0.5rem;
+    min-width: 300px;
     z-index: 10;
 }
 
@@ -682,7 +682,7 @@ body {
 
 .action-btn.primary {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-color: #667eea;
+    border-color: #040d35;
 }
 
 .action-btn.secondary {
@@ -1181,7 +1181,7 @@ body {
     color: white;
     border: none;
     padding: 12px 24px;
-    border-radius: 8px;
+    border-radius: 20px;
     cursor: pointer;
     transition: all 0.3s ease;
     font-weight: 600;
@@ -1220,7 +1220,7 @@ body {
     color: white;
     border: 1px solid rgba(255, 255, 255, 0.2);
     padding: 12px 24px;
-    border-radius: 8px;
+    border-radius: 20px;
     cursor: pointer;
     transition: all 0.3s ease;
 }
@@ -1299,7 +1299,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 10px;
+    padding: 5px 5px;
     background: rgba(255, 255, 255, 0.08);
     backdrop-filter: blur(20px);
     border-radius: 12px;
@@ -1314,7 +1314,7 @@ body {
     color: white;
     border: none;
     padding: 10px 20px;
-    border-radius: 8px;
+    border-radius: 16px;
     font-size: 0.95rem;
     font-weight: 600;
     cursor: pointer;
@@ -1349,7 +1349,7 @@ body {
     color: white;
     border: 1px solid rgba(255, 255, 255, 0.2);
     padding: 8px 16px;
-    border-radius: 6px;
+    border-radius: 16px;
     cursor: pointer;
     transition: all 0.3s ease;
     font-size: 0.85rem;
@@ -1484,8 +1484,8 @@ body {
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.3s ease;
-    font-size: 0.9rem;
-    font-weight: 600;
+    font-size: 0.8rem;
+    font-weight: 550;
 }
 
 .action-btn.primary:hover {
