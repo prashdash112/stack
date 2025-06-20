@@ -12,14 +12,24 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
-    <!-- Animated Background -->
     <div class="bg-animation"></div>
-    
-    <!-- Floating Particles -->
     <div class="particles" id="particles"></div>
-    <div class="header">
-            <!-- <h3 class="logo">🚀 GeniusPost AI</h3> -->
-            <!-- <p class="tagline">Transform your ideas into engaging LinkedIn posts with AI magic</p> -->
+    
+    <!-- NEW: Main layout wrapper -->
+    <div class="main-layout">
+        
+        <!-- NEW: Left sidebar -->
+        <div class="left-sidebar">
+            <!-- Logo area (optional) -->
+            <div class="sidebar-header">
+                <h3 class="logo">🚀 GeniusPost AI</h3>
+                <p class="tagline">AI-powered LinkedIn posts</p>
+            </div>
+            
+            <!-- Spacer to push profile to bottom -->
+            <div class="sidebar-spacer"></div>
+            
+            <!-- MOVED: Profile container (from header to bottom of sidebar) -->
             {% if current_user.is_authenticated %}
                 <div class="profile-container">
                     <img
@@ -39,25 +49,25 @@
                 </div>
             {% endif %}
         </div>
-    <div class="container">
-        <!-- Header -->
-        
+
+    <div class="main-content">
+        <div class="container">
 
         <!-- AI Generate Toolbar (NEW) -->
-<div class="ai-toolbar">
-    <button class="ai-generate-btn highlighted" id="aiGenerateBtn">
-        🤖 AI Generate
-        <span class="tooltip" id="firstVisitTooltip">Click here to create AI content!</span>
-    </button>
-    <div class="toolbar-actions">
-        <button class="toolbar-btn" onclick="document.getElementById('imageInput').click()">
-            🏞️ Add Visual
-        </button>
-        <button class="toolbar-btn" id="clearAllBtn">
-            🗑️ Clear All
-        </button>
-    </div>
-</div>
+        <div class="ai-toolbar">
+            <button class="ai-generate-btn highlighted" id="aiGenerateBtn">
+                🤖 AI Generate
+                <span class="tooltip" id="firstVisitTooltip">Click here to create AI content!</span>
+            </button>
+            <div class="toolbar-actions">
+                <button class="toolbar-btn" onclick="document.getElementById('imageInput').click()">
+                    🏞️ Add Visual
+                </button>
+                <button class="toolbar-btn" id="clearAllBtn">
+                    🗑️ Clear All
+                </button>
+            </div>
+        </div>
 
 <!-- AI Prompt Widget (Hidden by default) -->
 <div class="ai-prompt-widget" id="aiPromptWidget">
