@@ -1226,243 +1226,79 @@
     }
     
     try {
-        // LinkedIn target dimensions
-        const LINKEDIN_WIDTH = 1080;
-        const LINKEDIN_HEIGHT = 1350;
-        
-        // Create temporary container with LinkedIn dimensions
+        // Create a temporary container for the PDF
         const tempContainer = document.createElement('div');
         tempContainer.style.position = 'absolute';
         tempContainer.style.left = '-9999px';
-        tempContainer.style.top = '-9999px';
-        tempContainer.style.width = LINKEDIN_WIDTH + 'px';
-        tempContainer.style.height = 'auto';
-        tempContainer.style.minHeight = LINKEDIN_HEIGHT + 'px';
-        tempContainer.style.visibility = 'hidden';
-        tempContainer.style.overflow = 'visible';
-        
-        // Clone the preview content with deep cloning
-        const previewClone = preview.cloneNode(true);
-        previewClone.id = 'temp-preview-clone';
-        
-        // Critical: Remove all overflow constraints to prevent chopping
-        previewClone.style.overflow = 'visible';
-        previewClone.style.maxHeight = 'none';
-        previewClone.style.height = 'auto';
-        previewClone.style.minHeight = 'auto';
-        previewClone.style.whiteSpace = 'normal';
-        
-        // Fix all nested elements to prevent content chopping
-        const allElements = previewClone.querySelectorAll('*');
-        allElements.forEach(element => {
-            // Remove overflow constraints
-            element.style.overflow = 'visible';
-            element.style.maxHeight = 'none';
-            element.style.textOverflow = 'clip';
-            element.style.whiteSpace = 'normal';
-            
-            // Fix table-specific issues
-            if (element.tagName === 'TABLE') {
-                element.style.width = 'auto';
-                element.style.minWidth = '100%';
-                element.style.tableLayout = 'auto';
-                element.style.wordBreak = 'break-word';
-            }
-            
-            // Fix table cell issues
-            if (element.tagName === 'TD' || element.tagName === 'TH') {
-                element.style.whiteSpace = 'normal';
-                element.style.wordWrap = 'break-word';
-                element.style.overflow = 'visible';
-            }
-            
-            // Fix image container issues
-            if (element.tagName === 'IMG') {
-                element.style.maxWidth = '100%';
-                element.style.height = 'auto';
-                element.style.objectFit = 'contain';
-            }
-            
-            // Fix text container issues
-            if (['P', 'DIV', 'SPAN', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6'].includes(element.tagName)) {
-                element.style.overflow = 'visible';
-                element.style.whiteSpace = 'normal';
-                element.style.wordWrap = 'break-word';
-                element.style.hyphens = 'auto';
-            }
-        });
-        
-        // Calculate optimal scaling to fit LinkedIn dimensions
-        const originalWidth = preview.offsetWidth;
-        const originalHeight = preview.offsetHeight;
-        
-        // Smart scaling: fit content while maintaining aspect ratio
-        const widthScale = LINKEDIN_WIDTH / originalWidth;
-        const heightScale = LINKEDIN_HEIGHT / originalHeight;
-        const optimalScale = Math.min(widthScale, heightScale, 1.2); // Cap at 1.2x to maintain quality
-        
-        // Apply scaling transformation
-        previewClone.style.transform = `scale(${optimalScale})`;
-        previewClone.style.transformOrigin = 'top left';
-        previewClone.style.width = originalWidth + 'px';
-        previewClone.style.height = originalHeight + 'px';
-        
-        // Append to temp container and then to body
-        tempContainer.appendChild(previewClone);
+        tempContainer.style.width = '1080px';
+        tempContainer.innerHTML = preview.outerHTML;
         document.body.appendChild(tempContainer);
         
-        // Wait for content to render and fonts to load
-        await new Promise(resolve => setTimeout(resolve, 800));
-        
-        // Ensure all images are loaded
-        const images = tempContainer.querySelectorAll('img');
-        await Promise.all(Array.from(images).map(img => {
-            return new Promise(resolve => {
-                if (img.complete) {
-                    resolve();
-                } else {
-                    img.onload = resolve;
-                    img.onerror = resolve;
-                    setTimeout(resolve, 3000); // Fallback timeout
-                }
-            });
-        }));
-        
-        // Calculate final container dimensions
-        const scaledWidth = LINKEDIN_WIDTH;
-        const scaledHeight = Math.max(LINKEDIN_HEIGHT, originalHeight * optimalScale);
-        
-        tempContainer.style.width = scaledWidth + 'px';
-        tempContainer.style.height = scaledHeight + 'px';
-        
-        // Set background color based on template with fallback
+        // Set background color based on template
         let backgroundColor = '#ffffff';
-        if (typeof currentTemplate !== 'undefined' && currentTemplate) {
-            if (currentTemplate.includes('tech-neural')) backgroundColor = '#667eea';
-            else if (currentTemplate.includes('tech-quantum')) backgroundColor = '#0a0a0a';
-            else if (currentTemplate.includes('product-modern')) backgroundColor = '#ff6b6b';
-            else if (currentTemplate.includes('product-premium')) backgroundColor = '#2c3e50';
-            else if (currentTemplate.includes('finance-gold')) backgroundColor = '#f7931e';
-            else if (currentTemplate.includes('finance-elite')) backgroundColor = '#1e3c72';
-            else if (currentTemplate.includes('health-care')) backgroundColor = '#56ab2f';
-            else if (currentTemplate.includes('health-medical')) backgroundColor = '#0f4c75';
-            else if (currentTemplate.includes('saas-modern')) backgroundColor = '#667eea';
-            else if (currentTemplate.includes('saas-enterprise')) backgroundColor = '#2c3e50';
-        }
+        if (currentTemplate.includes('tech-neural')) backgroundColor = '#667eea';
+        else if (currentTemplate.includes('tech-quantum')) backgroundColor = '#0a0a0a';
+        else if (currentTemplate.includes('product-modern')) backgroundColor = '#ff6b6b';
+        else if (currentTemplate.includes('product-premium')) backgroundColor = '#2c3e50';
+        else if (currentTemplate.includes('finance-gold')) backgroundColor = '#f7931e';
+        else if (currentTemplate.includes('finance-elite')) backgroundColor = '#1e3c72';
+        else if (currentTemplate.includes('health-care')) backgroundColor = '#56ab2f';
+        else if (currentTemplate.includes('health-medical')) backgroundColor = '#0f4c75';
+        else if (currentTemplate.includes('saas-modern')) backgroundColor = '#667eea';
+        else if (currentTemplate.includes('saas-enterprise')) backgroundColor = '#2c3e50';
         
-        // Generate canvas with optimized settings for quality + file size balance
-        const canvas = await html2canvas(tempContainer, {
+        const canvas = await html2canvas(tempContainer.firstChild, {
             backgroundColor: backgroundColor,
-            scale: 1.5, // Optimal balance between quality and file size
+            scale: 1.5, // Reduced from 2 to 1.5 - still high quality but smaller file
             useCORS: true,
             allowTaint: true,
-            width: scaledWidth,
-            height: scaledHeight,
-            logging: false,
-            imageTimeout: 15000,
-            removeContainer: false,
-            foreignObjectRendering: true,
-            letterRendering: true,
-            // Optimization settings for smaller file size
-            onclone: (clonedDoc) => {
-                // Ensure cloned document maintains our fixes
-                const clonedContainer = clonedDoc.querySelector('#temp-preview-clone');
-                if (clonedContainer) {
-                    clonedContainer.style.overflow = 'visible';
-                }
-            }
+            width: 1080,
+            height: null,
+            logging: false
         });
         
-        // Clean up temporary container
         document.body.removeChild(tempContainer);
         
-        // Create PDF with exact LinkedIn dimensions
+        // Create PDF with compression
         const { jsPDF } = window.jspdf;
-        
-        // Calculate PDF dimensions to match LinkedIn aspect ratio (1080:1350 = 4:5)
-        const aspectRatio = LINKEDIN_HEIGHT / LINKEDIN_WIDTH; // 1.25
-        const pdfWidth = 216; // Slightly larger than A4 width for better quality
-        const pdfHeight = pdfWidth * aspectRatio; // LinkedIn proportional height
-        
+        // Calculate LinkedIn dimensions in mm (1080x1350 aspect ratio)
+        const linkedinWidth = 216; // mm (8.5 inches)
+        const linkedinHeight = 270; // mm (maintains 1080:1350 ratio)
+
         const pdf = new jsPDF({
-            orientation: 'portrait',
-            unit: 'mm',
-            format: [pdfWidth, pdfHeight],
-            compress: true,
-            precision: 2
+            orientation: 'p',
+            unit: 'mm', 
+            format: [linkedinWidth, linkedinHeight], // Custom LinkedIn format
+            compress: true
         });
+
+        const imgData = canvas.toDataURL('image/jpeg', 0.85);
+        const imgWidth = linkedinWidth;
+        const pageHeight = linkedinHeight;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        let heightLeft = imgHeight;
         
-        // Convert to JPEG with optimal quality/size balance
-        const imgData = canvas.toDataURL('image/jpeg', 0.85); // 85% quality - sweet spot
+        let position = 0;
         
-        // Calculate perfect fit dimensions (no cropping, no empty space)
-        const canvasAspectRatio = canvas.height / canvas.width;
-        const pdfAspectRatio = pdfHeight / pdfWidth;
+        pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight, undefined, 'FAST');
+        heightLeft -= pageHeight;
         
-        let imgWidth, imgHeight, x, y;
-        
-        // Smart fitting algorithm - ensure no content is cropped
-        if (Math.abs(canvasAspectRatio - pdfAspectRatio) < 0.01) {
-            // Aspect ratios match - perfect fit
-            imgWidth = pdfWidth;
-            imgHeight = pdfHeight;
-            x = 0;
-            y = 0;
-        } else if (canvasAspectRatio > pdfAspectRatio) {
-            // Content is taller - fit to height, center horizontally
-            imgHeight = pdfHeight;
-            imgWidth = imgHeight / canvasAspectRatio;
-            x = (pdfWidth - imgWidth) / 2;
-            y = 0;
-        } else {
-            // Content is wider - fit to width, center vertically
-            imgWidth = pdfWidth;
-            imgHeight = imgWidth * canvasAspectRatio;
-            x = 0;
-            y = (pdfHeight - imgHeight) / 2;
+        while (heightLeft >= 0) {
+            position = heightLeft - imgHeight;
+            pdf.addPage();
+            pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight, undefined, 'FAST');
+            heightLeft -= pageHeight;
         }
         
-        // Add image to PDF with perfect positioning
-        pdf.addImage(imgData, 'JPEG', x, y, imgWidth, imgHeight, undefined, 'FAST');
-        
-        // Add metadata for better organization
-        pdf.setProperties({
-            title: `LinkedIn Post - ${currentTemplate || 'Custom'}`,
-            subject: 'LinkedIn Post Export',
-            author: 'Carousel Generator',
-            creator: 'Carousel Generator',
-            producer: 'jsPDF'
-        });
-        
-        // Generate filename with template and timestamp
-        const templateName = (typeof currentTemplate !== 'undefined' && currentTemplate) 
-            ? currentTemplate.replace(/[^a-zA-Z0-9]/g, '-') 
-            : 'custom';
-        const timestamp = new Date().toISOString().slice(0, 19).replace(/[:.]/g, '-');
-        const filename = `linkedin-post-${templateName}-${timestamp}.pdf`;
-        
-        // Save the PDF
-        pdf.save(filename);
-        
-        console.log(`✅ LinkedIn PDF generated successfully!`);
-        console.log(`📐 Dimensions: ${canvas.width}x${canvas.height}px (scaled to ${LINKEDIN_WIDTH}x${LINKEDIN_HEIGHT})`);
-        console.log(`📁 File: ${filename}`);
-        console.log(`🎨 Background: ${backgroundColor}`);
+        pdf.save(`carousel-${currentTemplate}-${Date.now()}.pdf`);
         
     } catch (error) {
-        console.error('❌ Error generating PDF:', error);
-        
-        // Clean up any remaining temp containers
-        const tempContainers = document.querySelectorAll('[id*="temp-preview"]');
-        tempContainers.forEach(container => {
-            if (container.parentNode) {
-                container.parentNode.removeChild(container);
-            }
-        });
-        
-        alert('Error generating PDF. Please try again. Check the console for details.');
+        console.error('Error generating PDF:', error);
+        alert('Error generating PDF. Please try again.');
     }
 }
+
+       
         const preview = document.getElementById('preview');
 
         window.addEventListener('message', async (event) => {
