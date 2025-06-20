@@ -145,6 +145,7 @@ body {
     padding: 1.5rem 1rem;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     background: rgba(255, 255, 255, 0.03);
+    position: relative; /* Essential for absolute positioning */
 }
 
 .profile-icon {
@@ -152,6 +153,11 @@ body {
     height: 36px;
     display: block;
     margin: 0 auto 0.75rem auto;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid rgba(255,255,255,0.5);
+    transition: all 0.3s ease;
+    object-fit: cover;
 }
 
 .profile-icon:hover {
@@ -160,11 +166,20 @@ body {
 }
 
 .profile-card {
+    display: none; /* Hidden by default */
     position: absolute;
-    bottom: 100%;
+    bottom: 100%; /* This positions it ABOVE the container */
     left: 0.5rem;
     right: 0.5rem;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.5rem; /* Space between card and container */
+    background: rgba(20, 20, 40, 0.95);
+    backdrop-filter: blur(20px);
+    color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    padding: 1rem;
+    z-index: 200; /* Ensure it appears above everything */
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 @media (max-width: 768px) {
@@ -188,6 +203,19 @@ body {
 
 .profile-card.visible {
     display: block;
+    animation: slideUpFromBelow 0.3s ease;
+}
+
+/* Animation that slides up from below */
+@keyframes slideUpFromBelow {
+    from { 
+        opacity: 0; 
+        transform: translateY(20px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
 }
 
 .profile-card-header {
@@ -1622,9 +1650,9 @@ body {
     left: 0;
     top: 0;
     height: 100vh;
-    width: 230px;
+    width: 260px;
     z-index: 100;
-    overflow-y: auto;
+    overflow: visible; /* Allow card to overflow outside sidebar */
     box-shadow: 2px 0 20px rgba(0, 0, 0, 0.2);
 }
 
