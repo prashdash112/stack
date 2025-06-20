@@ -201,13 +201,6 @@ body {
     color: #ff5252;
 }
 
-/* Main Content Grid */
-.main-grid {
-    display: grid;
-    grid-template-columns: 1fr 400px;
-    gap: 40px;
-    margin-bottom: 60px;
-}
 
 /* Input Section */
 .input-section {
@@ -308,17 +301,6 @@ body {
     pointer-events: none;
 }
 
-/* Loading Animation */
-.loading-spinner {
-    display: none;
-    width: 24px;
-    height: 24px;
-    border: 3px solid rgba(255, 255, 255, 0.3);
-    border-top: 3px solid #ffffff;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin: 0 auto;
-}
 
 @keyframes spin {
     0% { transform: rotate(0deg); }
@@ -415,57 +397,11 @@ body {
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Layer Switcher */
-.layer-switcher {
-    display: flex;
-    background: rgba(255, 255, 255, 0.03);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
 
-.layer-btn {
-    flex: 1;
-    padding: 20px 30px;
-    background: transparent;
-    border: none;
-    color: #a0a0a0;
-    font-size: 1.2rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    position: relative;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
 
-.layer-btn:hover {
-    background: rgba(255, 255, 255, 0.05);
-    color: #ffffff;
-}
 
-.layer-btn.active {
-    background: rgba(102, 126, 234, 0.1);
-    color: #667eea;
-}
 
-.layer-btn.active::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
 
-/* Editor Layer */
-.editor-layer {
-    display: none;
-    padding: 30px;
-}
-
-.editor-layer.active {
-    display: block;
-}
 
 
 .control-group {
@@ -532,31 +468,6 @@ body {
     margin-left: auto;
 }
 
-
-
-/* Preview Layer */
-.preview-layer {
-    display: none;
-    padding: 30px;
-    min-height: 500px;
-}
-
-.preview-layer.active {
-    display: block;
-}
-
-.preview-sync-indicator {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 20px;
-    padding: 10px 15px;
-    background: rgba(76, 175, 80, 0.1);
-    border: 1px solid rgba(76, 175, 80, 0.2);
-    border-radius: 8px;
-    color: #4caf50;
-    font-size: 0.9rem;
-}
 
 .sync-icon {
     animation: rotate 2s linear infinite;
@@ -819,32 +730,7 @@ body {
     border-radius: 4px;
 }
 
-/* Responsive Design */
-@media (max-width: 1024px) {
-    .main-grid {
-        grid-template-columns: 1fr;
-        gap: 30px;
-    }
 
-    .benefits-section {
-        order: -1;
-    }
-
-    .editor-controls {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 15px;
-    }
-
-    .control-group {
-        justify-content: space-between;
-    }
-
-    .editor-actions {
-        margin-left: 0;
-        justify-content: center;
-    }
-}
 
 @media (max-width: 768px) {
     .container {
@@ -865,10 +751,6 @@ body {
         border-radius: 15px;
     }
 
-    .editor-layer,
-    .preview-layer {
-        padding: 20px;
-    }
 
     .editor-controls {
         padding: 15px;
@@ -924,43 +806,7 @@ body {
     }
 }
 
-@media (max-width: 480px) {
-    .layer-switcher {
-        flex-direction: column;
-    }
 
-    .layer-btn {
-        border-radius: 0;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .layer-btn:last-child {
-        border-bottom: none;
-    }
-
-    .editor-controls {
-        gap: 10px;
-        padding: 10px;
-    }
-
-    .styled-preview {
-        padding: 15px;
-    }
-
-    .styled-preview pre[data-windowed="true"] {
-        font-size: 0.9rem;
-        padding: 12px;
-    }
-
-    .styled-preview table {
-        font-size: 0.8rem;
-    }
-
-    .styled-preview th,
-    .styled-preview td {
-        padding: 0.5rem 0.75rem;
-    }
-}
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
@@ -1208,4 +1054,591 @@ body {
     background: #ffd700;
     color: #2c3e50;
     border-color: #ffd700;
+}
+
+
+@keyframes pulse {
+    0% { box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4); }
+    50% { box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6); }
+    100% { box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4); }
+}
+
+.tooltip.show {
+    opacity: 1;
+}
+
+.toolbar-actions {
+    display: flex;
+    gap: 10px;
+}
+
+
+/* Add this entire block to your addRequiredStyles() function */
+
+/* AI Toolbar Styles */
+
+
+
+
+@keyframes pulse {
+    0% { box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4); }
+    50% { box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6); }
+    100% { box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4); }
+}
+
+.tooltip {
+    position: absolute;
+    top: -45px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.tooltip.show {
+    opacity: 1;
+}
+
+.tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: #333;
+}
+
+.toolbar-actions {
+    display: flex;
+    gap: 10px;
+}
+
+
+
+
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translate(-50%, -60%); }
+    to { opacity: 1; transform: translate(-50%, -50%); }
+}
+
+.widget-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.widget-header h3 {
+    color: white;
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
+    transition: background 0.3s ease;
+}
+
+.close-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.prompt-input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    padding: 15px;
+    color: white;
+    font-size: 1rem;
+    min-height: 120px;
+    resize: vertical;
+    transition: all 0.3s ease;
+}
+
+.prompt-input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.prompt-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.widget-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.generate-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    position: relative;
+    flex: 1;
+}
+
+.generate-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.generate-btn.loading {
+    pointer-events: none;
+}
+
+.loading-spinner {
+    display: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top: 2px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.cancel-btn {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.cancel-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.sample-prompts {
+    margin-top: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+}
+
+.sample-prompts span {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
+}
+
+.sample-prompt {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.sample-prompt:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+}
+
+
+
+.empty-state-hint {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.6);
+    font-style: italic;
+}
+
+
+.preview-actions {
+    padding: 15px;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.05);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.action-btn.primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.action-btn.primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+/* Better file input styling */
+.toolbar-btn[onclick*="imageInput"] {
+    position: relative;
+    overflow: hidden;
+}
+
+.generate-btn.loading .loading-spinner {
+    display: block;
+}
+
+
+/* SLEEK AI TOOLBAR */
+.ai-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(20px);
+    border-radius: 12px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.ai-generate-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 10px rgba(102, 126, 234, 0.3);
+}
+
+.ai-generate-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.ai-generate-btn.highlighted {
+    animation: pulse 2s infinite;
+}
+
+.ai-generate-btn:focus,
+.toolbar-btn:focus,
+.sample-prompt:focus {
+    outline: 2px solid #667eea;
+    outline-offset: 2px;
+}
+
+.toolbar-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.toolbar-btn {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.toolbar-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+}
+
+/* TABBED WORKSPACE */
+.main-workspace-tabbed {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 75vh;
+    min-height: 600px;
+}
+
+.workspace-tabs {
+    display: flex;
+    background: rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 0;
+}
+
+.tab-btn {
+    flex: 0 0 auto;
+    padding: 15px 30px;
+    background: transparent;
+    border: none;
+    color: #a0a0a0;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    border-bottom: 3px solid transparent;
+}
+
+.tab-btn:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: #ffffff;
+}
+
+.tab-btn.active {
+    background: rgba(102, 126, 234, 0.1);
+    color: #667eea;
+    border-bottom-color: #667eea;
+}
+
+.tab-controls {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 0 20px;
+}
+
+.empty-state-hint {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.6);
+    font-style: italic;
+}
+
+.template-selector-compact {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.template-selector-compact select {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    min-width: 150px;
+}
+
+.tab-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.tab-pane {
+    display: none;
+    flex: 1;
+    flex-direction: column;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.tab-pane.active {
+    display: flex;
+    position: relative;
+}
+
+.fullscreen-frame {
+    flex: 1;
+    border: none;
+    background: white;
+    width: 100%;
+    height: 100%;
+}
+
+.preview-actions {
+    padding: 15px;
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.05);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.action-btn.primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.action-btn.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .ai-toolbar {
+        flex-direction: column;
+        gap: 10px;
+        padding: 15px;
+    }
+    
+    .toolbar-actions {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .workspace-tabs {
+        flex-direction: column;
+    }
+    
+    .tab-btn {
+        padding: 12px 20px;
+        text-align: center;
+    }
+    
+    .tab-controls {
+        margin-left: 0;
+        justify-content: center;
+        padding: 10px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .main-workspace-tabbed {
+        height: 70vh;
+        min-height: 500px;
+    }
+}
+
+@media (max-width: 480px) {
+    .tab-controls {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .preview-actions {
+        flex-direction: column;
+    }
+}
+
+/* ADD these missing styles to your CSS */
+
+/* Template selector in tab controls */
+.template-selector-compact select option {
+    background: #333;
+    color: white;
+}
+
+/* Focus states for accessibility */
+.tab-btn:focus {
+    outline: 2px solid #667eea;
+    outline-offset: 2px;
+}
+
+/* Better mobile responsiveness for tabs */
+@media (max-width: 768px) {
+    .workspace-tabs {
+        flex-wrap: wrap;
+    }
+    
+    .tab-controls {
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+/* Loading state improvements */
+.generate-btn.loading .btn-text {
+    opacity: 0;
+}
+
+.generate-btn.loading .loading-spinner {
+    display: inline-block;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* AI Prompt Widget - FIXED VERSION */
+.ai-prompt-widget {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(20, 20, 40, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 30px;
+    width: 500px;
+    max-width: 90vw;
+    z-index: 1000;
+    display: none;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.ai-prompt-widget.show {
+    display: block;
+    animation: slideDown 0.3s ease;
+}
+
+/* ONLY ONE BACKDROP RULE - Only when widget is shown */
+.ai-prompt-widget.show::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: -1;
+    backdrop-filter: blur(5px);
+}
+
+/* Fix loading spinner in widget */
+.ai-prompt-widget .loading-spinner {
+    width: 20px;
+    height: 20px; 
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top: 2px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
 }

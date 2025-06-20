@@ -43,147 +43,114 @@
             {% endif %}
         </div>
 
-        <!-- Main Content Grid -->
-        <div class="main-grid">
-            <!-- Input Section -->
-            <div class="input-section">
-                <h2 class="section-title">Create Your Post</h2>
-                <textarea 
-                    class="prompt-input" 
-                    id="promptInput"
-                    placeholder=""
-                ></textarea>
-                
-                <button class="generate-btn" id="generateBtn">
-                    <span class="btn-text">Generate AI Content</span>
-                    <div class="loading-spinner" id="loadingSpinner"></div>
-                </button>
+        <!-- AI Generate Toolbar (NEW) -->
+<div class="ai-toolbar">
+    <button class="ai-generate-btn highlighted" id="aiGenerateBtn">
+        🤖 AI Generate
+        <span class="tooltip" id="firstVisitTooltip">Click here to create AI content!</span>
+    </button>
+    <div class="toolbar-actions">
+        <button class="toolbar-btn" onclick="document.getElementById('imageInput').click()">
+            🖼️ Add Image
+        </button>
+        <button class="toolbar-btn" id="clearAllBtn">
+            🗑️ Clear All
+        </button>
+    </div>
+</div>
+
+<!-- AI Prompt Widget (Hidden by default) -->
+<div class="ai-prompt-widget" id="aiPromptWidget">
+    <div class="widget-header">
+        <h3>🤖 What would you like to create?</h3>
+        <button class="close-btn" id="closeWidget">✕</button>
+    </div>
+    <textarea 
+        class="prompt-input" 
+        id="promptInput"
+        placeholder="Write a LinkedIn post about machine learning..."
+    ></textarea>
+    <div class="widget-actions">
+        <button class="generate-btn" id="generateBtn">
+            <span class="btn-text">Generate Content</span>
+            <div class="loading-spinner" id="loadingSpinner"></div>
+        </button>
+        <button class="cancel-btn" id="cancelWidget">Cancel</button>
+    </div>
+    <div class="sample-prompts">
+        <span>Try these:</span>
+        <button class="sample-prompt">LinkedIn post about AI trends</button>
+        <button class="sample-prompt">Product launch announcement</button>
+        <button class="sample-prompt">Thought leadership article</button>
+    </div>
+</div>
+
+<!-- Main Workspace -->
+<!-- Main Workspace -->
+<div class="main-workspace-tabbed">
+    <!-- Tab Navigation -->
+    <div class="workspace-tabs">
+        <button class="tab-btn active" data-tab="editor">
+            ✏️ Editor
+        </button>
+        <button class="tab-btn" data-tab="preview">
+            👁️ Preview
+        </button>
+        
+        <!-- Template selector in tabs -->
+        <div class="tab-controls">
+            <div class="empty-state-hint" id="emptyHint">
+                Click "AI Generate" to start creating content
             </div>
-
-            <!-- Benefits Section -->
-            <div class="benefits-section">
-                <h2 class="section-title">Why Choose AI Content?</h2>
-                
-                <div class="benefit-item">
-                    <div class="benefit-icon">⚡</div>
-                    <div class="benefit-text">
-                        <div class="benefit-title">Lightning Fast</div>
-                        <div class="benefit-desc">Generate professional content in seconds</div>
-                    </div>
-                </div>
-
-                <div class="benefit-item">
-                    <div class="benefit-icon">🎯</div>
-                    <div class="benefit-text">
-                        <div class="benefit-title">Engagement Optimized</div>
-                        <div class="benefit-desc">Content designed for maximum LinkedIn reach</div>
-                    </div>
-                </div>
-
-                <div class="benefit-item">
-                    <div class="benefit-icon">✨</div>
-                    <div class="benefit-text">
-                        <div class="benefit-title">Professional Quality</div>
-                        <div class="benefit-desc">AI-powered writing that sounds human</div>
-                    </div>
-                </div>
-
-                <div class="benefit-item">
-                    <div class="benefit-icon">🔄</div>
-                    <div class="benefit-text">
-                        <div class="benefit-title">Fully Editable</div>
-                        <div class="benefit-desc">Customize and refine before posting</div>
-                    </div>
-                </div>
-
-                <div class="benefit-item">
-                    <div class="benefit-icon">💡</div>
-                    <div class="benefit-text">
-                        <div class="benefit-title">Creative Ideas</div>
-                        <div class="benefit-desc">Never run out of content inspiration</div>
-                    </div>
-                </div>
+            <div class="template-selector-compact" id="templateSelectorContainer" style="display: none;">
+                <select id="templateSelect">
+                    <option value="tech-neural">🧠 Neural</option>
+                    <option value="tech-quantum">⚛️ Quantum</option>
+                    <option value="product-modern">🚀 Modern</option>
+                    <option value="product-premium">👑 Premium</option>
+                    <option value="finance-gold">💰 Gold</option>
+                    <option value="finance-elite">🏦 Elite</option>
+                    <option value="health-care">🏥 Care</option>
+                    <option value="health-medical">🩺 Medical</option>
+                    <option value="saas-modern">💻 SaaS</option>
+                    <option value="saas-enterprise">🏢 Enterprise</option>
+                </select>
             </div>
-        </div>
-
-        <!-- Two-Layer Editor System -->
-        <div class="output-section" id="outputSection">
-            <h2 class="section-title">📝 Edit & Style Your Content</h2>
-            
-            <!-- Layer Switcher -->
-            <div class="layer-switcher" style="position: sticky; top: 0; z-index: 10; background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(20px);">
-                <button class="layer-btn active" id="editorTab" data-layer="editor">
-                    ✏️ Rich Editor
-                </button>
-                <button class="layer-btn" id="previewTab" data-layer="preview">
-                    👁️ Content Preview
-                </button>
-            </div>
-
-            <!-- Layer 1: Markdown Editor -->
-            <div class="editor-layer active" id="editorLayer">
-                <iframe 
-                    id="markdownEditorFrame" 
-                    src="markdown_editor.html" 
-                    style="width: 100%; height: 800px; border: none; border-radius: 12px;">
-                </iframe> 
-            <div class="editor-controls" style="margin-top: 12px; display: flex; gap: 8px; justify-content: flex-end;">
-                <button class="action-btn secondary" id="clearEditor">
-                    🗑️ Clear Editor
-                </button>
-                <button class="action-btn secondary" id="regenerateContent">
-                    🔄 Regenerate Content
-                </button>
-                <button class="action-btn secondary" onclick="document.getElementById('imageInput').click()">
-                    🖼️ Add Image
-                </button>
-            </div>
-            </div>
-
-            <!-- Layer 2: Styled Preview -->
-            <div class="preview-layer" id="previewLayer">
-                <div class="preview-sync-indicator">
-                    <span class="sync-icon">🔄</span>
-                    <span class="sync-text">Live Sync Active</span>
-                </div>
-                <!-- Template Selector -->
-                <div class="template-selector" style="margin-bottom: 20px;">
-                    <h3 style="margin-bottom: 15px;">Choose Template Style:</h3>
-                    <div class="template-grid" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 20px;">
-                        <button class="template-option active" data-template="tech-neural">🧠 Neural</button>
-                        <button class="template-option" data-template="tech-quantum">⚛️ Quantum</button>
-                        <button class="template-option" data-template="product-modern">🚀 Modern</button>
-                        <button class="template-option" data-template="product-premium">👑 Premium</button>
-                        <button class="template-option" data-template="finance-gold">💰 Gold</button>
-                        <button class="template-option" data-template="finance-elite">🏦 Elite</button>
-                        <button class="template-option" data-template="health-care">🏥 Care</button>
-                        <button class="template-option" data-template="health-medical">🩺 Medical</button>
-                        <button class="template-option" data-template="saas-modern">💻 SaaS</button>
-                        <button class="template-option" data-template="saas-enterprise">🏢 Enterprise</button>
-                    </div>
-                </div>
-                <!-- Template Preview -->
-                <iframe 
-                    id="templatePreviewFrame" 
-                    src="carousel_template.html" 
-                    style="width: 100%; height: 1000px; border: none; border-radius: 12px; background: white;">
-                </iframe>
-
-                <!-- Preview Actions -->
-                <div class="preview-actions">
-                    <button class="action-btn primary" id="downloadInfographic">
-                        📋 Download Infographic
-                    </button>
-                    <button class="action-btn primary" id="downloadCarousel">
-                        📄 Download Carousel (PDF)
-                    </button>
-                </div>
-            </div>
-
-            <!-- Hidden File Input for Images -->
-            <input type="file" id="imageInput" accept="image/*" style="display: none;" />
         </div>
     </div>
+
+    <!-- Tab Content -->
+    <div class="tab-content">
+        <!-- Editor Tab -->
+        <div class="tab-pane active" data-tab="editor">
+            <iframe 
+                id="markdownEditorFrame" 
+                src="markdown_editor.html" 
+                class="fullscreen-frame">
+            </iframe>
+        </div>
+
+        <!-- Preview Tab -->
+        <div class="tab-pane" data-tab="preview">
+            <iframe 
+                id="templatePreviewFrame" 
+                src="carousel_template.html" 
+                class="fullscreen-frame">
+            </iframe>
+            <div class="preview-actions">
+                <button class="action-btn primary" id="downloadInfographic">
+                    📋 Download PNG
+                </button>
+                <button class="action-btn primary" id="downloadCarousel">
+                    📄 Download PDF
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Hidden File Input for Images -->
+    <input type="file" id="imageInput" accept="image/*" style="display: none;" />
+</div>
 
     <script>
         // Global Variables
@@ -244,50 +211,7 @@
             document.head.appendChild(style);
         }
 
-        // Layer switching functionality
-        function initializeLayerSwitching() {
-            const layerBtns = document.querySelectorAll('.layer-btn');
-            const layers = document.querySelectorAll('.editor-layer, .preview-layer');
 
-            layerBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const targetLayer = btn.dataset.layer;
-                    
-                    // Update button states
-                    layerBtns.forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-
-                    // Update layer visibility
-                    layers.forEach(layer => {
-                        layer.classList.remove('active');
-                    });
-
-                    if (targetLayer === 'editor') {
-                        document.getElementById('editorLayer').classList.add('active');
-                    } else if (targetLayer === 'preview') {
-                        document.getElementById('previewLayer').classList.add('active');
-                        updateStyledPreviewFromMarkdown();
-                    }
-                });
-            });
-        }
-
-        // Editor controls functionality
-        function initializeEditorControls() {
-            // Clear editor
-            document.getElementById('clearEditor').addEventListener('click', () => {
-                const iframe = document.getElementById('markdownEditorFrame');
-                iframe.contentWindow.markdownEditor.setContent('');
-                document.getElementById('styledPreview').innerHTML = '';
-            });
-
-            // Regenerate content
-            document.getElementById('regenerateContent').addEventListener('click', () => {
-                if (currentPrompt) {
-                    generateContent();
-                }
-            });
-        }    
        
         // Image upload functionality with compression
 function initializeImageUpload() {
@@ -501,7 +425,6 @@ function createShortImageUrl(file, callback) {
             const generateBtn = document.getElementById('generateBtn');
             const btnText = generateBtn.querySelector('.btn-text');
             const loadingSpinner = document.getElementById('loadingSpinner');
-            const outputSection = document.getElementById('outputSection');
 
             currentPrompt = promptInput.value.trim();
 
@@ -540,10 +463,11 @@ function createShortImageUrl(file, callback) {
                 // Update preview
                 updateStyledPreviewFromMarkdown();
                 
-                // Show output section and switch to editor
-                outputSection.classList.add('show');
-                document.getElementById('editorTab').click();
-                outputSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                // Hide the AI widget after generation
+                hideAIWidget();
+
+                // Update empty state hint
+                updateEmptyStateHint();
 
             } catch (error) {
                 console.error('Error generating content:', error);
@@ -676,19 +600,10 @@ function createShortImageUrl(file, callback) {
 
         // Template selection functionality
         function initializeTemplateSelection() {
-            const templateOptions = document.querySelectorAll('.template-option');
-            templateOptions.forEach(option => {
-                option.addEventListener('click', () => {
-                    // Update active state
-                    templateOptions.forEach(opt => opt.classList.remove('active'));
-                    option.classList.add('active');
-                    
-                    // Update current template
-                    currentSelectedTemplate = option.dataset.template;
-                    
-                    // Update preview
-                    updateTemplatePreview();
-                });
+            // Handle dropdown template selection
+            document.getElementById('templateSelect').addEventListener('change', (e) => {
+                currentSelectedTemplate = e.target.value;
+                updateTemplatePreview();
             });
         }
 
@@ -711,47 +626,156 @@ function createShortImageUrl(file, callback) {
                 }, '*');
             }
         }
-        // Initialize everything
-        document.addEventListener('DOMContentLoaded', function() {
-            addRequiredStyles();
-            createParticles();
-            initializePlaceholder();
-            initializeProfile();
-            initializeMouseEffects();
-            
-            // Initialize editor system
-            initializeEditorControls();
-            initializeLayerSwitching();
-            
-            initializeImageUpload();
-            initializeTemplateSelection();
-            initializeDownloadActions();
-            
 
+        // Add these functions to your existing JavaScript
 
-            // Bind generate button
-            document.getElementById('generateBtn').addEventListener('click', generateContent);
-            document.getElementById('promptInput').addEventListener('keydown', function(e) {
-                if (e.key === 'Enter' && e.ctrlKey) {
-                    generateContent();
+// AI Widget Management
+function showAIWidget() {
+    document.getElementById('aiPromptWidget').classList.add('show');
+    document.getElementById('promptInput').focus();
+}
+
+function hideAIWidget() {
+    document.getElementById('aiPromptWidget').classList.remove('show');
+}
+
+// First Visit Tooltip
+function showFirstVisitTooltip() {
+    const tooltip = document.getElementById('firstVisitTooltip');
+    if (localStorage.getItem('hasVisited') !== 'true') {
+        tooltip.classList.add('show');
+        setTimeout(() => {
+            tooltip.classList.remove('show');
+        }, 5000);
+        localStorage.setItem('hasVisited', 'true');
+    }
+}
+
+// Empty State Management
+function updateEmptyStateHint() {
+    const iframe = document.getElementById('markdownEditorFrame');
+    const hint = document.getElementById('emptyHint');
+    
+    if (iframe.contentWindow && iframe.contentWindow.markdownEditor) {
+        const content = iframe.contentWindow.markdownEditor.getContent();
+        hint.style.display = content.trim() ? 'none' : 'block';
+    }
+}
+
+// Sample Prompt Functionality
+function initializeSamplePrompts() {
+    document.querySelectorAll('.sample-prompt').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.getElementById('promptInput').value = btn.textContent;
+        });
+    });
+}
+
+// Tab Management
+function initializeTabSystem() {
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabPanes = document.querySelectorAll('.tab-pane');
+    const templateContainer = document.getElementById('templateSelectorContainer');
+    
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const targetTab = btn.dataset.tab;
+            
+            // Update tab buttons
+            tabBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            // Update tab panes
+            tabPanes.forEach(pane => {
+                pane.classList.remove('active');
+                if (pane.dataset.tab === targetTab) {
+                    pane.classList.add('active');
                 }
             });
-
-            // Track actions
-            const actionMapping = {
-                generateBtn: "generate_ai_content",
-                downloadInfographic: "infographic",
-                downloadCarousel: "export_pdf",
-                insertImage: "insert_image",
-                regenerateContent: "regenerate",
-                clearEditor: "clear",
-            };
-
-            Object.entries(actionMapping).forEach(([id, action]) => {
-                const btn = document.getElementById(id);
-                if (btn) btn.addEventListener("click", () => trackAction(action));
-            });
+            
+            // Show/hide template selector based on active tab
+            if (targetTab === 'preview') {
+                templateContainer.style.display = 'flex';
+            } else {
+                templateContainer.style.display = 'none';
+            }
+            
+            // Update preview when switching to preview tab
+            if (targetTab === 'preview') {
+                setTimeout(() => {
+                    updateTemplatePreview();
+                }, 100);
+            }
         });
+    });
+}
+
+// Enhanced Empty State Management for Tabbed Layout
+function updateEmptyStateHint() {
+    const iframe = document.getElementById('markdownEditorFrame');
+    const hint = document.getElementById('emptyHint');
+    
+    if (iframe.contentWindow && iframe.contentWindow.markdownEditor) {
+        const content = iframe.contentWindow.markdownEditor.getContent();
+        hint.style.display = content.trim() ? 'none' : 'block';
+    }
+}
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    addRequiredStyles();
+    createParticles();
+    initializePlaceholder();
+    initializeProfile();
+    initializeMouseEffects();
+    initializeTabSystem();
+    initializeImageUpload();
+    initializeTemplateSelection();
+    initializeDownloadActions();
+    initializeSamplePrompts();
+
+    // AI Widget functionality
+    document.getElementById('aiGenerateBtn').addEventListener('click', showAIWidget);
+    document.getElementById('closeWidget').addEventListener('click', hideAIWidget);
+    document.getElementById('cancelWidget').addEventListener('click', hideAIWidget);
+
+    // Bind generate button
+    document.getElementById('generateBtn').addEventListener('click', generateContent);
+    document.getElementById('promptInput').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && e.ctrlKey) {
+            generateContent();
+        }
+    });
+
+    // Show tooltip on first visit
+    setTimeout(showFirstVisitTooltip, 1000);
+
+    // Monitor editor for empty state
+    setInterval(updateEmptyStateHint, 1000);
+
+    // Track actions for new buttons
+    document.getElementById('clearAllBtn')?.addEventListener('click', () => {
+        const iframe = document.getElementById('markdownEditorFrame');
+        if (iframe.contentWindow && iframe.contentWindow.markdownEditor) {
+            iframe.contentWindow.markdownEditor.setContent('');
+            updateEmptyStateHint();
+        }
+        trackAction('clear_all');
+    });
+
+    // Track actions
+    const actionMapping = {
+        generateBtn: "generate_ai_content",
+        downloadInfographic: "infographic", 
+        downloadCarousel: "export_pdf",
+        aiGenerateBtn: "open_ai_widget"
+    };
+
+    Object.entries(actionMapping).forEach(([id, action]) => {
+        const btn = document.getElementById(id);
+        if (btn) btn.addEventListener("click", () => trackAction(action));
+    });
+});
     </script>
 </body>
 </html>
