@@ -1398,7 +1398,7 @@ body {
 }
 
 /* TABBED WORKSPACE */
-.main-workspace-tabbed {
+.main-workspace-tabbed { 
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(20px);
     border: 5px solid rgba(255, 255, 255, 0.2);

@@ -1145,77 +1145,372 @@
             }
         }
 
+        // async function downloadPDF() {
+        //     const preview = document.getElementById('preview');
+            
+        //     if (!preview.innerHTML.trim()) {
+        //         alert('Please add some content before downloading!');
+        //         return;
+        //     }
+            
+        //     try {
+        //         // Create a temporary container for the PDF
+        //         const tempContainer = document.createElement('div');
+        //         tempContainer.style.position = 'absolute';
+        //         tempContainer.style.left = '-9999px';
+        //         tempContainer.style.width = '800px';
+        //         tempContainer.innerHTML = preview.outerHTML;
+        //         document.body.appendChild(tempContainer);
+                
+        //         // Set background color based on template
+        //         let backgroundColor = '#ffffff';
+        //         if (currentTemplate.includes('tech-neural')) backgroundColor = '#667eea';
+        //         else if (currentTemplate.includes('tech-quantum')) backgroundColor = '#0a0a0a';
+        //         else if (currentTemplate.includes('product-modern')) backgroundColor = '#ff6b6b';
+        //         else if (currentTemplate.includes('product-premium')) backgroundColor = '#2c3e50';
+        //         else if (currentTemplate.includes('finance-gold')) backgroundColor = '#f7931e';
+        //         else if (currentTemplate.includes('finance-elite')) backgroundColor = '#1e3c72';
+        //         else if (currentTemplate.includes('health-care')) backgroundColor = '#56ab2f';
+        //         else if (currentTemplate.includes('health-medical')) backgroundColor = '#0f4c75';
+        //         else if (currentTemplate.includes('saas-modern')) backgroundColor = '#667eea';
+        //         else if (currentTemplate.includes('saas-enterprise')) backgroundColor = '#2c3e50';
+                
+        //         const canvas = await html2canvas(tempContainer.firstChild, {
+        //             backgroundColor: backgroundColor,
+        //             scale: 2,
+        //             useCORS: true,
+        //             allowTaint: true,
+        //             width: 800,
+        //             height: null,
+        //             logging: false
+        //         });
+                
+        //         document.body.removeChild(tempContainer);
+                
+        //         // Create PDF
+        //         const { jsPDF } = window.jspdf;
+        //         const pdf = new jsPDF('p', 'mm', 'a4');
+                
+        //         const imgData = canvas.toDataURL('image/png');
+        //         const imgWidth = 210; // A4 width in mm
+        //         const pageHeight = 295; // A4 height in mm
+        //         const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        //         let heightLeft = imgHeight;
+                
+        //         let position = 0;
+                
+        //         pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        //         heightLeft -= pageHeight;
+                
+        //         while (heightLeft >= 0) {
+        //             position = heightLeft - imgHeight;
+        //             pdf.addPage();
+        //             pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        //             heightLeft -= pageHeight;
+        //         }
+                
+        //         pdf.save(`carousel-${currentTemplate}-${Date.now()}.pdf`);
+                
+        //     } catch (error) {
+        //         console.error('Error generating PDF:', error);
+        //         alert('Error generating PDF. Please try again.');
+        //     }
+        // }
+
         async function downloadPDF() {
-            const preview = document.getElementById('preview');
-            
-            if (!preview.innerHTML.trim()) {
-                alert('Please add some content before downloading!');
-                return;
-            }
-            
-            try {
-                // Create a temporary container for the PDF
-                const tempContainer = document.createElement('div');
-                tempContainer.style.position = 'absolute';
-                tempContainer.style.left = '-9999px';
-                tempContainer.style.width = '800px';
-                tempContainer.innerHTML = preview.outerHTML;
-                document.body.appendChild(tempContainer);
-                
-                // Set background color based on template
-                let backgroundColor = '#ffffff';
-                if (currentTemplate.includes('tech-neural')) backgroundColor = '#667eea';
-                else if (currentTemplate.includes('tech-quantum')) backgroundColor = '#0a0a0a';
-                else if (currentTemplate.includes('product-modern')) backgroundColor = '#ff6b6b';
-                else if (currentTemplate.includes('product-premium')) backgroundColor = '#2c3e50';
-                else if (currentTemplate.includes('finance-gold')) backgroundColor = '#f7931e';
-                else if (currentTemplate.includes('finance-elite')) backgroundColor = '#1e3c72';
-                else if (currentTemplate.includes('health-care')) backgroundColor = '#56ab2f';
-                else if (currentTemplate.includes('health-medical')) backgroundColor = '#0f4c75';
-                else if (currentTemplate.includes('saas-modern')) backgroundColor = '#667eea';
-                else if (currentTemplate.includes('saas-enterprise')) backgroundColor = '#2c3e50';
-                
-                const canvas = await html2canvas(tempContainer.firstChild, {
-                    backgroundColor: backgroundColor,
-                    scale: 2,
-                    useCORS: true,
-                    allowTaint: true,
-                    width: 800,
-                    height: null,
-                    logging: false
-                });
-                
-                document.body.removeChild(tempContainer);
-                
-                // Create PDF
-                const { jsPDF } = window.jspdf;
-                const pdf = new jsPDF('p', 'mm', 'a4');
-                
-                const imgData = canvas.toDataURL('image/png');
-                const imgWidth = 210; // A4 width in mm
-                const pageHeight = 295; // A4 height in mm
-                const imgHeight = (canvas.height * imgWidth) / canvas.width;
-                let heightLeft = imgHeight;
-                
-                let position = 0;
-                
-                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                heightLeft -= pageHeight;
-                
-                while (heightLeft >= 0) {
-                    position = heightLeft - imgHeight;
-                    pdf.addPage();
-                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                    heightLeft -= pageHeight;
+    const preview = document.getElementById('preview');
+    
+    if (!preview.innerHTML.trim()) {
+        alert('Please add some content before downloading!');
+        return;
+    }
+    
+    try {
+        // Show loading indicator
+        const loadingBtn = document.querySelector('[onclick*="downloadPDF"]');
+        const originalText = loadingBtn ? loadingBtn.textContent : '';
+        if (loadingBtn) loadingBtn.textContent = '📄 Generating PDF...';
+        
+        // LinkedIn optimal dimensions (1080x1350)
+        const LINKEDIN_WIDTH = 1080;
+        const LINKEDIN_HEIGHT = 1350;
+        const ASPECT_RATIO = LINKEDIN_HEIGHT / LINKEDIN_WIDTH; // 1.25
+        
+        // Create optimized container for LinkedIn format
+        const tempContainer = document.createElement('div');
+        tempContainer.style.cssText = `
+            position: absolute;
+            left: -9999px;
+            width: ${LINKEDIN_WIDTH}px;
+            height: auto;
+            min-height: ${LINKEDIN_HEIGHT}px;
+            padding: 40px;
+            box-sizing: border-box;
+            font-family: 'Inter', Arial, sans-serif;
+            line-height: 1.6;
+            overflow: hidden;
+        `;
+        
+        // Clone and optimize content
+        const contentClone = preview.cloneNode(true);
+        
+        // Remove watermarks and unnecessary elements
+        const watermarks = contentClone.querySelectorAll('.watermark, .action-btn, .preview-actions');
+        watermarks.forEach(el => el.remove());
+        
+        // Optimize images for better quality and smaller size
+        const images = contentClone.querySelectorAll('img');
+        await Promise.all(Array.from(images).map(async (img) => {
+            if (img.src) {
+                try {
+                    const optimizedSrc = await optimizeImage(img.src, 800, 600, 0.85);
+                    img.src = optimizedSrc;
+                    img.style.cssText += `
+                        max-width: 100%;
+                        height: auto;
+                        display: block;
+                        margin: 20px auto;
+                        border-radius: 8px;
+                    `;
+                } catch (e) {
+                    console.warn('Image optimization failed for:', img.src);
                 }
-                
-                pdf.save(`carousel-${currentTemplate}-${Date.now()}.pdf`);
-                
-            } catch (error) {
-                console.error('Error generating PDF:', error);
-                alert('Error generating PDF. Please try again.');
             }
+        }));
+        
+        // Optimize text elements for PDF
+        const textElements = contentClone.querySelectorAll('h1, h2, h3, h4, h5, h6, p, div, span');
+        textElements.forEach(el => {
+            // Ensure proper font sizes for LinkedIn format
+            const computedStyle = window.getComputedStyle(el);
+            const fontSize = parseInt(computedStyle.fontSize);
+            
+            if (el.tagName.match(/^H[1-6]$/)) {
+                el.style.fontSize = Math.max(fontSize * 1.2, 24) + 'px';
+                el.style.fontWeight = '700';
+                el.style.marginBottom = '16px';
+                el.style.lineHeight = '1.3';
+            } else {
+                el.style.fontSize = Math.max(fontSize, 16) + 'px';
+                el.style.lineHeight = '1.6';
+            }
+            
+            // Prevent text overflow
+            el.style.wordWrap = 'break-word';
+            el.style.overflowWrap = 'break-word';
+        });
+        
+        // Optimize tables
+        const tables = contentClone.querySelectorAll('table');
+        tables.forEach(table => {
+            table.style.cssText += `
+                width: 100%;
+                border-collapse: collapse;
+                margin: 20px 0;
+                font-size: 14px;
+                page-break-inside: avoid;
+            `;
+            
+            const cells = table.querySelectorAll('td, th');
+            cells.forEach(cell => {
+                cell.style.cssText += `
+                    padding: 12px;
+                    border: 1px solid #ddd;
+                    word-wrap: break-word;
+                    max-width: 200px;
+                `;
+            });
+        });
+        
+        // Style the container content
+        contentClone.style.cssText = `
+            width: 100%;
+            height: auto;
+            background: ${getTemplateBackgroundColor()};
+            color: ${getTemplateTextColor()};
+            padding: 30px;
+            box-sizing: border-box;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        `;
+        
+        tempContainer.appendChild(contentClone);
+        document.body.appendChild(tempContainer);
+        
+        // Wait for fonts and images to load
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        // Calculate optimal canvas dimensions
+        const containerHeight = tempContainer.scrollHeight;
+        const optimalHeight = Math.max(LINKEDIN_HEIGHT, containerHeight + 80);
+        
+        // Generate high-quality canvas with optimized settings
+        const canvas = await html2canvas(tempContainer, {
+            backgroundColor: getTemplateBackgroundColor(),
+            scale: 2, // High quality but manageable
+            useCORS: true,
+            allowTaint: true,
+            width: LINKEDIN_WIDTH,
+            height: optimalHeight,
+            logging: false,
+            removeContainer: true,
+            imageTimeout: 10000,
+            // Quality optimizations
+            foreignObjectRendering: true,
+            scrollX: 0,
+            scrollY: 0,
+            windowWidth: LINKEDIN_WIDTH,
+            windowHeight: optimalHeight
+        });
+        
+        // Clean up temp container
+        document.body.removeChild(tempContainer);
+        
+        // Create optimized PDF for LinkedIn
+        const { jsPDF } = window.jspdf;
+        
+        // Calculate PDF dimensions (A4 proportions but LinkedIn optimized)
+        const pdfWidth = 210; // A4 width in mm
+        const pdfHeight = pdfWidth * ASPECT_RATIO; // LinkedIn aspect ratio
+        
+        const pdf = new jsPDF({
+            orientation: 'portrait',
+            unit: 'mm',
+            format: [pdfWidth, pdfHeight],
+            compress: true, // Enable compression
+            precision: 2
+        });
+        
+        // Optimize image for PDF with compression
+        const imgData = canvas.toDataURL('image/jpeg', 0.85); // JPEG with 85% quality for smaller size
+        
+        // Calculate image dimensions to fit perfectly without cropping
+        const canvasAspectRatio = canvas.height / canvas.width;
+        const pdfAspectRatio = pdfHeight / pdfWidth;
+        
+        let imgWidth, imgHeight, x, y;
+        
+        if (canvasAspectRatio > pdfAspectRatio) {
+            // Canvas is taller, fit to height
+            imgHeight = pdfHeight - 20; // 10mm margin top/bottom
+            imgWidth = imgHeight / canvasAspectRatio;
+            x = (pdfWidth - imgWidth) / 2; // Center horizontally
+            y = 10; // 10mm top margin
+        } else {
+            // Canvas is wider, fit to width
+            imgWidth = pdfWidth - 20; // 10mm margin left/right
+            imgHeight = imgWidth * canvasAspectRatio;
+            x = 10; // 10mm left margin
+            y = (pdfHeight - imgHeight) / 2; // Center vertically
         }
+        
+        // Add image to PDF with perfect fit
+        pdf.addImage(imgData, 'JPEG', x, y, imgWidth, imgHeight, undefined, 'FAST');
+        
+        // Add metadata for better organization
+        pdf.setProperties({
+            title: `GeniusPost AI - ${currentTemplate}`,
+            subject: 'LinkedIn Post Content',
+            author: 'GeniusPost AI',
+            creator: 'GeniusPost AI Platform',
+            producer: 'GeniusPost AI'
+        });
+        
+        // Generate filename with timestamp
+        const timestamp = new Date().toISOString().slice(0, 10);
+        const filename = `linkedin-post-${currentTemplate}-${timestamp}.pdf`;
+        
+        // Save optimized PDF
+        pdf.save(filename);
+        
+        // Success feedback
+        if (loadingBtn) {
+            loadingBtn.textContent = '✅ PDF Ready!';
+            setTimeout(() => {
+                loadingBtn.textContent = originalText;
+            }, 2000);
+        }
+        
+        console.log(`✅ PDF generated successfully:
+        📏 Dimensions: ${LINKEDIN_WIDTH}x${optimalHeight}px
+        📄 File: ${filename}
+        💾 Optimized for LinkedIn sharing`);
+        
+    } catch (error) {
+        console.error('❌ PDF generation failed:', error);
+        alert('Error generating PDF. Please try again.');
+        
+        // Reset button
+        const loadingBtn = document.querySelector('[onclick*="downloadPDF"]');
+        if (loadingBtn && originalText) {
+            loadingBtn.textContent = originalText;
+        }
+    }
+}
+
+// Helper function to optimize images
+async function optimizeImage(src, maxWidth, maxHeight, quality) {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        
+        img.onload = () => {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Calculate optimized dimensions
+            let { width, height } = img;
+            
+            if (width > maxWidth) {
+                height = (height * maxWidth) / width;
+                width = maxWidth;
+            }
+            
+            if (height > maxHeight) {
+                width = (width * maxHeight) / height;
+                height = maxHeight;
+            }
+            
+            canvas.width = width;
+            canvas.height = height;
+            
+            // Draw and compress
+            ctx.drawImage(img, 0, 0, width, height);
+            resolve(canvas.toDataURL('image/jpeg', quality));
+        };
+        
+        img.onerror = reject;
+        img.src = src;
+    });
+}
+
+// Helper function to get template background color
+function getTemplateBackgroundColor() {
+    if (typeof currentTemplate === 'undefined') return '#ffffff';
+    
+    if (currentTemplate.includes('tech-neural')) return '#667eea';
+    if (currentTemplate.includes('tech-quantum')) return '#0a0a0a';
+    if (currentTemplate.includes('product-modern')) return '#ff6b6b';
+    if (currentTemplate.includes('product-premium')) return '#2c3e50';
+    if (currentTemplate.includes('finance-gold')) return '#f7931e';
+    if (currentTemplate.includes('finance-elite')) return '#1e3c72';
+    if (currentTemplate.includes('health-care')) return '#56ab2f';
+    if (currentTemplate.includes('health-medical')) return '#0f4c75';
+    if (currentTemplate.includes('saas-modern')) return '#667eea';
+    if (currentTemplate.includes('saas-enterprise')) return '#2c3e50';
+    
+    return '#ffffff';
+}
+
+// Helper function to get template text color
+function getTemplateTextColor() {
+    const bgColor = getTemplateBackgroundColor();
+    
+    // Dark backgrounds need light text
+    const darkBackgrounds = ['#0a0a0a', '#2c3e50', '#0f4c75', '#1e3c72'];
+    
+    return darkBackgrounds.includes(bgColor) ? '#ffffff' : '#333333';
+}
 
         const preview = document.getElementById('preview');
 
