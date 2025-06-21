@@ -1061,6 +1061,449 @@
                 font-size: 1.2rem !important;
             }
         }
+
+        /* Dark Neon Template */
+.dark-neon-template {
+    background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+    color: #ffffff;
+    font-family: 'Space Grotesk', sans-serif;
+}
+
+.dark-neon-template::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3), transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3), transparent 50%);
+    pointer-events: none;
+}
+
+.dark-neon-template > * {
+    position: relative;
+    z-index: 1;
+}
+
+.dark-neon-template h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #ff006e, #8338ec, #3a86ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 0 30px rgba(255, 0, 110, 0.5);
+    animation: glow 3s ease-in-out infinite;
+}
+
+.dark-neon-template h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #ff006e;
+    text-shadow: 0 0 20px rgba(255, 0, 110, 0.3);
+}
+
+.dark-neon-template h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #8338ec;
+    text-shadow: 0 0 15px rgba(131, 56, 236, 0.3);
+}
+
+.dark-neon-template li::before {
+    content: '▶';
+    color: #ff006e;
+    font-size: 0.8rem;
+    text-shadow: 0 0 10px rgba(255, 0, 110, 0.5);
+}
+
+.dark-neon-template pre, .dark-neon-template p code {
+    background: rgba(255, 0, 110, 0.1);
+    border: 1px solid rgba(255, 0, 110, 0.3);
+    color: #3a86ff;
+    box-shadow: 0 0 20px rgba(255, 0, 110, 0.1);
+}
+
+.dark-neon-template table {
+    background: rgba(131, 56, 236, 0.1);
+    box-shadow: 0 0 20px rgba(131, 56, 236, 0.2);
+}
+
+.dark-neon-template th {
+    background: rgba(255, 0, 110, 0.2);
+    color: #ffffff;
+    text-shadow: 0 0 10px rgba(255, 0, 110, 0.3);
+}
+
+.dark-neon-template th, .dark-neon-template td {
+    border-bottom: 1px solid rgba(255, 0, 110, 0.2);
+}
+
+@keyframes glow {
+    0%, 100% { text-shadow: 0 0 20px rgba(255, 0, 110, 0.5); }
+    50% { text-shadow: 0 0 30px rgba(255, 0, 110, 0.8); }
+}
+
+/* Sketchy Minimal Template */
+.sketchy-minimal-template {
+    background: #fefefe;
+    color: #2d3436;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.sketchy-minimal-template::before {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    border: 3px solid #2d3436;
+    border-radius: 25px;
+    opacity: 0.1;
+    transform: rotate(-1deg);
+}
+
+.sketchy-minimal-template::after {
+    content: '';
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    right: 15px;
+    bottom: 15px;
+    border: 2px solid #636e72;
+    border-radius: 20px;
+    opacity: 0.05;
+    transform: rotate(1deg);
+}
+
+.sketchy-minimal-template > * {
+    position: relative;
+    z-index: 1;
+}
+
+.sketchy-minimal-template h1 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #2d3436;
+    text-decoration: underline;
+    text-decoration-style: wavy;
+    text-underline-offset: 8px;
+    transform: rotate(-1deg);
+    animation: sketch 4s ease-in-out infinite;
+}
+
+.sketchy-minimal-template h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #636e72;
+    transform: rotate(0.5deg);
+    border-bottom: 2px dashed #ddd;
+    padding-bottom: 8px;
+}
+
+.sketchy-minimal-template h3 {
+    font-size: 1.4rem;
+    font-weight: 400;
+    color: #2d3436;
+    transform: rotate(-0.3deg);
+}
+
+.sketchy-minimal-template li::before {
+    content: '✓';
+    color: #00b894;
+    font-size: 1.2rem;
+    font-weight: bold;
+    transform: rotate(-10deg);
+}
+
+.sketchy-minimal-template pre, .sketchy-minimal-template p code {
+    background: #f8f9fc;
+    border: 2px dashed #ddd;
+    border-radius: 15px;
+    color: #2d3436;
+    transform: rotate(0.5deg);
+    box-shadow: 3px 3px 0px rgba(0,0,0,0.1);
+}
+
+@keyframes sketch {
+    0%, 100% { transform: rotate(-0.5deg); }
+    25% { transform: rotate(0.5deg); }
+    75% { transform: rotate(-0.3deg); }
+}
+
+/* Executive Board Template */
+.executive-board-template {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    color: #212529;
+    font-family: 'Inter', sans-serif;
+    border-left: 6px solid #1e3c72;
+}
+
+.executive-board-template::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #1e3c72, #2a5298, #1e3c72);
+}
+
+.executive-board-template h1 {
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: #1e3c72;
+    text-align: center;
+    position: relative;
+    padding-bottom: 20px;
+}
+
+.executive-board-template h1::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 3px;
+    background: linear-gradient(90deg, #1e3c72, #2a5298);
+    border-radius: 2px;
+}
+
+.executive-board-template h2 {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #2a5298;
+    border-bottom: 2px solid #dee2e6;
+    padding-bottom: 10px;
+    position: relative;
+}
+
+.executive-board-template h2::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 50px;
+    height: 2px;
+    background: #1e3c72;
+}
+
+.executive-board-template li::before {
+    content: '▪';
+    color: #1e3c72;
+    font-size: 1.5rem;
+    font-weight: bold;
+    top: -2px;
+}
+
+.executive-board-template pre, .executive-board-template p code {
+    background: #ffffff;
+    border: 1px solid #dee2e6;
+    color: #495057;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    border-left: 4px solid #1e3c72;
+}
+
+/* Gradient Pro Template */
+.gradient-pro-template {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    color: white;
+    font-family: 'Space Grotesk', sans-serif;
+}
+
+.gradient-pro-template::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, transparent 50%, rgba(255,255,255,0.1) 100%);
+    animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.8; }
+}
+
+.gradient-pro-template > * {
+    position: relative;
+    z-index: 1;
+}
+
+.gradient-pro-template h1 {
+    font-size: 2.6rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #ffffff, #f8f9fa, #ffffff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-align: center;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.gradient-pro-template h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #ffd89b, #19547b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.gradient-pro-template li::before {
+    content: '✨';
+    font-size: 1.2rem;
+}
+
+.gradient-pro-template pre, .gradient-pro-template p code {
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: #f8f9fa;
+}
+
+/* Retro Vibe Template */
+.retro-vibe-template {
+    background: linear-gradient(135deg, #ff6b35 0%, #f7931e 50%, #ffcd3c 100%);
+    color: #2c3e50;
+    font-family: 'JetBrains Mono', monospace;
+    box-shadow: inset 0 0 50px rgba(0,0,0,0.1);
+}
+
+.retro-vibe-template::before {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    right: 20px;
+    bottom: 20px;
+    border: 4px solid #2c3e50;
+    border-radius: 20px;
+    opacity: 0.3;
+}
+
+.retro-vibe-template::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        rgba(255,255,255,0.1) 10px,
+        rgba(255,255,255,0.1) 20px
+    );
+    pointer-events: none;
+}
+
+.retro-vibe-template > * {
+    position: relative;
+    z-index: 1;
+}
+
+.retro-vibe-template h1 {
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: #2c3e50;
+    text-align: center;
+    text-shadow: 3px 3px 0px rgba(255,255,255,0.8);
+    transform: rotate(-2deg);
+}
+
+.retro-vibe-template h2 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #34495e;
+    text-shadow: 2px 2px 0px rgba(255,255,255,0.7);
+    transform: rotate(1deg);
+}
+
+.retro-vibe-template li::before {
+    content: '★';
+    color: #e74c3c;
+    font-size: 1.5rem;
+    text-shadow: 2px 2px 0px rgba(255,255,255,0.7);
+}
+
+.retro-vibe-template pre, .retro-vibe-template p code {
+    background: rgba(255,255,255,0.8);
+    border: 3px solid #2c3e50;
+    color: #2c3e50;
+    transform: rotate(-1deg);
+    box-shadow: 5px 5px 0px rgba(0,0,0,0.2);
+}
+
+/* Glass Morph Template */
+.glass-morph-template {
+    background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+    color: #2d3436;
+    font-family: 'Inter', sans-serif;
+}
+
+.glass-morph-template::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255,255,255,0.25);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.18);
+}
+
+.glass-morph-template > * {
+    position: relative;
+    z-index: 1;
+}
+
+.glass-morph-template h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-align: center;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+}
+
+.glass-morph-template h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #f093fb, #f5576c);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.glass-morph-template li::before {
+    content: '💎';
+    font-size: 1.2rem;
+}
+
+.glass-morph-template pre, .glass-morph-template p code {
+    background: rgba(255,255,255,0.4);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: #2d3436;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+}
+
+.glass-morph-template table {
+    background: rgba(255,255,255,0.3);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255,255,255,0.3);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+}
     </style>
 </head>
 <body>
@@ -1120,6 +1563,12 @@
                 else if (currentTemplate.includes('health-medical')) backgroundColor = '#0f4c75';
                 else if (currentTemplate.includes('saas-modern')) backgroundColor = '#667eea';
                 else if (currentTemplate.includes('saas-enterprise')) backgroundColor = '#2c3e50';
+                else if (currentTemplate.includes('dark-neon')) backgroundColor = '#0f0f23';
+                else if (currentTemplate.includes('sketchy-minimal')) backgroundColor = '#fefefe';
+                else if (currentTemplate.includes('executive-board')) backgroundColor = '#f8f9fa';
+                else if (currentTemplate.includes('gradient-pro')) backgroundColor = '#667eea';
+                else if (currentTemplate.includes('retro-vibe')) backgroundColor = '#ff6b35';
+                else if (currentTemplate.includes('glass-morph')) backgroundColor = '#a8edea';
 
                 const canvas = await html2canvas(tempContainer.firstChild, {
                     backgroundColor: backgroundColor,
@@ -1176,6 +1625,12 @@
         else if (currentTemplate.includes('health-medical')) backgroundColor = '#0f4c75';
         else if (currentTemplate.includes('saas-modern')) backgroundColor = '#667eea';
         else if (currentTemplate.includes('saas-enterprise')) backgroundColor = '#2c3e50';
+        else if (currentTemplate.includes('dark-neon')) backgroundColor = '#0f0f23';
+        else if (currentTemplate.includes('sketchy-minimal')) backgroundColor = '#fefefe';
+        else if (currentTemplate.includes('executive-board')) backgroundColor = '#f8f9fa';
+        else if (currentTemplate.includes('gradient-pro')) backgroundColor = '#667eea';
+        else if (currentTemplate.includes('retro-vibe')) backgroundColor = '#ff6b35';
+        else if (currentTemplate.includes('glass-morph')) backgroundColor = '#a8edea';
         
         const canvas = await html2canvas(tempContainer.firstChild, {
             backgroundColor: backgroundColor,
@@ -1226,7 +1681,7 @@
         console.error('Error generating PDF:', error);
         alert('Error generating PDF. Please try again.');
     }
-}
+} 
        
 
        

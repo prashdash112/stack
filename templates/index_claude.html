@@ -115,17 +115,48 @@
             </div>
             <div class="template-selector-compact" id="templateSelectorContainer" style="display: none;">
                 <select id="templateSelect">
-                    <option value="tech-neural">🧠 Neural</option>
-                    <option value="tech-quantum">⚛️ Quantum</option>
-                    <option value="product-modern">🚀 Modern</option>
-                    <option value="product-premium">👑 Premium</option>
-                    <option value="finance-gold">💰 Gold</option>
-                    <option value="finance-elite">🏦 Elite</option>
-                    <option value="health-care">🏥 Care</option>
-                    <option value="health-medical">🩺 Medical</option>
-                    <option value="saas-modern">💻 SaaS</option>
-                    <option value="saas-enterprise">🏢 Enterprise</option>
-                </select>
+                <optgroup label="Tech">
+                    <option value="tech-neural">Tech-Neural</option>
+                    <option value="tech-quantum">Tech-Quantum</option>
+                </optgroup>
+                
+                <optgroup label="Product">
+                    <option value="product-modern">Product-Modern</option>
+                    <option value="product-premium">Product-Premium</option>
+                </optgroup>
+                
+                <optgroup label="Finance">
+                    <option value="finance-gold">Finance-Gold</option>
+                    <option value="finance-elite">Finance-Elite</option>
+                </optgroup>
+                
+                <optgroup label="Health">
+                    <option value="health-care">Health-Care</option>
+                    <option value="health-medical">Health-Tech</option>
+                </optgroup>
+                
+                <optgroup label="SaaS">
+                    <option value="saas-modern">SaaS-Modern</option>
+                    <option value="saas-enterprise">SaaS-Enterprise</option>
+                </optgroup>
+                
+                <optgroup label="Creative content">
+                    <option value="retro-vibe">retro-vibe</option>
+                    <option value="sketchy-minimal">sketchy-minimal</option>
+                </optgroup>
+
+                <optgroup label="Code documentation">
+                    <option value="executive-board">executive-board</option>
+                    <option value="glass-morph">glass-morph</option>
+                </optgroup>
+
+                <optgroup label="Neon">
+                    <option value="gradient-pro">gradient-pro</option>
+                    <option value="dark-neon">Dark Neon</option>
+                </optgroup>
+                    
+            
+            </select>
             </div>
         </div>
     </div>
@@ -342,9 +373,9 @@ function createShortImageUrl(file, callback) {
                 }
                 
                 // Trigger download from iframe
-                templateFrame.contentWindow.postMessage({
-                    action: 'downloadPDF'
-                }, '*');
+                templateFrame.contentWindow.postMessage({ 
+                    action: 'downloadPDF' 
+                }, '*'); 
             });
         }
         function cleanAndFormatHTML(html) {
