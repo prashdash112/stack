@@ -1594,14 +1594,17 @@ font-family:'Kalam', cursive !important;
     font-family: 'Courier New', monospace !important;
 }
 /* Retro Vibe Template */
-.retro-vibe-template {
+.retro-template {
     background: linear-gradient(135deg, #ff6b35 0%, #f7931e 50%, #ffcd3c 100%);
     color: #2c3e50;
-    font-family: 'JetBrains Mono', monospace;
+    padding: 40px;
+    font-family: 'Kalam', cursive;
+    line-height: 1.7;
+    position: relative;
     box-shadow: inset 0 0 50px rgba(0,0,0,0.1);
 }
 
-.retro-vibe-template::before {
+.retro-template::before {
     content: '';
     position: absolute;
     top: 20px;
@@ -1613,7 +1616,7 @@ font-family:'Kalam', cursive !important;
     opacity: 0.3;
 }
 
-.retro-vibe-template::after {
+.retro-template::after {
     content: '';
     position: absolute;
     top: 0;
@@ -1630,116 +1633,122 @@ font-family:'Kalam', cursive !important;
     pointer-events: none;
 }
 
-.retro-vibe-template > * {
+.retro-template > * {
     position: relative;
     z-index: 1;
 }
 
-.retro-vibe-template h1 {
+.retro-template h1 {
     font-size: 2.8rem;
     font-weight: 700;
     color: #2c3e50;
+    margin-bottom: 30px;
     text-align: center;
     text-shadow: 3px 3px 0px rgba(255,255,255,0.8);
     transform: rotate(-2deg);
 }
 
-.retro-vibe-template h2 {
+.retro-template h2 {
     font-size: 2.2rem;
     font-weight: 700;
     color: #34495e;
+    margin: 35px 0 25px 0;
     text-shadow: 2px 2px 0px rgba(255,255,255,0.7);
     transform: rotate(1deg);
 }
 
-.retro-vibe-template li::before {
+.retro-template h3 {
+    font-size: 1.8rem;
+    font-weight: 400;
+    color: #2c3e50;
+    margin: 25px 0 15px 0;
+    transform: rotate(-0.5deg);
+}
+
+.retro-template p {
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+    color: #34495e;
+    text-shadow: 1px 1px 0px rgba(255,255,255,0.5);
+}
+
+.retro-template ul, .retro-template ol {
+    margin: 20px 0;
+    padding-left: 0;
+}
+
+.retro-template li {
+    list-style: none;
+    margin: 15px 0;
+    padding-left: 40px;
+    position: relative;
+    color: #2c3e50;
+    transform: rotate(0.3deg);
+}
+
+.retro-template li:nth-child(even) {
+    transform: rotate(-0.3deg);
+}
+
+.retro-template li::before {
     content: '★';
+    position: absolute;
+    left: 0;
     color: #e74c3c;
     font-size: 1.5rem;
     text-shadow: 2px 2px 0px rgba(255,255,255,0.7);
 }
 
-.retro-vibe-template pre, .retro-vibe-template p code {
+.retro-template code {
     background: rgba(255,255,255,0.8);
     border: 3px solid #2c3e50;
+    padding: 15px;
+    border-radius: 15px;
+    display: block;
+    font-family: 'Courier New', monospace;
     color: #2c3e50;
+    margin: 20px 0;
+    white-space: pre-wrap;
+    overflow-x: auto;
+    line-height: 1.4;
     transform: rotate(-1deg);
     box-shadow: 5px 5px 0px rgba(0,0,0,0.2);
 }
 
-.retro-vibe-template table {
+.retro-template table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 25px 0;
     background: rgba(255,255,255,0.9);
-    border: 4px solid #2c3e50;
+    border: 3px solid #2c3e50;
     border-radius: 15px;
-    transform: rotate(-1deg);
-    box-shadow: 8px 8px 0px rgba(0,0,0,0.2);
     overflow: hidden;
+    transform: rotate(0.5deg);
+    box-shadow: 5px 5px 0px rgba(0,0,0,0.2);
 }
 
-.retro-vibe-template th {
-    background: linear-gradient(135deg, #2c3e50, #34495e);
-    color: #ffcd3c;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    text-shadow: 2px 2px 0px rgba(0,0,0,0.3);
-}
-
-.retro-vibe-template th, .retro-vibe-template td {
+.retro-template th, .retro-template td {
+    padding: 15px;
+    text-align: left;
     border-bottom: 2px solid #2c3e50;
-    font-family: 'JetBrains Mono', monospace;
-    font-weight: 600;
+    border-right: 2px solid #2c3e50;
 }
 
-.retro-vibe-template td {
-    background: rgba(255,255,255,0.8);
-    color: #2c3e50;
+.retro-template th {
+    background: #e74c3c;
+    color: white;
+    font-weight: 700;
+    text-shadow: 1px 1px 0px rgba(0,0,0,0.3);
 }
 
-.retro-vibe-template blockquote {
-    border-left: 6px solid #e74c3c;
-    background: rgba(255,255,255,0.8);
-    transform: rotate(1deg);
-    box-shadow: 5px 5px 0px rgba(0,0,0,0.1);
-    border-radius: 10px;
+.retro-template th:last-child,
+.retro-template td:last-child {
+    border-right: none;
 }
 
-.retro-vibe-template strong {
-    color: #e74c3c;
-    font-weight: 800;
-    text-shadow: 2px 2px 0px rgba(255,255,255,0.7);
-}
-
-.retro-vibe-template a {
-    color: #34495e;
-    text-decoration: underline;
-    text-decoration-thickness: 3px;
-}
-
-.retro-vibe-template hr {
-    background: linear-gradient(90deg, transparent, #2c3e50, transparent);
-    height: 4px;
-    border: none;
-    margin: 30px 0;
-    border-radius: 2px;
-}
-
-.retro-vibe-template h1,
-.retro-vibe-template h2,
-.retro-vibe-template h3,
-.retro-vibe-template h4,
-.retro-vibe-template h5,
-.retro-vibe-template h6,
-.retro-vibe-template p, 
-.retro-vibe-template li, 
-.retro-vibe-template div, 
-.retro-vibe-template span,
-.retro-vibe-template blockquote {
-    font-family: 'Kalam', cursive !important;
-}
-
-.retro-vibe-template code {
-    font-family: 'Courier New', monospace !important;
+.retro-template tr:last-child td {
+    border-bottom: none;
 }
 /* Glass Morph Template */
 .glass-morph-template {
@@ -1932,7 +1941,7 @@ font-family:'Kalam', cursive !important;
                 else if (currentTemplate.includes('sketchy-minimal')) backgroundColor = '#fefefe';
                 else if (currentTemplate.includes('executive-board')) backgroundColor = '#f8f9fa';
                 else if (currentTemplate.includes('gradient-pro')) backgroundColor = '#667eea';
-                else if (currentTemplate.includes('retro-vibe')) backgroundColor = '#ff6b35';
+                else if (currentTemplate.includes('retro-template')) backgroundColor = '#ff6b35';
                 else if (currentTemplate.includes('glass-morph')) backgroundColor = '#a8edea';
 
                 const canvas = await html2canvas(tempContainer.firstChild, {
@@ -1994,7 +2003,7 @@ font-family:'Kalam', cursive !important;
         else if (currentTemplate.includes('sketchy-minimal')) backgroundColor = '#fefefe';
         else if (currentTemplate.includes('executive-board')) backgroundColor = '#f8f9fa';
         else if (currentTemplate.includes('gradient-pro')) backgroundColor = '#667eea';
-        else if (currentTemplate.includes('retro-vibe')) backgroundColor = '#ff6b35';
+        else if (currentTemplate.includes('retro-template')) backgroundColor = '#ff6b35';
         else if (currentTemplate.includes('glass-morph')) backgroundColor = '#a8edea';
         
         const canvas = await html2canvas(tempContainer.firstChild, {
