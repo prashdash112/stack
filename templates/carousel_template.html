@@ -32,7 +32,7 @@
         }
 
         /* Common template styles */
-        .template-base {
+        /* .template-base {
             padding: 40px;
             min-height: 100vh;
             line-height: 1.6;
@@ -128,8 +128,184 @@
 
         .template-base em {
             font-style: italic;
+        } */
+        /* LinkedIn Carousel Optimized Base Styles */
+        .template-base {
+            padding: 60px;
+            min-height: 100vh;
+            line-height: 1.8;
+            position: relative;
+            font-size: 1.25rem;
         }
 
+        /* ONLY apply base styles when template doesn't override */
+        .template-base:not([class*="tech-"]):not([class*="product-"]):not([class*="finance-"]):not([class*="health-"]):not([class*="saas-"]):not([class*="dark-"]):not([class*="sketchy-"]):not([class*="executive-"]):not([class*="gradient-"]):not([class*="retro-"]):not([class*="glass-"]) h1,
+        .template-base h1:not(.template-styled) {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin: 40px 0 30px 0;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+        }
+
+        .template-base:not([class*="tech-"]):not([class*="product-"]):not([class*="finance-"]):not([class*="health-"]):not([class*="saas-"]):not([class*="dark-"]):not([class*="sketchy-"]):not([class*="executive-"]):not([class*="gradient-"]):not([class*="retro-"]):not([class*="glass-"]) h2,
+        .template-base h2:not(.template-styled) {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin: 35px 0 25px 0;
+            line-height: 1.3;
+        }
+
+        .template-base:not([class*="tech-"]):not([class*="product-"]):not([class*="finance-"]):not([class*="health-"]):not([class*="saas-"]):not([class*="dark-"]):not([class*="sketchy-"]):not([class*="executive-"]):not([class*="gradient-"]):not([class*="retro-"]):not([class*="glass-"]) h3,
+        .template-base h3:not(.template-styled) {
+            font-size: 2.2rem;
+            font-weight: 600;
+            margin: 30px 0 20px 0;
+            line-height: 1.4;
+        }
+
+        .template-base:not([class*="tech-"]):not([class*="product-"]):not([class*="finance-"]):not([class*="health-"]):not([class*="saas-"]):not([class*="dark-"]):not([class*="sketchy-"]):not([class*="executive-"]):not([class*="gradient-"]):not([class*="retro-"]):not([class*="glass-"]) h4,
+        .template-base h4:not(.template-styled) {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin: 25px 0 18px 0;
+        }
+
+        .template-base:not([class*="tech-"]):not([class*="product-"]):not([class*="finance-"]):not([class*="health-"]):not([class*="saas-"]):not([class*="dark-"]):not([class*="sketchy-"]):not([class*="executive-"]):not([class*="gradient-"]):not([class*="retro-"]):not([class*="glass-"]) h5,
+        .template-base h5:not(.template-styled) {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 20px 0 15px 0;
+        }
+
+        .template-base:not([class*="tech-"]):not([class*="product-"]):not([class*="finance-"]):not([class*="health-"]):not([class*="saas-"]):not([class*="dark-"]):not([class*="sketchy-"]):not([class*="executive-"]):not([class*="gradient-"]):not([class*="retro-"]):not([class*="glass-"]) h6,
+        .template-base h6:not(.template-styled) {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin: 18px 0 12px 0;
+        }
+
+        .template-base p {
+            margin-bottom: 24px;
+            font-size: 1.35rem;
+            line-height: 1.7;
+            font-weight: 500;
+        }
+
+        .template-base ul, .template-base ol {
+            margin: 30px 0;
+            padding-left: 0;
+            font-size: 1.3rem;
+        }
+
+        .template-base li {
+            list-style: none;
+            margin: 20px 0;
+            padding-left: 45px;
+            position: relative;
+            font-size: 1.3rem;
+            line-height: 1.6;
+            font-weight: 500;
+        }
+
+        .template-base pre {
+            background: rgba(0,0,0,0.08);
+            border: 2px solid rgba(0,0,0,0.1);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 35px 0;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .template-base code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .template-base p code {
+            background: rgba(0,0,0,0.08);
+            border: 1px solid rgba(0,0,0,0.15);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 1.05rem;
+            font-weight: 600;
+        }
+
+        .template-base table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 40px 0;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            font-size: 1.2rem;
+        }
+
+        .template-base th, .template-base td {
+            padding: 20px 25px;
+            text-align: left;
+            border-bottom: 2px solid rgba(0,0,0,0.1);
+            font-size: 1.2rem;
+            line-height: 1.5;
+        }
+
+        .template-base th {
+            font-weight: 700;
+            font-size: 1.3rem;
+            background: rgba(0,0,0,0.05);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .template-base blockquote {
+            margin: 35px 0;
+            padding: 25px 35px;
+            border-radius: 15px;
+            font-style: italic;
+            border-left: 6px solid rgba(0,0,0,0.2);
+            background: rgba(0,0,0,0.03);
+            font-size: 1.4rem;
+            line-height: 1.7;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        .template-base a {
+            text-decoration: none;
+            font-weight: 600;
+            font-size: inherit;
+            border-bottom: 2px solid currentColor;
+            transition: all 0.3s ease;
+        }
+
+        .template-base a:hover {
+            text-decoration: none;
+            opacity: 0.8;
+            transform: translateY(-1px);
+        }
+
+        .template-base hr {
+            border: none;
+            height: 4px;
+            margin: 50px 0;
+            border-radius: 2px;
+            background: linear-gradient(90deg, transparent, rgba(0,0,0,0.2), transparent);
+        }
+
+        .template-base strong {
+            font-weight: 800;
+            font-size: inherit;
+        }
+
+        .template-base em {
+            font-style: italic;
+            font-size: inherit;
+        }
         /* Tech Neural Template */
         .tech-neural-template {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -1180,7 +1356,7 @@
 .sketchy-minimal-template {
     background: #fefefe;
     color: #2d3436;
-    font-family: 'Kalam', cursive;
+    font-family: 'Kalam', sans-serif;
     line-height: 1.8;
     position: relative;
 }
@@ -1321,7 +1497,7 @@
 .sketchy-minimal-template div, 
 .sketchy-minimal-template span,
 .sketchy-minimal-template blockquote {
-font-family:'Kalam', cursive !important;
+font-family:'Kalam', sans-serif !important;
 }
 
 .sketchy-minimal-template code {
@@ -1598,7 +1774,7 @@ font-family:'Kalam', cursive !important;
     background: linear-gradient(135deg, #ff6b35 0%, #f7931e 50%, #ffcd3c 100%);
     color: #2c3e50;
     padding: 40px;
-    font-family: 'Kalam', cursive;
+    font-family: 'Kalam' ;
     line-height: 1.7;
     position: relative;
     box-shadow: inset 0 0 50px rgba(0,0,0,0.1);
@@ -1751,9 +1927,6 @@ font-family:'Kalam', cursive !important;
     border-bottom: none;
 }
 
-.retro-template.template-base {
-    font-family: 'Kalam', cursive;
-}
 /* Glass Morph Template */
 .glass-morph-template {
     background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
