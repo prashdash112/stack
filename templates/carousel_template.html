@@ -1145,78 +1145,88 @@
             }
         }
 
-        // async function downloadPDF() {
-        //     const preview = document.getElementById('preview');
-            
-        //     if (!preview.innerHTML.trim()) {
-        //         alert('Please add some content before downloading!');
-        //         return;
-        //     }
-            
-        //     try {
-        //         // Create a temporary container for the PDF
-        //         const tempContainer = document.createElement('div');
-        //         tempContainer.style.position = 'absolute';
-        //         tempContainer.style.left = '-9999px';
-        //         tempContainer.style.width = '800px';
-        //         tempContainer.innerHTML = preview.outerHTML;
-        //         document.body.appendChild(tempContainer);
-                
-        //         // Set background color based on template
-        //         let backgroundColor = '#ffffff';
-        //         if (currentTemplate.includes('tech-neural')) backgroundColor = '#667eea';
-        //         else if (currentTemplate.includes('tech-quantum')) backgroundColor = '#0a0a0a';
-        //         else if (currentTemplate.includes('product-modern')) backgroundColor = '#ff6b6b';
-        //         else if (currentTemplate.includes('product-premium')) backgroundColor = '#2c3e50';
-        //         else if (currentTemplate.includes('finance-gold')) backgroundColor = '#f7931e';
-        //         else if (currentTemplate.includes('finance-elite')) backgroundColor = '#1e3c72';
-        //         else if (currentTemplate.includes('health-care')) backgroundColor = '#56ab2f';
-        //         else if (currentTemplate.includes('health-medical')) backgroundColor = '#0f4c75';
-        //         else if (currentTemplate.includes('saas-modern')) backgroundColor = '#667eea';
-        //         else if (currentTemplate.includes('saas-enterprise')) backgroundColor = '#2c3e50';
-                
-        //         const canvas = await html2canvas(tempContainer.firstChild, {
-        //             backgroundColor: backgroundColor,
-        //             scale: 2,
-        //             useCORS: true,
-        //             allowTaint: true,
-        //             width: 800,
-        //             height: null,
-        //             logging: false
-        //         });
-                
-        //         document.body.removeChild(tempContainer);
-                
-        //         // Create PDF
-        //         const { jsPDF } = window.jspdf;
-        //         const pdf = new jsPDF('p', 'mm', 'a4');
-                
-        //         const imgData = canvas.toDataURL('image/png');
-        //         const imgWidth = 210; // A4 width in mm
-        //         const pageHeight = 295; // A4 height in mm
-        //         const imgHeight = (canvas.height * imgWidth) / canvas.width;
-        //         let heightLeft = imgHeight;
-                
-        //         let position = 0;
-                
-        //         pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-        //         heightLeft -= pageHeight;
-                
-        //         while (heightLeft >= 0) {
-        //             position = heightLeft - imgHeight;
-        //             pdf.addPage();
-        //             pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-        //             heightLeft -= pageHeight;
-        //         }
-                
-        //         pdf.save(`carousel-${currentTemplate}-${Date.now()}.pdf`);
-                
-        //     } catch (error) {
-        //         console.error('Error generating PDF:', error);
-        //         alert('Error generating PDF. Please try again.');
-        //     }
-        // }
+        
 
+//         async function downloadPDF() {
+//     const preview = document.getElementById('preview');
+    
+//     if (!preview.innerHTML.trim()) {
+//         alert('Please add some content before downloading!');
+//         return;
+//     }
+    
+//     try {
+//         // Create a temporary container for the PDF
+//         const tempContainer = document.createElement('div');
+//         tempContainer.style.position = 'absolute';
+//         tempContainer.style.left = '-9999px';
+//         tempContainer.style.width = '1080px';
+//         tempContainer.innerHTML = preview.outerHTML;
+//         document.body.appendChild(tempContainer);
+        
+//         // Set background color based on template
+//         let backgroundColor = '#ffffff';
+//         if (currentTemplate.includes('tech-neural')) backgroundColor = '#667eea';
+//         else if (currentTemplate.includes('tech-quantum')) backgroundColor = '#0a0a0a';
+//         else if (currentTemplate.includes('product-modern')) backgroundColor = '#ff6b6b';
+//         else if (currentTemplate.includes('product-premium')) backgroundColor = '#2c3e50';
+//         else if (currentTemplate.includes('finance-gold')) backgroundColor = '#f7931e';
+//         else if (currentTemplate.includes('finance-elite')) backgroundColor = '#1e3c72';
+//         else if (currentTemplate.includes('health-care')) backgroundColor = '#56ab2f';
+//         else if (currentTemplate.includes('health-medical')) backgroundColor = '#0f4c75';
+//         else if (currentTemplate.includes('saas-modern')) backgroundColor = '#667eea';
+//         else if (currentTemplate.includes('saas-enterprise')) backgroundColor = '#2c3e50';
+        
+//         const canvas = await html2canvas(tempContainer.firstChild, {
+//             backgroundColor: backgroundColor,
+//             scale: 1.5, // Reduced from 2 to 1.5 - still high quality but smaller file
+//             useCORS: true,
+//             allowTaint: true,
+//             width: 1080,
+//             height: null,
+//             logging: false
+//         });
+        
+//         document.body.removeChild(tempContainer);
+        
+//         // Create PDF with compression
+//         const { jsPDF } = window.jspdf;
+//         // Calculate LinkedIn dimensions in mm (1080x1350 aspect ratio)
+//         const linkedinWidth = 216; // mm (8.5 inches)
+//         const linkedinHeight = 270; // mm (maintains 1080:1350 ratio)
+
+//         const pdf = new jsPDF({
+//             orientation: 'p',
+//             unit: 'mm', 
+//             format: [linkedinWidth, linkedinHeight], // Custom LinkedIn format
+//             compress: true
+//         });
+
+//         const imgData = canvas.toDataURL('image/jpeg', 0.85);
+//         const imgWidth = linkedinWidth;
+//         const pageHeight = linkedinHeight;
+//         const imgHeight = (canvas.height * imgWidth) / canvas.width;
+//         let heightLeft = imgHeight;
+        
+//         let position = 0;
+        
+//         pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight, undefined, 'FAST');
+//         heightLeft -= pageHeight;
+        
+//         while (heightLeft >= 0) {
+//             position = heightLeft - imgHeight;
+//             pdf.addPage();
+//             pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight, undefined, 'FAST');
+//             heightLeft -= pageHeight;
+//         }
+        
+//         pdf.save(`carousel-${currentTemplate}-${Date.now()}.pdf`);
+        
+//     } catch (error) {
+//         console.error('Error generating PDF:', error);
+//         alert('Error generating PDF. Please try again.');
+//     }
+// }
         async function downloadPDF() {
     const preview = document.getElementById('preview');
     
@@ -1231,7 +1241,38 @@
         tempContainer.style.position = 'absolute';
         tempContainer.style.left = '-9999px';
         tempContainer.style.width = '1080px';
-        tempContainer.innerHTML = preview.outerHTML;
+
+        // ADD THIS BLOCK HERE - Pre-process to prevent chopping
+        const previewClone = preview.cloneNode(true);
+
+        // Remove overflow constraints that cause chopping
+        const preventChopping = (element) => {
+            element.style.overflow = 'visible';
+            element.style.maxHeight = 'none';
+            element.style.textOverflow = 'clip';
+            element.style.whiteSpace = 'normal';
+        };
+
+        // Apply to main container
+        preventChopping(previewClone);
+
+        // Apply to all nested elements
+        previewClone.querySelectorAll('*').forEach(el => {
+            preventChopping(el);
+            
+            // Table-specific fixes
+            if (el.tagName === 'TABLE') {
+                el.style.tableLayout = 'auto';
+                el.style.width = 'auto';
+            }
+            
+            // Image-specific fixes  
+            if (el.tagName === 'IMG') {
+                el.style.maxWidth = '100%';
+                el.style.height = 'auto';
+            }
+        });
+        tempContainer.innerHTML = previewClone.outerHTML;
         document.body.appendChild(tempContainer);
         
         // Set background color based on template
