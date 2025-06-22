@@ -9,7 +9,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Playfair+Display:wght@400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
-        
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Playfair+Display:wght@400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
         * {
             margin: 0;
             padding: 0;
@@ -2059,7 +2059,8 @@ font-family:'Kalam', sans-serif !important;
 </head>
 <body>
     <div class="preview-container">
-        <div class="tech-neural-template template-base" id="preview">
+        <!-- <div class="tech-neural-template template-base" id="preview"> -->
+        <div class="tech-neural-template" id="preview"></div>
             <h1>Professional Carousel Templates 🚀</h1>
             <p>Choose from 10 industry-specific templates designed for maximum impact.</p>
             <h2>Features:</h2>
@@ -2246,12 +2247,12 @@ font-family:'Kalam', sans-serif !important;
                     // Parse markdown to HTML first
                     const htmlContent = marked.parse(content || '');
                     preview.innerHTML = htmlContent;
-                    preview.className = template + '-template template-base';
+                    preview.className = template + '-template';// template-base';
                     currentTemplate = template;
                 } catch (error) {
                     console.error('Error parsing markdown:', error);
                     preview.innerHTML = content || '';
-                    preview.className = template + '-template template-base';
+                    preview.className = template + '-template'; // template-base';
                     currentTemplate = template;
                 }
             }
@@ -2270,3 +2271,4 @@ font-family:'Kalam', sans-serif !important;
     </script>
 </body>
 </html>
+
