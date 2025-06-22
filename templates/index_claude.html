@@ -269,7 +269,7 @@ function initializeImageUpload() {
         const iframe = document.getElementById('markdownEditorFrame');
         if (iframe.contentWindow && iframe.contentWindow.markdownEditor) {
             try {
-                const imageHTML = `<img src="${shortUrl}" alt="${file.name}" style="max-width: 100%; height: auto; border-radius: 12px; margin: 12px 0; display: block;" />`;
+                const imageHTML = `<img src="${shortUrl}" alt="${file.name}" style="max-width: 100%; height: auto; border-radius: 16px; margin: 5px 0; display: block;" />`;
                 iframe.contentWindow.markdownEditor.insertAtCursor(`\n${imageHTML}\n`);
                 
                 setTimeout(() => {
@@ -279,7 +279,7 @@ function initializeImageUpload() {
             } catch (error) {
                 console.error('Failed to insert image:', error);
                 const currentContent = iframe.contentWindow.markdownEditor.getContent() || '';
-                const imageHTML = `<img src="${shortUrl}" alt="${file.name}" style="max-width: 100%; height: auto; border-radius: 12px; margin: 12px 0; display: block;" />`;
+                const imageHTML = `<img src="${shortUrl}" alt="${file.name}" style="max-width: 100%; height: auto; border-radius: 16px; margin: 5px 0; display: block;" />`;
                 iframe.contentWindow.markdownEditor.setContent(currentContent + `\n${imageHTML}\n`);
                 
                 setTimeout(() => {
@@ -301,8 +301,8 @@ function compressImage(file, callback) {
     
     img.onload = function() {
         // Set maximum dimensions
-        const MAX_WIDTH = 800;
-        const MAX_HEIGHT = 600;
+        const MAX_WIDTH = 1080;
+        const MAX_HEIGHT = 800;
         
         let { width, height } = img;
         
@@ -324,7 +324,7 @@ function compressImage(file, callback) {
         
         ctx.drawImage(img, 0, 0, width, height);
         
-        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7); // 70% quality
+        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.8); // 70% quality
         callback(compressedDataUrl);
     };
     
