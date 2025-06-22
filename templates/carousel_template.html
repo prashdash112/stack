@@ -31,281 +31,349 @@
             overflow: hidden;
         }
 
-        /* Common template styles */
-        /* .template-base {
-            padding: 40px;
-            min-height: 100vh;
-            line-height: 1.6;
-            position: relative;
-        }
-
-        .template-base h1, .template-base h2, .template-base h3, 
-        .template-base h4, .template-base h5, .template-base h6 {
-            margin: 20px 0 15px 0;
-            font-weight: 600;
-        }
-
-        .template-base p {
-            margin-bottom: 18px;
-        }
-
-        .template-base ul, .template-base ol {
-            margin: 20px 0;
-            padding-left: 0;
-        }
-
-        .template-base li {
-            list-style: none;
-            margin: 12px 0;
-            padding-left: 30px;
-            position: relative;
-        }
-
-        .template-base pre {
-            background: rgba(0,0,0,0.1);
-            border-radius: 8px;
-            padding: 20px;
-            margin: 20px 0;
-            overflow-x: auto;
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        .template-base code {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.9em;
-        }
-
-        .template-base p code {
-            background: rgba(0,0,0,0.1);
-            padding: 3px 6px;
-            border-radius: 4px;
-        }
-
-        .template-base table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 25px 0;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        .template-base th, .template-base td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid;
-        }
-
-        .template-base th {
-            font-weight: 600;
-        }
-
-        .template-base blockquote {
-            margin: 20px 0;
-            padding: 15px 20px;
-            border-radius: 8px;
-            font-style: italic;
-            border-left: 4px solid;
-        }
-
-        .template-base a {
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .template-base a:hover {
-            text-decoration: underline;
-        }
-
-        .template-base hr {
-            border: none;
-            height: 2px;
-            margin: 30px 0;
-        }
-
-        .template-base strong {
-            font-weight: 700;
-        }
-
-        .template-base em {
-            font-style: italic;
-        } */
         /* LinkedIn Carousel Optimized Base Styles */
-        .template-base {
-            padding: 60px;
-            min-height: 100vh;
-            line-height: 1.8;
-            position: relative;
-            font-size: 1.25rem;
-        }
+        /* 🎯 SMART BASE TEMPLATE - SIZE FOUNDATION ONLY */
+/* This provides SIZING but allows templates to override STYLING */
 
-        /* ONLY apply base styles when template doesn't override */
-        .template-base:not([class*="tech-"]):not([class*="product-"]):not([class*="finance-"]):not([class*="health-"]):not([class*="saas-"]):not([class*="dark-"]):not([class*="sketchy-"]):not([class*="executive-"]):not([class*="gradient-"]):not([class*="retro-"]):not([class*="glass-"]) h1,
-        .template-base h1:not(.template-styled) {
-            font-size: 3.5rem;
-            font-weight: 800;
-            margin: 40px 0 30px 0;
-            line-height: 1.2;
-            letter-spacing: -0.02em;
-        }
+.template-base {
+    padding: 80px 60px;
+    min-height: 100vh;
+    line-height: 1.9;
+    position: relative;
+    font-size: 1.5rem;
+}
 
-        .template-base:not([class*="tech-"]):not([class*="product-"]):not([class*="finance-"]):not([class*="health-"]):not([class*="saas-"]):not([class*="dark-"]):not([class*="sketchy-"]):not([class*="executive-"]):not([class*="gradient-"]):not([class*="retro-"]):not([class*="glass-"]) h2,
-        .template-base h2:not(.template-styled) {
-            font-size: 2.8rem;
-            font-weight: 700;
-            margin: 35px 0 25px 0;
-            line-height: 1.3;
-        }
+/* 📏 FONT SIZES ONLY - Let templates handle colors, backgrounds, etc. */
+.template-base h1 {
+    font-size: 4.5rem !important;
+    font-weight: 900;
+    margin: 50px 0 40px 0;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    /* NO color, background, or decorative styles - templates handle this */
+}
 
-        .template-base:not([class*="tech-"]):not([class*="product-"]):not([class*="finance-"]):not([class*="health-"]):not([class*="saas-"]):not([class*="dark-"]):not([class*="sketchy-"]):not([class*="executive-"]):not([class*="gradient-"]):not([class*="retro-"]):not([class*="glass-"]) h3,
-        .template-base h3:not(.template-styled) {
-            font-size: 2.2rem;
-            font-weight: 600;
-            margin: 30px 0 20px 0;
-            line-height: 1.4;
-        }
+.template-base h2 {
+    font-size: 3.5rem !important;
+    font-weight: 800;
+    margin: 45px 0 35px 0;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    /* NO color, background, or decorative styles */
+}
 
-        .template-base:not([class*="tech-"]):not([class*="product-"]):not([class*="finance-"]):not([class*="health-"]):not([class*="saas-"]):not([class*="dark-"]):not([class*="sketchy-"]):not([class*="executive-"]):not([class*="gradient-"]):not([class*="retro-"]):not([class*="glass-"]) h4,
-        .template-base h4:not(.template-styled) {
-            font-size: 1.8rem;
-            font-weight: 600;
-            margin: 25px 0 18px 0;
-        }
+.template-base h3 {
+    font-size: 2.8rem !important;
+    font-weight: 700;
+    margin: 40px 0 25px 0;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    /* NO color, background, or decorative styles */
+}
 
-        .template-base:not([class*="tech-"]):not([class*="product-"]):not([class*="finance-"]):not([class*="health-"]):not([class*="saas-"]):not([class*="dark-"]):not([class*="sketchy-"]):not([class*="executive-"]):not([class*="gradient-"]):not([class*="retro-"]):not([class*="glass-"]) h5,
-        .template-base h5:not(.template-styled) {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin: 20px 0 15px 0;
-        }
+.template-base h4 {
+    font-size: 2.3rem !important;
+    font-weight: 700;
+    margin: 35px 0 25px 0;
+    line-height: 1.4;
+    /* NO color, background, or decorative styles */
+}
 
-        .template-base:not([class*="tech-"]):not([class*="product-"]):not([class*="finance-"]):not([class*="health-"]):not([class*="saas-"]):not([class*="dark-"]):not([class*="sketchy-"]):not([class*="executive-"]):not([class*="gradient-"]):not([class*="retro-"]):not([class*="glass-"]) h6,
-        .template-base h6:not(.template-styled) {
-            font-size: 1.3rem;
-            font-weight: 600;
-            margin: 18px 0 12px 0;
-        }
+.template-base h5 {
+    font-size: 1.9rem !important;
+    font-weight: 600;
+    margin: 30px 0 20px 0;
+    line-height: 1.5;
+    /* NO color, background, or decorative styles */
+}
 
-        .template-base p {
-            margin-bottom: 24px;
-            font-size: 1.35rem;
-            line-height: 1.7;
-            font-weight: 500;
-        }
+.template-base h6 {
+    font-size: 1.6rem !important;
+    font-weight: 600;
+    margin: 25px 0 18px 0;
+    line-height: 1.5;
+    /* NO color, background, or decorative styles */
+}
 
-        .template-base ul, .template-base ol {
-            margin: 30px 0;
-            padding-left: 0;
-            font-size: 1.3rem;
-        }
+/* 📝 TEXT SIZING ONLY */
+.template-base p {
+    margin-bottom: 32px;
+    font-size: 1.7rem !important;
+    line-height: 1.8;
+    font-weight: 500;
+    /* NO colors - let templates handle styling */
+}
 
-        .template-base li {
-            list-style: none;
-            margin: 20px 0;
-            padding-left: 45px;
-            position: relative;
-            font-size: 1.3rem;
-            line-height: 1.6;
-            font-weight: 500;
-        }
+/* 📋 LIST SIZING ONLY */
+.template-base ul, .template-base ol {
+    margin: 40px 0;
+    padding-left: 0;
+    font-size: 1.6rem !important;
+}
 
-        .template-base pre {
-            background: rgba(0,0,0,0.08);
-            border: 2px solid rgba(0,0,0,0.1);
-            border-radius: 15px;
-            padding: 30px;
-            margin: 35px 0;
-            overflow-x: auto;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 1.1rem;
-            line-height: 1.6;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-        }
+.template-base li {
+    list-style: none;
+    margin: 25px 0;
+    padding-left: 60px;
+    position: relative;
+    font-size: 1.6rem !important;
+    line-height: 1.7;
+    font-weight: 500;
+    /* NO bullet styling - templates handle ::before */
+}
 
-        .template-base code {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 1.1rem;
-            font-weight: 600;
-        }
+/* 💻 CODE SIZING ONLY */
+.template-base pre {
+    border-radius: 20px;
+    padding: 40px !important;
+    margin: 50px 0;
+    overflow-x: auto;
+    font-size: 1.4rem !important;
+    line-height: 1.7;
+    /* NO background, border, colors - templates handle styling */
+}
 
-        .template-base p code {
-            background: rgba(0,0,0,0.08);
-            border: 1px solid rgba(0,0,0,0.15);
-            padding: 6px 12px;
-            border-radius: 8px;
-            font-size: 1.05rem;
-            font-weight: 600;
-        }
+.template-base code {
+    font-size: 1.3rem !important;
+    font-weight: 600;
+    /* NO background, colors - templates handle styling */
+}
 
-        .template-base table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-            margin: 40px 0;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            font-size: 1.2rem;
-        }
+.template-base p code {
+    padding: 8px 16px !important;
+    border-radius: 10px;
+    font-size: 1.2rem !important;
+    font-weight: 600;
+    white-space: nowrap;
+    /* NO background, colors - templates handle styling */
+}
 
-        .template-base th, .template-base td {
-            padding: 20px 25px;
-            text-align: left;
-            border-bottom: 2px solid rgba(0,0,0,0.1);
-            font-size: 1.2rem;
-            line-height: 1.5;
-        }
+/* 📊 TABLE SIZING ONLY */
+.template-base table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 50px 0;
+    border-radius: 20px;
+    overflow: hidden;
+    font-size: 1.4rem !important;
+    /* NO background, shadows, borders - templates handle styling */
+}
 
-        .template-base th {
-            font-weight: 700;
-            font-size: 1.3rem;
-            background: rgba(0,0,0,0.05);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
+.template-base th, .template-base td {
+    padding: 25px 30px !important;
+    text-align: left;
+    font-size: 1.4rem !important;
+    line-height: 1.6;
+    /* NO background, colors, borders - templates handle styling */
+}
 
-        .template-base blockquote {
-            margin: 35px 0;
-            padding: 25px 35px;
-            border-radius: 15px;
-            font-style: italic;
-            border-left: 6px solid rgba(0,0,0,0.2);
-            background: rgba(0,0,0,0.03);
-            font-size: 1.4rem;
-            line-height: 1.7;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-        }
+.template-base th {
+    font-weight: 800;
+    font-size: 1.5rem !important;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    /* NO background, colors - templates handle styling */
+}
 
-        .template-base a {
-            text-decoration: none;
-            font-weight: 600;
-            font-size: inherit;
-            border-bottom: 2px solid currentColor;
-            transition: all 0.3s ease;
-        }
+/* 💬 BLOCKQUOTE SIZING ONLY */
+.template-base blockquote {
+    margin: 50px 0;
+    padding: 40px 50px !important;
+    border-radius: 20px;
+    font-style: italic;
+    font-size: 1.8rem !important;
+    line-height: 1.8;
+    font-weight: 500;
+    position: relative;
+    /* NO background, border, colors - templates handle styling */
+}
 
-        .template-base a:hover {
-            text-decoration: none;
-            opacity: 0.8;
-            transform: translateY(-1px);
-        }
+/* 🔗 LINK SIZING ONLY */
+.template-base a {
+    text-decoration: none;
+    font-weight: 700;
+    font-size: inherit;
+    transition: all 0.3s ease;
+    position: relative;
+    /* NO colors, borders - templates handle styling */
+}
 
-        .template-base hr {
-            border: none;
-            height: 4px;
-            margin: 50px 0;
-            border-radius: 2px;
-            background: linear-gradient(90deg, transparent, rgba(0,0,0,0.2), transparent);
-        }
+/* ➖ DIVIDER SIZING ONLY */
+.template-base hr {
+    border: none;
+    height: 6px !important;
+    margin: 60px 0;
+    border-radius: 3px;
+    /* NO background, colors - templates handle styling */
+}
 
-        .template-base strong {
-            font-weight: 800;
-            font-size: inherit;
-        }
+/* 💪 TEXT STYLING SIZING ONLY */
+.template-base strong {
+    font-weight: 900;
+    font-size: inherit;
+    /* NO colors - templates handle styling */
+}
 
-        .template-base em {
-            font-style: italic;
-            font-size: inherit;
-        }
+.template-base em {
+    font-style: italic;
+    font-size: inherit;
+    font-weight: 600;
+    /* NO colors - templates handle styling */
+}
+
+/* 📱 RESPONSIVE SIZING */
+@media (max-width: 1200px) {
+    .template-base {
+        padding: 60px 40px;
+    }
+    
+    .template-base h1 {
+        font-size: 3.8rem !important;
+    }
+    
+    .template-base h2 {
+        font-size: 3rem !important;
+    }
+    
+    .template-base h3 {
+        font-size: 2.4rem !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .template-base {
+        padding: 40px 30px;
+    }
+    
+    .template-base h1 {
+        font-size: 3.2rem !important;
+    }
+    
+    .template-base h2 {
+        font-size: 2.6rem !important;
+    }
+    
+    .template-base h3 {
+        font-size: 2rem !important;
+    }
+    
+    .template-base p {
+        font-size: 1.5rem !important;
+    }
+    
+    .template-base li {
+        font-size: 1.4rem !important;
+    }
+}
+
+/* 🎯 FALLBACK BASE STYLING - Only applies when NO template is used */
+.template-base:not([class*="-template"]) {
+    background: linear-gradient(135deg, #fafafa 0%, #f5f7fa 100%);
+    box-shadow: inset 0 0 100px rgba(0,0,0,0.02);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: #2d3748;
+}
+
+.template-base:not([class*="-template"]) h1 {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.08);
+}
+
+.template-base:not([class*="-template"]) h1::after {
+    content: '';
+    position: absolute;
+    bottom: -15px;
+    left: 0;
+    width: 120px;
+    height: 6px;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    border-radius: 3px;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.template-base:not([class*="-template"]) h2 {
+    color: #2d3748;
+}
+
+.template-base:not([class*="-template"]) h2::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    border-radius: 2px;
+}
+
+.template-base:not([class*="-template"]) li::before {
+    content: '●';
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: #667eea;
+    font-size: 2rem;
+    font-weight: bold;
+    text-shadow: 0 2px 4px rgba(102, 126, 234, 0.2);
+}
+
+.template-base:not([class*="-template"]) pre {
+    background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+    border: 3px solid #e2e8f0;
+    color: #e2e8f0;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+}
+
+.template-base:not([class*="-template"]) p code {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+}
+
+.template-base:not([class*="-template"]) table {
+    background: white;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+}
+
+.template-base:not([class*="-template"]) th {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.template-base:not([class*="-template"]) blockquote {
+    border-left: 8px solid #667eea;
+    background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+    color: #2d3748;
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.1);
+}
+
+.template-base:not([class*="-template"]) a {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.template-base:not([class*="-template"]) hr {
+    background: linear-gradient(90deg, transparent, #667eea, #764ba2, transparent);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+}
+
+.template-base:not([class*="-template"]) strong {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.template-base:not([class*="-template"]) em {
+    color: #667eea;
+}
         /* Tech Neural Template */
         .tech-neural-template {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -1219,24 +1287,6 @@
             background: linear-gradient(90deg, transparent, #4caf50, transparent);
         }
 
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .template-base {
-                padding: 20px;
-            }
-            
-            .template-base h1 {
-                font-size: 2rem !important;
-            }
-            
-            .template-base h2 {
-                font-size: 1.5rem !important;
-            }
-            
-            .template-base h3 {
-                font-size: 1.2rem !important;
-            }
-        }
 
         /* Dark Neon Template */
 .dark-neon-template {
@@ -2059,8 +2109,8 @@ font-family:'Kalam', sans-serif !important;
 </head>
 <body>
     <div class="preview-container">
-        <!-- <div class="tech-neural-template template-base" id="preview"> -->
-        <div class="tech-neural-template" id="preview"></div>
+        <div class="tech-neural-template template-base" id="preview">
+        <!-- <div class="tech-neural-template" id="preview"></div> -->
             <h1>Professional Carousel Templates 🚀</h1>
             <p>Choose from 10 industry-specific templates designed for maximum impact.</p>
             <h2>Features:</h2>
@@ -2247,13 +2297,13 @@ font-family:'Kalam', sans-serif !important;
                     // Parse markdown to HTML first
                     const htmlContent = marked.parse(content || '');
                     preview.innerHTML = htmlContent;
-                    preview.className = template + '-template';// template-base';
+                    preview.className = template + '-template template-base';
                     currentTemplate = template;
                 } catch (error) {
                     console.error('Error parsing markdown:', error);
                     preview.innerHTML = content || '';
-                    preview.className = template + '-template'; // template-base';
-                    currentTemplate = template;
+                    preview.className = template + '-template template-base';
+                    currentTemplate = template; 
                 }
             }
             else if (action === 'downloadImage') {
