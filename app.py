@@ -448,13 +448,14 @@ def create_enhanced_pdf_html(content, template, captured_styles=''):
 
         /* IMAGE HANDLING FOR PDF - CRITICAL */
         img {{
-            max-width: 100% !important;
+            min-width: 1080px !important;    /* Minimum 1080px wide */
+            width: 1080px !important;
             height: auto !important;
-            width: 1080px
             display: block !important;
             page-break-inside: avoid;
-            margin: 0px 0 !important;
+            margin: 10px 0 !important;
             object-fit: contain !important;
+            border-radius: 16px !important;  /* Match your style */
         }}
         
         p, li {{
