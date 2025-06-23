@@ -345,6 +345,91 @@ def generate_pdf():
         print(f"PDF generation error: {str(e)}")
         return jsonify({'success': False, 'error': str(e)}), 500
 
+# def create_enhanced_pdf_html(content, template, captured_styles=''):
+#     """Create complete HTML document with all captured styles"""
+    
+#     complete_template_styles = f"""
+#     <style>
+#         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+        
+#         /* PDF PAGE CONTROL - CRITICAL */
+#         @page {{
+#             size: A4;
+#             margin: 0mm;
+#             padding: 0mm;
+#         }}
+        
+#         * {{
+#             box-sizing: border-box;
+#             margin: 0;
+#             padding: 0;
+#         }}
+        
+#         html, body {{
+#             width: 210mm;
+#             margin: 0 !important;
+#             padding: 0 !important;
+#             font-family: 'Inter', sans-serif;
+#             /* REMOVED: height and overflow hidden */
+#         }}
+        
+#         .pdf-container {{
+#             width: 210mm;
+#             margin: 0;
+#             padding: 0;
+#             position: relative;  /* Changed from absolute */
+#             /* REMOVED: height and overflow hidden */
+#         }}
+        
+#         .template-base {{
+#             width: 210mm !important;
+#             min-height: 297mm !important;  /* Changed to min-height */
+#             margin: 0 !important;
+#             padding: 20mm !important;
+#             position: relative;  /* Changed from absolute */
+#             box-sizing: border-box;
+#             /* REMOVED: overflow hidden */
+#             page-break-inside: auto;  /* Allow page breaks */
+#         }}
+        
+#         /* PAGE BREAK CONTROLS */
+#         h1, h2, h3, h4, h5, h6 {{
+#             page-break-after: avoid;
+#             page-break-inside: avoid;
+#         }}
+        
+#         p, li {{
+#             orphans: 3;
+#             widows: 3;
+#         }}
+        
+#         table, pre, blockquote {{
+#             page-break-inside: avoid;
+#         }}
+        
+#         /* Additional captured styles */
+#         {captured_styles}
+#     </style>
+#     """
+    
+#     return f"""
+#     <!DOCTYPE html>
+#     <html>
+#     <head>
+#         <meta charset="UTF-8">
+#         <title>Carousel PDF - {template}</title>
+#         {complete_template_styles}
+#     </head>
+#     <body>
+#         <div class="pdf-container">
+#             <div class="{template}-template template-base">
+#                 {content}
+#             </div>
+#         </div>
+#     </body>
+#     </html>
+#     """
+
 def create_enhanced_pdf_html(content, template, captured_styles=''):
     """Create complete HTML document with all captured styles"""
     
@@ -352,11 +437,11 @@ def create_enhanced_pdf_html(content, template, captured_styles=''):
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
         
-        /* PDF PAGE CONTROL - CRITICAL */
+        /* PDF PAGE CONTROL - CUSTOM SIZE */
         @page {{
-            size: A4;
-            margin: 0mm;
-            padding: 0mm;
+            size: 1080px 1350px;
+            margin: 0;
+            padding: 0;
         }}
         
         * {{
@@ -366,30 +451,27 @@ def create_enhanced_pdf_html(content, template, captured_styles=''):
         }}
         
         html, body {{
-            width: 210mm;
+            width: 1080px;
             margin: 0 !important;
             padding: 0 !important;
             font-family: 'Inter', sans-serif;
-            /* REMOVED: height and overflow hidden */
         }}
         
         .pdf-container {{
-            width: 210mm;
+            width: 1080px;
             margin: 0;
             padding: 0;
-            position: relative;  /* Changed from absolute */
-            /* REMOVED: height and overflow hidden */
+            position: relative;
         }}
         
         .template-base {{
-            width: 210mm !important;
-            min-height: 297mm !important;  /* Changed to min-height */
+            width: 1080px !important;
+            min-height: 1350px !important;
             margin: 0 !important;
-            padding: 20mm !important;
-            position: relative;  /* Changed from absolute */
+            padding: 40px !important;
+            position: relative;
             box-sizing: border-box;
-            /* REMOVED: overflow hidden */
-            page-break-inside: auto;  /* Allow page breaks */
+            page-break-inside: auto;
         }}
         
         /* PAGE BREAK CONTROLS */
