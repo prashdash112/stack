@@ -2199,94 +2199,102 @@ font-family:'Kalam', sans-serif !important;
         
 
         async function downloadPDF() {
-    const preview = document.getElementById('preview');
-    
-    if (!preview.innerHTML.trim()) {
-        alert('Please add some content before downloading!');
-        return;
-    }
-    
-    try {
-        // Create a temporary container for the PDF
-        const tempContainer = document.createElement('div');
-        tempContainer.style.position = 'absolute';
-        tempContainer.style.left = '-9999px';
-        tempContainer.style.width = '1080px';
-        tempContainer.innerHTML = preview.outerHTML;
-        document.body.appendChild(tempContainer);
-        
-        // Set background color based on template
-        let backgroundColor = '#ffffff';
-        if (currentTemplate.includes('tech-neural')) backgroundColor = '#667eea';
-        else if (currentTemplate.includes('tech-quantum')) backgroundColor = '#0a0a0a';
-        else if (currentTemplate.includes('product-modern')) backgroundColor = '#ff6b6b';
-        else if (currentTemplate.includes('product-premium')) backgroundColor = '#2c3e50';
-        else if (currentTemplate.includes('finance-gold')) backgroundColor = '#f7931e';
-        else if (currentTemplate.includes('finance-elite')) backgroundColor = '#1e3c72';
-        else if (currentTemplate.includes('health-care')) backgroundColor = '#56ab2f';
-        else if (currentTemplate.includes('health-medical')) backgroundColor = '#0f4c75';
-        else if (currentTemplate.includes('saas-modern')) backgroundColor = '#667eea';
-        else if (currentTemplate.includes('saas-enterprise')) backgroundColor = '#2c3e50';
-        else if (currentTemplate.includes('dark-neon')) backgroundColor = '#0f0f23';
-        else if (currentTemplate.includes('sketchy-minimal')) backgroundColor = '#fefefe';
-        else if (currentTemplate.includes('executive-board')) backgroundColor = '#f8f9fa';
-        else if (currentTemplate.includes('gradient-pro')) backgroundColor = '#667eea';
-        else if (currentTemplate.includes('retro')) backgroundColor = '#ff6b35';
-        else if (currentTemplate.includes('glass-morph')) backgroundColor = '#a8edea';
-        
-        const canvas = await html2canvas(tempContainer.firstChild, {
-            backgroundColor: backgroundColor,
-            scale: 1.5, // Reduced from 2 to 1.5 - still high quality but smaller file
-            useCORS: true,
-            allowTaint: true,
-            width: 1080,
-            height: null,
-            logging: false
-        });
-        
-        document.body.removeChild(tempContainer);
-        
-        // Create PDF with compression
-        const { jsPDF } = window.jspdf;
-        // Calculate LinkedIn dimensions in mm (1080x1350 aspect ratio)
-        const linkedinWidth = 216; // mm (8.5 inches)
-        const linkedinHeight = 270; // mm (maintains 1080:1350 ratio)
-
-        const pdf = new jsPDF({
-            orientation: 'p',
-            unit: 'mm', 
-            format: [linkedinWidth, linkedinHeight], // Custom LinkedIn format
-            compress: true
-        });
-
-        const imgData = canvas.toDataURL('image/jpeg', 0.85);
-        const imgWidth = linkedinWidth;
-        const pageHeight = linkedinHeight;
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
-        let heightLeft = imgHeight;
-        
-        let position = 0;
-        
-        pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight, undefined, 'FAST');
-        heightLeft -= pageHeight;
-        
-        while (heightLeft >= 0) {
-            position = heightLeft - imgHeight;
-            pdf.addPage();
-            pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight, undefined, 'FAST');
-            heightLeft -= pageHeight;
+            const preview = document.getElementById('preview');
+            
+            if (!preview.innerHTML.trim()) {
+                alert('Please add some content before downloading!');
+                return;
+            }
+            
+            try {
+                // Show loading indicator
+                const originalText = 'Download PDF';
+                const downloadBtn = document.querySelector('[onclick="downloadPDF()"]');
+                if (downloadBtn) {
+                    downloadBtn.textContent = 'Generating PDF...';
+                    downloadBtn.disabled = true;
+                }
+                
+                // Get the raw content (before markdown parsing if applicable)
+                const rawContent = preview.innerHTML;
+                
+                // Send request to backend for PDF generation
+                const response = await fetch('/generate-pdf', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        content: rawContent,
+                        template: currentTemplate || 'tech-neural'
+                    })
+                });
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`Server error (${response.status}): ${errorText}`);
+                }
+                
+                const result = await response.json();
+                
+                if (!result.success) {
+                    throw new Error(result.error || 'PDF generation failed');
+                }
+                
+                // Convert base64 to blob and download
+                const pdfBlob = base64ToBlob(result.pdf_data, 'application/pdf');
+                const downloadUrl = URL.createObjectURL(pdfBlob);
+                
+                // Create download link and trigger download
+                const downloadLink = document.createElement('a');
+                downloadLink.href = downloadUrl;
+                downloadLink.download = result.filename;
+                downloadLink.style.display = 'none';
+                
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                document.body.removeChild(downloadLink);
+                
+                // Clean up URL
+                URL.revokeObjectURL(downloadUrl);
+                
+                console.log('PDF downloaded successfully');
+                
+            } catch (error) {
+                console.error('Error generating PDF:', error);
+                alert(`Error generating PDF: ${error.message}`);
+            } finally {
+                // Reset button state
+                const downloadBtn = document.querySelector('[onclick="downloadPDF()"]');
+                if (downloadBtn) {
+                    downloadBtn.textContent = originalText;
+                    downloadBtn.disabled = false;
+                }
+            }
         }
-        
-        pdf.save(`carousel-${currentTemplate}-${Date.now()}.pdf`);
-        
-    } catch (error) {
-        console.error('Error generating PDF:', error);
-        alert('Error generating PDF. Please try again.');
-    }
-} 
-       
 
-       
+        // Helper function to convert base64 to blob
+        function base64ToBlob(base64Data, contentType = '') {
+            const byteCharacters = atob(base64Data);
+            const byteArrays = [];
+            
+            for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+                const slice = byteCharacters.slice(offset, offset + 512);
+                const byteNumbers = new Array(slice.length);
+                
+                for (let i = 0; i < slice.length; i++) {
+                    byteNumbers[i] = slice.charCodeAt(i);
+                }
+                
+                const byteArray = new Uint8Array(byteNumbers);
+                byteArrays.push(byteArray);
+            }
+            
+            return new Blob(byteArrays, { type: contentType });
+        }
+
+      
         const preview = document.getElementById('preview');
 
         window.addEventListener('message', async (event) => {

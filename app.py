@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for
+from flask import Flask, render_template, request, jsonify, redirect, url_for,send_file
 import requests
 from flask_cors import CORS
 import os
@@ -9,6 +9,15 @@ from authlib.integrations.flask_client import OAuth
 from flask_login import LoginManager, UserMixin, login_user, login_required, current_user, logout_user
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timezone
+
+from weasyprint import HTML, CSS
+from weasyprint.text.fonts import FontConfiguration
+import tempfile
+import base64
+from io import BytesIO
+import markdown
+import time
+
 
 
 app = Flask(__name__, template_folder="templates", static_folder="static")
@@ -52,10 +61,6 @@ class UserMetrics(db.Model):
 
     user = db.relationship("User", backref="metrics", uselist=False)
 
-    # def touch(self, action):
-    #     """Increment the right counter and update timestamp."""
-    #     setattr(self, f"{action}_count", getattr(self, f"{action}_count") + 1)
-    #     self.updated_at = datetime.now(timezone.utc)
 
     def touch(self, action):
         """Increment the right counter (even if it was None) and update timestamp."""
@@ -281,6 +286,292 @@ def track_action():
 
     return jsonify({"status": "ok"})
 
+##################################################
+
+# Add this route to your existing app.py
+@app.route('/generate-pdf', methods=['POST'])
+def generate_pdf():
+    try:
+        data = request.get_json()
+        content = data.get('content', '')
+        template = data.get('template', 'default')
+        
+        # Convert markdown to HTML if needed
+        html_content = markdown.markdown(content) if content else ''
+        
+        # Create the complete HTML document with styles
+        full_html = create_pdf_html(html_content, template)
+        
+        # Generate PDF using WeasyPrint
+        font_config = FontConfiguration()
+        
+        # Create temporary file for PDF
+        with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as tmp_file:
+            HTML(string=full_html, base_url=request.url_root).write_pdf(
+                tmp_file.name,
+                font_config=font_config,
+                optimize_images=True
+            )
+            tmp_file_path = tmp_file.name
+        
+        # Read PDF content
+        with open(tmp_file_path, 'rb') as pdf_file:
+            pdf_content = pdf_file.read()
+        
+        # Clean up temporary file
+        os.unlink(tmp_file_path)
+        
+        # Return PDF as base64 encoded string
+        pdf_base64 = base64.b64encode(pdf_content).decode('utf-8')
+        
+        return jsonify({
+            'success': True,
+            'pdf_data': pdf_base64,
+            'filename': f'carousel-{template}-{int(time.time())}.pdf'
+        })
+        
+    except Exception as e:
+        print(f"PDF generation error: {str(e)}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+def create_pdf_html(content, template):
+    """Create complete HTML document with embedded styles for PDF generation"""
+    
+    # Base styles that work well with WeasyPrint
+    base_styles = """
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: white;
+        }
+        
+        .pdf-container {
+            width: 210mm;  /* A4 width */
+            min-height: 297mm; /* A4 height */
+            margin: 0 auto;
+            padding: 20mm;
+            background: white;
+            page-break-inside: avoid;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            margin-bottom: 0.5em;
+            line-height: 1.2;
+            page-break-after: avoid;
+        }
+        
+        p {
+            margin-bottom: 1em;
+            orphans: 3;
+            widows: 3;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1em;
+            page-break-inside: avoid;
+        }
+        
+        th, td {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #f5f5f5;
+            font-weight: 600;
+        }
+        
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            background-color: #f8f9fa;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+        
+        pre {
+            background-color: #f8f9fa;
+            padding: 1em;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin-bottom: 1em;
+            page-break-inside: avoid;
+        }
+        
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        
+        ul, ol {
+            margin-left: 2em;
+            margin-bottom: 1em;
+        }
+        
+        li {
+            margin-bottom: 0.5em;
+        }
+        
+        blockquote {
+            border-left: 4px solid #007bff;
+            margin: 1em 0;
+            padding-left: 1em;
+            font-style: italic;
+        }
+        
+        img {
+            max-width: 100%;
+            height: auto;
+            page-break-inside: avoid;
+        }
+        
+        /* Page break utilities */
+        .page-break {
+            page-break-before: always;
+        }
+        
+        .no-break {
+            page-break-inside: avoid;
+        }
+    </style>
+    """
+    
+    # Template-specific styles
+    template_styles = get_template_styles(template)
+    
+    return f"""
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Carousel PDF - {template}</title>
+        {base_styles}
+        {template_styles}
+    </head>
+    <body>
+        <div class="pdf-container {template}-template">
+            {content}
+        </div>
+    </body>
+    </html>
+    """
+
+def get_template_styles(template):
+    """Return template-specific CSS styles"""
+    
+    styles_map = {
+        'tech-neural': """
+        <style>
+            .tech-neural-template {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+            }
+            .tech-neural-template h1, .tech-neural-template h2 {
+                color: #fff;
+                text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            }
+            .tech-neural-template code {
+                background: rgba(255,255,255,0.1);
+                color: #e1e8ff;
+            }
+            .tech-neural-template pre {
+                background: rgba(0,0,0,0.3);
+                border: 1px solid rgba(255,255,255,0.1);
+            }
+        </style>
+        """,
+        
+        'tech-quantum': """
+        <style>
+            .tech-quantum-template {
+                background: #0a0a0a;
+                color: #00ff88;
+            }
+            .tech-quantum-template h1, .tech-quantum-template h2 {
+                color: #00ff88;
+                text-shadow: 0 0 10px rgba(0,255,136,0.5);
+            }
+            .tech-quantum-template code {
+                background: rgba(0,255,136,0.1);
+                color: #00ff88;
+            }
+        </style>
+        """,
+        
+        'product-modern': """
+        <style>
+            .product-modern-template {
+                background: linear-gradient(135deg, #ff6b6b 0%, #ffa500 100%);
+                color: white;
+            }
+            .product-modern-template h1, .product-modern-template h2 {
+                color: #fff;
+            }
+        </style>
+        """,
+        
+        'finance-gold': """
+        <style>
+            .finance-gold-template {
+                background: linear-gradient(135deg, #f7931e 0%, #ffd700 100%);
+                color: #2c3e50;
+            }
+            .finance-gold-template h1, .finance-gold-template h2 {
+                color: #2c3e50;
+                font-weight: 700;
+            }
+        </style>
+        """,
+        
+        'health-care': """
+        <style>
+            .health-care-template {
+                background: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%);
+                color: #2c3e50;
+            }
+        </style>
+        """,
+        
+        'saas-modern': """
+        <style>
+            .saas-modern-template {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+            }
+        </style>
+        """,
+        
+        'dark-neon': """
+        <style>
+            .dark-neon-template {
+                background: #0f0f23;
+                color: #00ffff;
+            }
+            .dark-neon-template h1, .dark-neon-template h2 {
+                color: #ff00ff;
+                text-shadow: 0 0 10px rgba(255,0,255,0.5);
+            }
+        </style>
+        """
+    }
+    
+    return styles_map.get(template, '<style></style>')
+
+##################################################
 
 if __name__ == '__main__':
     app.run(host="127.0.0.1", debug=True, port=8000)
