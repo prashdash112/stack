@@ -302,26 +302,77 @@ import requests
 
 # Replace your existing /generate-pdf endpoint with this enhanced version
 @app.route('/generate-pdf', methods=['POST'])
+# def generate_pdf():
+#     try:
+#         data = request.get_json()
+#         content = data.get('content', '')
+#         template = data.get('template', 'tech-neural')
+#         styles = data.get('styles', '')  # New: capture styles from frontend
+        
+#         # Create the complete HTML document with all styles
+#         full_html = create_enhanced_pdf_html(content, template, styles)
+        
+#         # Generate PDF using WeasyPrint
+#         font_config = FontConfiguration()
+        
+#         # Create temporary file for PDF
+#         with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as tmp_file:
+#             HTML(string=full_html, base_url=request.url_root).write_pdf(
+#                 tmp_file.name,
+#                 font_config=font_config,
+#                 optimize_images=True,
+#                 presentational_hints=True  # This helps preserve more styling
+#             )
+#             tmp_file_path = tmp_file.name
+        
+#         # Read PDF content
+#         with open(tmp_file_path, 'rb') as pdf_file:
+#             pdf_content = pdf_file.read()
+        
+#         # Clean up temporary file
+#         os.unlink(tmp_file_path)
+        
+#         # Return PDF as base64 encoded string
+#         pdf_base64 = base64.b64encode(pdf_content).decode('utf-8')
+        
+#         return jsonify({
+#             'success': True,
+#             'pdf_data': pdf_base64,
+#             'filename': f'carousel-{template}-{int(time.time())}.pdf'
+#         })
+        
+#     except Exception as e:
+#         print(f"PDF generation error: {str(e)}")
+#         return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/generate-pdf', methods=['POST'])
 def generate_pdf():
     try:
         data = request.get_json()
         content = data.get('content', '')
         template = data.get('template', 'tech-neural')
-        styles = data.get('styles', '')  # New: capture styles from frontend
+        styles = data.get('styles', '')
         
         # Create the complete HTML document with all styles
         full_html = create_enhanced_pdf_html(content, template, styles)
         
-        # Generate PDF using WeasyPrint
+        # Generate PDF using WeasyPrint with proper image handling
         font_config = FontConfiguration()
         
         # Create temporary file for PDF
         with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as tmp_file:
-            HTML(string=full_html, base_url=request.url_root).write_pdf(
+            HTML(
+                string=full_html, 
+                base_url=request.url_root,  # ✅ CRITICAL: This allows relative image URLs
+                encoding='utf-8'
+            ).write_pdf(
                 tmp_file.name,
                 font_config=font_config,
-                optimize_images=True,
-                presentational_hints=True  # This helps preserve more styling
+                optimize_images=False,  # ✅ CHANGED: Don't optimize to prevent corruption
+                presentational_hints=True,
+                # ✅ NEW: Add these for better image handling
+                stylesheets=[],
+                attachments=[]
             )
             tmp_file_path = tmp_file.name
         
@@ -344,92 +395,7 @@ def generate_pdf():
     except Exception as e:
         print(f"PDF generation error: {str(e)}")
         return jsonify({'success': False, 'error': str(e)}), 500
-
-# def create_enhanced_pdf_html(content, template, captured_styles=''):
-#     """Create complete HTML document with all captured styles"""
     
-#     complete_template_styles = f"""
-#     <style>
-#         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
-        
-#         /* PDF PAGE CONTROL - CRITICAL */
-#         @page {{
-#             size: A4;
-#             margin: 0mm;
-#             padding: 0mm;
-#         }}
-        
-#         * {{
-#             box-sizing: border-box;
-#             margin: 0;
-#             padding: 0;
-#         }}
-        
-#         html, body {{
-#             width: 210mm;
-#             margin: 0 !important;
-#             padding: 0 !important;
-#             font-family: 'Inter', sans-serif;
-#             /* REMOVED: height and overflow hidden */
-#         }}
-        
-#         .pdf-container {{
-#             width: 210mm;
-#             margin: 0;
-#             padding: 0;
-#             position: relative;  /* Changed from absolute */
-#             /* REMOVED: height and overflow hidden */
-#         }}
-        
-#         .template-base {{
-#             width: 210mm !important;
-#             min-height: 297mm !important;  /* Changed to min-height */
-#             margin: 0 !important;
-#             padding: 20mm !important;
-#             position: relative;  /* Changed from absolute */
-#             box-sizing: border-box;
-#             /* REMOVED: overflow hidden */
-#             page-break-inside: auto;  /* Allow page breaks */
-#         }}
-        
-#         /* PAGE BREAK CONTROLS */
-#         h1, h2, h3, h4, h5, h6 {{
-#             page-break-after: avoid;
-#             page-break-inside: avoid;
-#         }}
-        
-#         p, li {{
-#             orphans: 3;
-#             widows: 3;
-#         }}
-        
-#         table, pre, blockquote {{
-#             page-break-inside: avoid;
-#         }}
-        
-#         /* Additional captured styles */
-#         {captured_styles}
-#     </style>
-#     """
-    
-#     return f"""
-#     <!DOCTYPE html>
-#     <html>
-#     <head>
-#         <meta charset="UTF-8">
-#         <title>Carousel PDF - {template}</title>
-#         {complete_template_styles}
-#     </head>
-#     <body>
-#         <div class="pdf-container">
-#             <div class="{template}-template template-base">
-#                 {content}
-#             </div>
-#         </div>
-#     </body>
-#     </html>
-#     """
-
 def create_enhanced_pdf_html(content, template, captured_styles=''):
     """Create complete HTML document with all captured styles"""
     
@@ -478,6 +444,17 @@ def create_enhanced_pdf_html(content, template, captured_styles=''):
         h1, h2, h3, h4, h5, h6 {{
             page-break-after: avoid;
             page-break-inside: avoid;
+        }}
+
+        /* IMAGE HANDLING FOR PDF - CRITICAL */
+        img {{
+            max-width: 100% !important;
+            height: auto !important;
+            width: 1080px
+            display: block !important;
+            page-break-inside: avoid;
+            margin: 0px 0 !important;
+            object-fit: contain !important;
         }}
         
         p, li {{
