@@ -348,10 +348,16 @@ def generate_pdf():
 def create_enhanced_pdf_html(content, template, captured_styles=''):
     """Create complete HTML document with all captured styles"""
     
-    # Complete template styles - all your templates
     complete_template_styles = f"""
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+        
+        /* PDF PAGE CONTROL - CRITICAL */
+        @page {{
+            size: A4;
+            margin: 0mm;  /* Remove all default margins */
+            padding: 0mm;
+        }}
         
         * {{
             box-sizing: border-box;
@@ -359,21 +365,36 @@ def create_enhanced_pdf_html(content, template, captured_styles=''):
             padding: 0;
         }}
         
-        body {{
-            font-family: 'Inter', sans-serif;
-            line-height: 1.6;
-            background: white;
+        html, body {{
             width: 210mm;
-            min-height: 297mm;
-            margin: 0;
-            padding: 0;
+            height: 297mm;
+            margin: 0 !important;
+            padding: 0 !important;
+            overflow: hidden;
+            font-family: 'Inter', sans-serif;
         }}
         
         .pdf-container {{
-            width: 100%;
-            min-height: 100vh;
-            padding: 0mm;
-            page-break-inside: avoid;
+            width: 210mm;
+            height: 297mm;
+            margin: 0;
+            padding: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            overflow: hidden;
+        }}
+        
+        .template-base {{
+            width: 210mm !important;
+            height: 297mm !important;
+            margin: 0 !important;
+            padding: 20mm !important;  /* Your content padding */
+            position: absolute;
+            top: 0;
+            left: 0;
+            box-sizing: border-box;
+            overflow: hidden;
         }}
         
         /* Additional captured styles */
@@ -383,10 +404,9 @@ def create_enhanced_pdf_html(content, template, captured_styles=''):
     
     return f"""
     <!DOCTYPE html>
-    <html lang="en">
+    <html>
     <head>
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Carousel PDF - {template}</title>
         {complete_template_styles}
     </head>
