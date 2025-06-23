@@ -406,8 +406,8 @@ def create_enhanced_pdf_html(content, template, captured_styles=''):
         /* PDF PAGE CONTROL - CUSTOM SIZE */
         @page {{
             size: 1080px 1350px;
-            margin: 0;
-            padding: 0;
+            margin: 8px;
+            padding: 0px;
         }}
         
         * {{
@@ -419,7 +419,7 @@ def create_enhanced_pdf_html(content, template, captured_styles=''):
         html, body {{
             width: 1080px;
             margin: 0 !important;
-            padding: 0 !important;
+            padding: 0px !important;
             font-family: 'Inter', sans-serif;
         }}
         
@@ -456,6 +456,7 @@ def create_enhanced_pdf_html(content, template, captured_styles=''):
             margin: 10px 0 !important;
             object-fit: contain !important;
             border-radius: 16px !important;  /* Match your style */
+            position: absolute;
         }}
         
         p, li {{
