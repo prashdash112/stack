@@ -2199,80 +2199,111 @@ font-family:'Kalam', sans-serif !important;
         
 
         async function downloadPDF() {
-            const preview = document.getElementById('preview');
-            
-            if (!preview.innerHTML.trim()) {
-                alert('Please add some content before downloading!');
-                return;
-            }
-            
+    const preview = document.getElementById('preview');
+    
+    if (!preview.innerHTML.trim()) {
+        alert('Please add some content before downloading!');
+        return;
+    }
+    
+    try {
+        // Show loading indicator
+        const originalText = 'Download PDF';
+        const downloadBtn = document.querySelector('[onclick="downloadPDF()"]');
+        if (downloadBtn) {
+            downloadBtn.textContent = 'Generating PDF...';
+            downloadBtn.disabled = true;
+        }
+        
+        // Get the raw content
+        const rawContent = preview.innerHTML;
+        
+        // Capture all current styles from the page
+        const allStyles = [];
+        
+        // Get all stylesheets
+        for (let i = 0; i < document.styleSheets.length; i++) {
             try {
-                // Show loading indicator
-                const originalText = 'Download PDF';
-                const downloadBtn = document.querySelector('[onclick="downloadPDF()"]');
-                if (downloadBtn) {
-                    downloadBtn.textContent = 'Generating PDF...';
-                    downloadBtn.disabled = true;
+                const styleSheet = document.styleSheets[i];
+                if (styleSheet.cssRules) {
+                    for (let j = 0; j < styleSheet.cssRules.length; j++) {
+                        allStyles.push(styleSheet.cssRules[j].cssText);
+                    }
                 }
-                
-                // Get the raw content (before markdown parsing if applicable)
-                const rawContent = preview.innerHTML;
-                
-                // Send request to backend for PDF generation
-                const response = await fetch('/generate-pdf', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        content: rawContent,
-                        template: currentTemplate || 'tech-neural'
-                    })
-                });
-                
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    throw new Error(`Server error (${response.status}): ${errorText}`);
-                }
-                
-                const result = await response.json();
-                
-                if (!result.success) {
-                    throw new Error(result.error || 'PDF generation failed');
-                }
-                
-                // Convert base64 to blob and download
-                const pdfBlob = base64ToBlob(result.pdf_data, 'application/pdf');
-                const downloadUrl = URL.createObjectURL(pdfBlob);
-                
-                // Create download link and trigger download
-                const downloadLink = document.createElement('a');
-                downloadLink.href = downloadUrl;
-                downloadLink.download = result.filename;
-                downloadLink.style.display = 'none';
-                
-                document.body.appendChild(downloadLink);
-                downloadLink.click();
-                document.body.removeChild(downloadLink);
-                
-                // Clean up URL
-                URL.revokeObjectURL(downloadUrl);
-                
-                console.log('PDF downloaded successfully');
-                
-            } catch (error) {
-                console.error('Error generating PDF:', error);
-                alert(`Error generating PDF: ${error.message}`);
-            } finally {
-                // Reset button state
-                const downloadBtn = document.querySelector('[onclick="downloadPDF()"]');
-                if (downloadBtn) {
-                    downloadBtn.textContent = originalText;
-                    downloadBtn.disabled = false;
-                }
+            } catch (e) {
+                // Handle CORS issues with external stylesheets
+                console.log('Could not access stylesheet:', e);
             }
         }
+        
+        // Get inline styles from style tags
+        const styleTags = document.querySelectorAll('style');
+        styleTags.forEach(tag => {
+            allStyles.push(tag.innerHTML);
+        });
+        
+        // Combine all styles
+        const combinedStyles = allStyles.join('\n');
+        
+        console.log('Captured styles length:', combinedStyles.length);
+        console.log('Current template:', currentTemplate);
+        
+        // Send request to backend for PDF generation
+        const response = await fetch('/generate-pdf', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                content: rawContent,
+                template: currentTemplate || 'tech-neural',
+                styles: combinedStyles  // Send captured styles
+            })
+        });
+        
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Server error (${response.status}): ${errorText}`);
+        }
+        
+        const result = await response.json();
+        
+        if (!result.success) {
+            throw new Error(result.error || 'PDF generation failed');
+        }
+        
+        // Convert base64 to blob and download
+        const pdfBlob = base64ToBlob(result.pdf_data, 'application/pdf');
+        const downloadUrl = URL.createObjectURL(pdfBlob);
+        
+        // Create download link and trigger download
+        const downloadLink = document.createElement('a');
+        downloadLink.href = downloadUrl;
+        downloadLink.download = result.filename;
+        downloadLink.style.display = 'none';
+        
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+        
+        // Clean up URL
+        URL.revokeObjectURL(downloadUrl);
+        
+        console.log('PDF downloaded successfully');
+        
+    } catch (error) {
+        console.error('Error generating PDF:', error);
+        alert(`Error generating PDF: ${error.message}`);
+    } finally {
+        // Reset button state
+        const downloadBtn = document.querySelector('[onclick="downloadPDF()"]');
+        if (downloadBtn) {
+            downloadBtn.textContent = originalText;
+            downloadBtn.disabled = false;
+        }
+    }
+}
 
         // Helper function to convert base64 to blob
         function base64ToBlob(base64Data, contentType = '') {
