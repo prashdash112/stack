@@ -355,7 +355,7 @@ def create_enhanced_pdf_html(content, template, captured_styles=''):
         /* PDF PAGE CONTROL - CRITICAL */
         @page {{
             size: A4;
-            margin: 0mm;  /* Remove all default margins */
+            margin: 0mm;
             padding: 0mm;
         }}
         
@@ -367,34 +367,44 @@ def create_enhanced_pdf_html(content, template, captured_styles=''):
         
         html, body {{
             width: 210mm;
-            height: 297mm;
             margin: 0 !important;
             padding: 0 !important;
-            overflow: hidden;
             font-family: 'Inter', sans-serif;
+            /* REMOVED: height and overflow hidden */
         }}
         
         .pdf-container {{
             width: 210mm;
-            height: 297mm;
             margin: 0;
             padding: 0;
-            position: absolute;
-            top: 0;
-            left: 0;
-            overflow: hidden;
+            position: relative;  /* Changed from absolute */
+            /* REMOVED: height and overflow hidden */
         }}
         
         .template-base {{
             width: 210mm !important;
-            height: 297mm !important;
+            min-height: 297mm !important;  /* Changed to min-height */
             margin: 0 !important;
-            padding: 20mm !important;  /* Your content padding */
-            position: absolute;
-            top: 0;
-            left: 0;
+            padding: 20mm !important;
+            position: relative;  /* Changed from absolute */
             box-sizing: border-box;
-            overflow: hidden;
+            /* REMOVED: overflow hidden */
+            page-break-inside: auto;  /* Allow page breaks */
+        }}
+        
+        /* PAGE BREAK CONTROLS */
+        h1, h2, h3, h4, h5, h6 {{
+            page-break-after: avoid;
+            page-break-inside: avoid;
+        }}
+        
+        p, li {{
+            orphans: 3;
+            widows: 3;
+        }}
+        
+        table, pre, blockquote {{
+            page-break-inside: avoid;
         }}
         
         /* Additional captured styles */
