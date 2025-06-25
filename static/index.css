@@ -22,7 +22,8 @@ body {
     width: 100%;
     height: 100%;
     z-index: -2;
-    background: linear-gradient(45deg, #0a0a0a, #1a1a2e, #5b1878, #0f3460);
+    /* background: linear-gradient(45deg, #0a0a0a, #1a1a2e, #5b1878, #0f3460); */
+    background: linear-gradient(45deg, #0a0a0a, #1a1a2e, #16213e, #092240);
     background-size: 400% 400%;
 }
 
@@ -1592,7 +1593,7 @@ body {
 /* Left sidebar */
 .left-sidebar {
     /* background: rgba(10, 10, 30, 0.9); */
-    background: linear-gradient(45deg, #0a0a0a, #1a1a2e, #2a0b37, #041325);
+    background: linear-gradient(45deg, #0a0a0a, #1a1a2e, #0f1528, #000811);
     backdrop-filter: blur(20px);
     border-right: 1px solid rgba(255, 255, 255, 0.1);
     display: flex;
