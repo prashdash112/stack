@@ -522,10 +522,15 @@ def create_enhanced_pdf_html(content, template, captured_styles=''):
             
             @bottom-center {{
                 content: "Generated with GeniusPost AI";
-                font-family: 'Inter', sans-serif;
-                font-size: 10px;
-                color: #666;
-                margin-top: 10px;
+                font-family: 'Space Grotesk', sans-serif;
+                font-size: 18px;
+                font-weight: 700;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                letter-spacing: 1px;
+                margin-top: 15px;
+                text-transform: uppercase;
             }}
         }}
         
@@ -551,7 +556,7 @@ def create_enhanced_pdf_html(content, template, captured_styles=''):
         
         .template-base {{
             width: 1064px !important;
-            min-height: 1334px !important;  /* ✅ Keep original height since only first page has larger bottom margin */
+            min-height: 1324px !important;  /* ✅ Keep original height since only first page has larger bottom margin */
             margin: 0 !important;
             padding: 30px !important;
             position: relative;
