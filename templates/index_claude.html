@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GeniusPost AI</title>
     <link rel="stylesheet" href="../static/index.css">
+    <link rel="stylesheet" href="../static/feedback_widget.css"> 
     
     <!-- External Dependencies -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -13,7 +14,6 @@
 </head>
 <body>
     <div class="bg-animation"></div>
-    <div class="particles" id="particles"></div>
     
     <!-- NEW: Main layout wrapper -->
     <div class="main-layout">
@@ -96,7 +96,60 @@
     </div>
 </div>
 
-<!-- Main Workspace -->
+<!-- Feedback Widget -->
+<div class="feedback-widget" id="feedbackWidget">
+    <div class="feedback-content">
+        <div class="feedback-header">
+            <h3>🎉 Thanks for using GeniusPost AI!</h3>
+            <p>Help us make it even better</p>
+            <button class="feedback-close-btn" id="closeFeedback">✕</button>
+        </div>
+        
+        <!-- Question 1: Star Rating -->
+        <div class="feedback-question">
+            <label>How would you rate your experience?</label>
+            <div class="star-rating" id="starRating">
+                <span class="star" data-rating="1">⭐</span>
+                <span class="star" data-rating="2">⭐</span>
+                <span class="star" data-rating="3">⭐</span>
+                <span class="star" data-rating="4">⭐</span>
+                <span class="star" data-rating="5">⭐</span>
+            </div>
+        </div>
+        
+        <!-- Question 2: Improvement Suggestion -->
+        <div class="feedback-question">
+            <label for="improvementInput">What could make GeniusPost AI 100x more useful?</label>
+            <textarea 
+                id="improvementInput" 
+                class="feedback-textarea"
+                placeholder="Your suggestions help us improve..."
+                maxlength="500"
+            ></textarea>
+        </div>
+        
+        <!-- Question 3: Recommendation -->
+        <div class="feedback-question">
+            <label>Would you recommend GeniusPost AI to others?</label>
+            <div class="recommendation-buttons">
+                <button class="recommend-btn" data-recommend="true">👍 Yes</button>
+                <button class="recommend-btn" data-recommend="false">👎 No</button>
+            </div>
+        </div>
+        
+        <!-- Submit Button -->
+        <div class="feedback-actions">
+            <button class="feedback-submit-btn" id="submitFeedback">
+                <span class="submit-text">Submit Feedback</span>
+                <div class="submit-spinner" id="submitSpinner"></div>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Feedback Overlay -->
+<div class="feedback-overlay" id="feedbackOverlay"></div>
+
 <!-- Main Workspace -->
 <div class="main-workspace-tabbed">
     <!-- Tab Navigation -->
@@ -201,18 +254,7 @@
         let isUpdatingPreview = false;
 
         // Initialize particles
-        function createParticles() {
-            const particlesContainer = document.getElementById('particles');
-            
-            for (let i = 0; i < 50; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.animationDelay = Math.random() * 20 + 's';
-                particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
-                particlesContainer.appendChild(particle);
-            }
-        }
+        
         function addRequiredStyles() {
             const style = document.createElement('style');
             style.textContent = `
@@ -233,15 +275,6 @@
                     z-index: 1000;
                 }
                 
-                .particle {
-                    position: absolute;
-                    width: 4px;
-                    height: 4px;
-                    background: rgba(255, 255, 255, 0.1);
-                    border-radius: 50%;
-                    pointer-events: none;
-                    animation: float 20s infinite linear;
-                }
                 
                 @keyframes float {
                     0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
@@ -349,6 +382,8 @@ function createShortImageUrl(file, callback) {
             });
     });
 }
+        
+
         function initializeDownloadActions() {
             // Download infographic
             document.getElementById('downloadInfographic').addEventListener('click', async () => {
@@ -362,6 +397,9 @@ function createShortImageUrl(file, callback) {
                 templateFrame.contentWindow.postMessage({
                     action: 'downloadImage'
                 }, '*');
+                
+                // Trigger feedback widget on first download
+                triggerFeedbackOnFirstDownload();
             });
 
             // Download PDF carousel
@@ -375,7 +413,10 @@ function createShortImageUrl(file, callback) {
                 // Trigger download from iframe
                 templateFrame.contentWindow.postMessage({ 
                     action: 'downloadPDF' 
-                }, '*'); 
+                }, '*');
+                
+                // Trigger feedback widget on first download
+                triggerFeedbackOnFirstDownload();
             });
         }
         function cleanAndFormatHTML(html) {
@@ -614,19 +655,6 @@ function createShortImageUrl(file, callback) {
             card.addEventListener('click', e => e.stopPropagation());
         }
 
-        // Mouse effects
-        function initializeMouseEffects() {
-            document.addEventListener('mousemove', function(e) {
-                const particles = document.querySelectorAll('.particle');
-                particles.forEach(particle => {
-                    const speed = Math.random() * 2 + 1;
-                    const x = (e.clientX * speed) / 100;
-                    const y = (e.clientY * speed) / 100;
-                    
-                    particle.style.transform = `translateX(${x}px) translateY(${y}px)`;
-                });
-            });
-        }
 
         // Action tracking
         function trackAction(action) {
@@ -763,18 +791,186 @@ function updateEmptyStateHint() {
     }
 }
 
+// Feedback Widget Management
+let feedbackData = {
+    starRating: 0,
+    improvementSuggestion: '',
+    wouldRecommend: null
+};
+
+let hasSubmittedFeedback = false;
+let firstDownloadCompleted = false;
+
+function initializeFeedbackWidget() {
+    // Check if user has already submitted feedback
+    checkFeedbackStatus();
+    
+    // Star rating functionality
+    const stars = document.querySelectorAll('.star');
+    stars.forEach((star, index) => {
+        star.addEventListener('click', () => {
+            feedbackData.starRating = index + 1;
+            updateStarDisplay();
+        });
+        
+        star.addEventListener('mouseenter', () => {
+            highlightStars(index + 1);
+        });
+    });
+    
+    document.getElementById('starRating').addEventListener('mouseleave', () => {
+        updateStarDisplay();
+    });
+    
+    // Recommendation buttons
+    document.querySelectorAll('.recommend-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const recommend = btn.dataset.recommend === 'true';
+            feedbackData.wouldRecommend = recommend;
+            
+            // Update button states
+            document.querySelectorAll('.recommend-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+        });
+    });
+    
+    // Improvement suggestion
+    document.getElementById('improvementInput').addEventListener('input', (e) => {
+        feedbackData.improvementSuggestion = e.target.value;
+    });
+    
+    // Close buttons
+    document.getElementById('closeFeedback').addEventListener('click', hideFeedbackWidget);
+    document.getElementById('feedbackOverlay').addEventListener('click', hideFeedbackWidget);
+    
+    // Submit button
+    document.getElementById('submitFeedback').addEventListener('click', submitFeedback);
+}
+
+function updateStarDisplay() {
+    const stars = document.querySelectorAll('.star');
+    stars.forEach((star, index) => {
+        if (index < feedbackData.starRating) {
+            star.classList.add('active');
+        } else {
+            star.classList.remove('active');
+        }
+    });
+}
+
+function highlightStars(count) {
+    const stars = document.querySelectorAll('.star');
+    stars.forEach((star, index) => {
+        if (index < count) {
+            star.classList.add('active');
+        } else {
+            star.classList.remove('active');
+        }
+    });
+}
+
+function showFeedbackWidget() {
+    if (hasSubmittedFeedback) return;
+    
+    document.getElementById('feedbackOverlay').classList.add('show');
+    document.getElementById('feedbackWidget').classList.add('show');
+}
+
+function hideFeedbackWidget() {
+    document.getElementById('feedbackOverlay').classList.remove('show');
+    document.getElementById('feedbackWidget').classList.remove('show');
+}
+
+async function submitFeedback() {
+    // Validate required fields
+    if (feedbackData.starRating === 0) {
+        alert('Please select a star rating');
+        return;
+    }
+    
+    if (feedbackData.wouldRecommend === null) {
+        alert('Please select if you would recommend GeniusPost AI');
+        return;
+    }
+    
+    const submitBtn = document.getElementById('submitFeedback');
+    submitBtn.classList.add('loading');
+    
+    try {
+        const response = await fetch('/submit_feedback', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                star_rating: feedbackData.starRating,
+                improvement_suggestion: feedbackData.improvementSuggestion,
+                would_recommend: feedbackData.wouldRecommend
+            })
+        });
+        
+        const result = await response.json();
+        
+        if (response.ok) {
+            hasSubmittedFeedback = true;
+            showFeedbackSuccess();
+        } else {
+            alert('Error: ' + result.error);
+        }
+    } catch (error) {
+        console.error('Feedback submission error:', error);
+        alert('Failed to submit feedback. Please try again.');
+    } finally {
+        submitBtn.classList.remove('loading');
+    }
+}
+
+function showFeedbackSuccess() {
+    const widget = document.getElementById('feedbackWidget');
+    widget.innerHTML = `
+        <div class="feedback-content" style="text-align: center; padding: 20px;">
+            <div style="font-size: 48px; margin-bottom: 15px;">🎉</div>
+            <h3 style="color: white; margin-bottom: 10px;">Thank You!</h3>
+            <p style="color: rgba(255, 255, 255, 0.7); margin-bottom: 20px;">
+                Your feedback helps us make GeniusPost AI even better.
+            </p>
+            <button class="feedback-submit-btn" onclick="hideFeedbackWidget()">
+                Continue Creating
+            </button>
+        </div>
+    `;
+    
+    setTimeout(hideFeedbackWidget, 3000);
+}
+
+async function checkFeedbackStatus() {
+    try {
+        const response = await fetch('/check_feedback_status');
+        const result = await response.json();
+        hasSubmittedFeedback = result.has_submitted;
+    } catch (error) {
+        console.error('Error checking feedback status:', error);
+    }
+}
+
+function triggerFeedbackOnFirstDownload() {
+    if (!firstDownloadCompleted && !hasSubmittedFeedback) {
+        firstDownloadCompleted = true;
+        // Show feedback widget after a short delay
+        setTimeout(showFeedbackWidget, 1500);
+    }
+}
 
 document.addEventListener('DOMContentLoaded', function() {
     addRequiredStyles();
-    createParticles();
     initializePlaceholder();
     initializeProfile();
-    initializeMouseEffects();
     initializeTabSystem();
     initializeImageUpload();
     initializeTemplateSelection();
     initializeDownloadActions();
     initializeSamplePrompts();
+    initializeFeedbackWidget();
 
     // AI Widget functionality
     document.getElementById('aiGenerateBtn').addEventListener('click', showAIWidget);

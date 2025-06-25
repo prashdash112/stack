@@ -68,8 +68,25 @@ class UserMetrics(db.Model):
         current = getattr(self, attr) or 0
         setattr(self, attr, current + 1)
         self.updated_at = datetime.now(timezone.utc)
-########################################################
 
+########################User Feedback ################################
+class UserFeedback(db.Model):
+    __tablename__ = "user_feedback"
+    
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.String(50), db.ForeignKey("user.id"), nullable=False)
+    username = db.Column(db.String(150), nullable=False)
+    email = db.Column(db.String(150), nullable=False)
+    star_rating = db.Column(db.Integer, nullable=False)  # 1-5
+    improvement_suggestion = db.Column(db.Text, nullable=True)  # What could make it 100x better
+    would_recommend = db.Column(db.Boolean, nullable=False)  # True=Yes, False=No
+    submitted_at = db.Column(db.DateTime, default=datetime.now(timezone.utc), nullable=False)
+    
+    user = db.relationship("User", backref="feedback")
+    
+    def __repr__(self):
+        return f"<UserFeedback user_id={self.user_id} rating={self.star_rating}>"
+########################################################
 # Create the database tables if they don't exist
 with app.app_context():
     db.create_all()
@@ -286,65 +303,53 @@ def track_action():
 
     return jsonify({"status": "ok"})
 
+#####################submit_feedback route#############################
+@app.route("/submit_feedback", methods=["POST"])
+@login_required
+def submit_feedback():
+    try:
+        data = request.get_json() or {}
+        
+        # Validate required fields
+        star_rating = data.get("star_rating")
+        would_recommend = data.get("would_recommend")
+        improvement_suggestion = data.get("improvement_suggestion", "").strip()
+        
+        if not star_rating or star_rating not in [1, 2, 3, 4, 5]:
+            return jsonify({"error": "Valid star rating (1-5) is required"}), 400
+            
+        if would_recommend not in [True, False]:
+            return jsonify({"error": "Recommendation answer is required"}), 400
+        
+        # Create feedback record
+        feedback = UserFeedback(
+            user_id=current_user.id,
+            username=current_user.name,
+            email=current_user.email,
+            star_rating=star_rating,
+            improvement_suggestion=improvement_suggestion if improvement_suggestion else None,
+            would_recommend=would_recommend
+        )
+        
+        db.session.add(feedback)
+        db.session.commit()
+        
+        return jsonify({"status": "success", "message": "Thank you for your feedback!"})
+        
+    except Exception as e:
+        print(f"Feedback submission error: {str(e)}")
+        return jsonify({"error": "Failed to submit feedback"}), 500
+
+@app.route("/check_feedback_status", methods=["GET"])
+
+@login_required
+def check_feedback_status():
+    """Check if user has already submitted feedback"""
+    existing_feedback = UserFeedback.query.filter_by(user_id=current_user.id).first()
+    return jsonify({"has_submitted": existing_feedback is not None})
+
 ##################################################
-
-# Add this route to your existing app.py
-from flask import Flask, request, jsonify, send_file
-from weasyprint import HTML, CSS
-from weasyprint.text.fonts import FontConfiguration
-import tempfile
-import os
-import base64
-from io import BytesIO
-import markdown
-import time
-import requests
-
 # Replace your existing /generate-pdf endpoint with this enhanced version
-@app.route('/generate-pdf', methods=['POST'])
-# def generate_pdf():
-#     try:
-#         data = request.get_json()
-#         content = data.get('content', '')
-#         template = data.get('template', 'tech-neural')
-#         styles = data.get('styles', '')  # New: capture styles from frontend
-        
-#         # Create the complete HTML document with all styles
-#         full_html = create_enhanced_pdf_html(content, template, styles)
-        
-#         # Generate PDF using WeasyPrint
-#         font_config = FontConfiguration()
-        
-#         # Create temporary file for PDF
-#         with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as tmp_file:
-#             HTML(string=full_html, base_url=request.url_root).write_pdf(
-#                 tmp_file.name,
-#                 font_config=font_config,
-#                 optimize_images=True,
-#                 presentational_hints=True  # This helps preserve more styling
-#             )
-#             tmp_file_path = tmp_file.name
-        
-#         # Read PDF content
-#         with open(tmp_file_path, 'rb') as pdf_file:
-#             pdf_content = pdf_file.read()
-        
-#         # Clean up temporary file
-#         os.unlink(tmp_file_path)
-        
-#         # Return PDF as base64 encoded string
-#         pdf_base64 = base64.b64encode(pdf_content).decode('utf-8')
-        
-#         return jsonify({
-#             'success': True,
-#             'pdf_data': pdf_base64,
-#             'filename': f'carousel-{template}-{int(time.time())}.pdf'
-#         })
-        
-#     except Exception as e:
-#         print(f"PDF generation error: {str(e)}")
-#         return jsonify({'success': False, 'error': str(e)}), 500
-
 @app.route('/generate-pdf', methods=['POST'])
 def generate_pdf():
     try:

@@ -1,0 +1,219 @@
+/* Feedback Widget Styles */
+.feedback-widget {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.8);
+    background: rgba(15, 15, 15, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 30px;
+    width: 480px;
+    max-width: 90vw;
+    max-height: 90vh;
+    overflow-y: auto;
+    z-index: 10000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: 'Inter', sans-serif;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+}
+
+.feedback-widget.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.feedback-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+    z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.feedback-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.feedback-header {
+    text-align: center;
+    margin-bottom: 25px;
+    position: relative;
+}
+
+.feedback-header h3 {
+    color: white;
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.feedback-header p {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+}
+
+.feedback-close-btn {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 16px;
+}
+
+.feedback-close-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+.feedback-question {
+    margin-bottom: 20px;
+}
+
+.feedback-question label {
+    display: block;
+    color: white;
+    font-weight: 500;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.star-rating {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 5px;
+}
+
+.star {
+    font-size: 24px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    opacity: 0.3;
+}
+
+.star:hover,
+.star.active {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.feedback-textarea {
+    width: 100%;
+    min-height: 80px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 12px;
+    color: white;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    resize: vertical;
+    transition: all 0.2s ease;
+}
+
+.feedback-textarea:focus {
+    outline: none;
+    border-color: #3b82f6;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.feedback-textarea::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.recommendation-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.recommend-btn {
+    flex: 1;
+    padding: 12px 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 14px;
+}
+
+.recommend-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-1px);
+}
+
+.recommend-btn.selected {
+    background: #3b82f6;
+    border-color: #3b82f6;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.feedback-actions {
+    margin-top: 25px;
+    text-align: center;
+}
+
+.feedback-submit-btn {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    border: none;
+    color: white;
+    padding: 12px 30px;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    min-width: 140px;
+}
+
+.feedback-submit-btn:hover:not(.loading) {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+}
+
+.feedback-submit-btn.loading .submit-text {
+    opacity: 0;
+}
+
+.submit-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top: 2px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    display: none;
+}
+
+.feedback-submit-btn.loading .submit-spinner {
+    display: block;
+}
+
+@keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
