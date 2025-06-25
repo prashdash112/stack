@@ -518,19 +518,21 @@ def create_enhanced_pdf_html(content, template, captured_styles=''):
         
         /* ✅ FIRST PAGE ONLY - Footer */
         @page :first {{
-            margin: 8px 8px 40px 8px;  /* ✅ Bottom margin increased for footer on first page only */
+            margin: 8px 8px 20px 8px; 
             
             @bottom-center {{
                 content: "Generated with GeniusPost AI";
                 font-family: 'Space Grotesk', sans-serif;
                 font-size: 18px;
                 font-weight: 700;
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
+                color: #2c3e50;
+                background: rgba(255,255,255,0.9);
+                padding: 8px 16px;
+                border-radius: 20px;
                 letter-spacing: 1px;
-                margin-top: 15px;
                 text-transform: uppercase;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+                margin-top: 15px;
             }}
         }}
         
