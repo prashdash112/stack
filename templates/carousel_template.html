@@ -2132,6 +2132,65 @@ font-family:'Kalam', sans-serif !important;
             smartypants: true
         });
 
+        // async function downloadImage() {
+        //     const preview = document.getElementById('preview');
+            
+        //     if (!preview.innerHTML.trim()) {
+        //         alert('Please add some content before downloading!');
+        //         return;
+        //     }
+            
+        //     try {
+        //         // Create a temporary container for the image
+        //         const tempContainer = document.createElement('div');
+        //         tempContainer.style.position = 'absolute';
+        //         tempContainer.style.left = '-9999px';
+        //         tempContainer.style.width = '1080px'; 
+        //         tempContainer.innerHTML = preview.outerHTML;
+        //         document.body.appendChild(tempContainer);
+                
+        //         // Set background color based on template
+        //         let backgroundColor = '#ffffff';
+        //         if (currentTemplate.includes('tech-neural')) backgroundColor = '#667eea';
+        //         else if (currentTemplate.includes('tech-quantum')) backgroundColor = '#0a0a0a';
+        //         else if (currentTemplate.includes('product-modern')) backgroundColor = '#ff6b6b';
+        //         else if (currentTemplate.includes('product-premium')) backgroundColor = '#2c3e50';
+        //         else if (currentTemplate.includes('finance-gold')) backgroundColor = '#f7931e';
+        //         else if (currentTemplate.includes('finance-elite')) backgroundColor = '#1e3c72';
+        //         else if (currentTemplate.includes('health-care')) backgroundColor = '#56ab2f';
+        //         else if (currentTemplate.includes('health-medical')) backgroundColor = '#0f4c75';
+        //         else if (currentTemplate.includes('saas-modern')) backgroundColor = '#667eea';
+        //         else if (currentTemplate.includes('saas-enterprise')) backgroundColor = '#2c3e50';
+        //         else if (currentTemplate.includes('dark-neon')) backgroundColor = '#0f0f23';
+        //         else if (currentTemplate.includes('sketchy-minimal')) backgroundColor = '#fefefe';
+        //         else if (currentTemplate.includes('executive-board')) backgroundColor = '#f8f9fa';
+        //         else if (currentTemplate.includes('gradient-pro')) backgroundColor = '#667eea';
+        //         else if (currentTemplate.includes('retro')) backgroundColor = '#ff6b35';
+        //         else if (currentTemplate.includes('glass-morph')) backgroundColor = '#a8edea';
+
+        //         const canvas = await html2canvas(tempContainer.firstChild, {
+        //             backgroundColor: backgroundColor,
+        //             scale: 2,
+        //             useCORS: true,
+        //             allowTaint: true,
+        //             width: 1080,
+        //             height: null,
+        //             logging: false
+        //         });
+                
+        //         document.body.removeChild(tempContainer);
+                
+        //         // Download the image
+        //         const link = document.createElement('a');
+        //         link.download = `carousel-${currentTemplate}-${Date.now()}.png`;
+        //         link.href = canvas.toDataURL('image/png');
+        //         link.click();
+                
+        //     } catch (error) {
+        //         console.error('Error generating image:', error);
+        //         alert('Error generating image. Please try again.');
+        //     }
+        // }
         async function downloadImage() {
             const preview = document.getElementById('preview');
             
@@ -2147,6 +2206,28 @@ font-family:'Kalam', sans-serif !important;
                 tempContainer.style.left = '-9999px';
                 tempContainer.style.width = '1080px'; 
                 tempContainer.innerHTML = preview.outerHTML;
+                
+                // ✅ ADD WATERMARK - shortest way
+                const watermark = document.createElement('div');
+                watermark.innerHTML = 'GENERATED WITH GENIUSPOST AI';
+                watermark.style.cssText = `
+                    position: absolute; 
+                    bottom: 20px; 
+                    left: 50%; 
+                    transform: translateX(-50%); 
+                    font-family: 'Space Grotesk', sans-serif; 
+                    font-size: 18px; 
+                    font-weight: 700; 
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                    -webkit-background-clip: text; 
+                    -webkit-text-fill-color: transparent; 
+                    letter-spacing: 1px; 
+                    text-transform: uppercase; 
+                    z-index: 9999;
+                `;
+                tempContainer.firstChild.style.position = 'relative';
+                tempContainer.firstChild.appendChild(watermark);
+                
                 document.body.appendChild(tempContainer);
                 
                 // Set background color based on template
