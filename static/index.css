@@ -333,10 +333,10 @@ body {
 
 
 
-@keyframes spin {
+/* @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
-}
+} */
 
 /* Benefits Section */
 .benefits-section {
@@ -1203,7 +1203,7 @@ body {
 }
 
 .prompt-input::placeholder {
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 0.5); 
 }
 
 .widget-actions {
@@ -1211,7 +1211,7 @@ body {
     gap: 10px;
     margin-top: 15px;
 }
-
+ /* AI prompt widget button */
 .generate-btn {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
@@ -1221,8 +1221,12 @@ body {
     cursor: pointer;
     transition: all 0.3s ease;
     font-weight: 600;
-    position: relative; /* ADD THIS LINE */
+    position: relative;
     flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px; 
 }
 
 .generate-btn:hover {
@@ -1234,6 +1238,17 @@ body {
     pointer-events: none;
 }
 
+.btn-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.3s ease;
+}
+
+.generate-btn.loading .btn-text { 
+    display: none; 
+}
+
 .loading-spinner {
     display: none;
     width: 20px;
@@ -1242,15 +1257,22 @@ body {
     border-top: 2px solid white;
     border-radius: 50%;
     animation: spin 1s linear infinite;
-    margin: 0 auto;
-    position: relative;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+} 
+
+.generate-btn.loading .loading-spinner {
+    display: block;
+} 
+
+@keyframes spin { 
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
+/* Ai-prompt widget button end  */
 .cancel-btn {
     background: rgba(255, 255, 255, 0.1);
     color: white;
@@ -1324,11 +1346,6 @@ body {
     position: relative;
     overflow: hidden;
 }
-
-.generate-btn.loading .loading-spinner {
-    display: block;
-}
-
 
 /* SLEEK AI TOOLBAR */
 .ai-toolbar {
@@ -1601,12 +1618,8 @@ body {
     }
 }
 
-/* Loading state improvements */
-.generate-btn.loading .btn-text {
-    opacity: 0;
-}
 
-/* AI Prompt Widget - FIXED VERSION */
+/* AI Prompt Widget - FIXED VERSION */ 
 .ai-prompt-widget {
     position: fixed;
     top: 50%;
