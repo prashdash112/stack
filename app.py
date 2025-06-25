@@ -404,6 +404,107 @@ def generate_pdf():
 def create_enhanced_pdf_html(content, template, captured_styles=''): 
     """Create complete HTML document with all captured styles"""
     
+    # complete_template_styles = f"""
+    # <style>
+    #     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+        
+    #     /* PDF PAGE CONTROL - CUSTOM SIZE */
+    #     @page {{
+    #         size: 1080px 1350px;
+    #         margin: 8px;  /* ✅ 8px margins on all sides */
+    #         padding: 0px;
+    #     }}
+        
+    #     * {{
+    #         box-sizing: border-box;
+    #         margin: 0;
+    #         padding: 0;
+    #     }}
+        
+    #     html, body {{
+    #         width: 1064px;  /* ✅ UPDATED: 1080 - 16px (8px margins × 2) */
+    #         margin: 0 !important;
+    #         padding: 0px !important;
+    #         font-family: 'Inter', sans-serif;
+    #     }}
+        
+    #     .pdf-container {{
+    #         width: 1064px;  /* ✅ UPDATED: Match body width */
+    #         margin: 0;
+    #         padding: 0;
+    #         position: relative;
+    #     }}
+        
+    #     .template-base {{
+    #         width: 1064px !important;  /* ✅ UPDATED: Match container width */
+    #         min-height: 1334px !important;  /* ✅ UPDATED: 1350 - 16px margins */
+    #         margin: 0 !important;
+    #         padding: 30px !important;  /* ✅ Internal padding for content spacing */
+    #         position: relative;
+    #         box-sizing: border-box;
+    #         page-break-inside: auto;
+    #     }}
+        
+    #     /* PAGE BREAK CONTROLS */
+    #     h1, h2, h3, h4, h5, h6 {{
+    #         page-break-after: avoid;
+    #         page-break-inside: avoid;
+    #         margin-top: 0;  /* ✅ Prevent extra top spacing */
+    #     }}
+
+    #     /* ✅ IMAGE HANDLING FOR PDF - PROPERLY CENTERED */
+    #     img {{
+    #         max-width: 1004px !important;   /* ✅ UPDATED: 1064 - 60px for padding */
+    #         width: 100% !important;         /* ✅ Responsive width */
+    #         height: auto !important;
+    #         display: block !important;
+    #         page-break-inside: avoid;
+    #         margin: 20px auto !important;   /* ✅ Center with top/bottom margins */
+    #         object-fit: contain !important;
+    #         border-radius: 16px !important;
+    #         position: relative !important;  /* ✅ Relative positioning */
+    #     }}
+        
+    #     /* ✅ Specific spacing for content elements */
+    #     .template-base > *:first-child {{
+    #         margin-top: 0 !important;  /* Remove top margin from first element */
+    #     }}
+        
+    #     .template-base > h1:first-child,
+    #     .template-base > h2:first-child,
+    #     .template-base > h3:first-child {{
+    #         padding-top: 10px;  /* Add some breathing room from top */
+    #     }}
+        
+    #     p, li {{
+    #         orphans: 3;
+    #         widows: 3;
+    #     }}
+        
+    #     table, pre, blockquote {{
+    #         page-break-inside: avoid;
+    #         margin: 15px 0;  /* ✅ Consistent spacing */
+    #     }}
+        
+    #     /* ✅ Content spacing improvements */
+    #     p {{
+    #         margin-bottom: 12px;
+    #     }}
+        
+    #     h1, h2, h3, h4, h5, h6 {{
+    #         margin-bottom: 10px;
+    #         margin-top: 20px;
+    #     }}
+        
+    #     h1:first-child, h2:first-child, h3:first-child {{
+    #         margin-top: 0;  /* No top margin for first heading */
+    #     }}
+        
+    #     /* Additional captured styles */
+    #     {captured_styles}
+    # </style>
+    # """
+
     complete_template_styles = f"""
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
@@ -411,8 +512,21 @@ def create_enhanced_pdf_html(content, template, captured_styles=''):
         /* PDF PAGE CONTROL - CUSTOM SIZE */
         @page {{
             size: 1080px 1350px;
-            margin: 8px;  /* ✅ 8px margins on all sides */
+            margin: 8px;
             padding: 0px;
+        }}
+        
+        /* ✅ FIRST PAGE ONLY - Footer */
+        @page :first {{
+            margin: 8px 8px 40px 8px;  /* ✅ Bottom margin increased for footer on first page only */
+            
+            @bottom-center {{
+                content: "Generated with GeniusPost AI";
+                font-family: 'Inter', sans-serif;
+                font-size: 10px;
+                color: #666;
+                margin-top: 10px;
+            }}
         }}
         
         * {{
@@ -422,24 +536,24 @@ def create_enhanced_pdf_html(content, template, captured_styles=''):
         }}
         
         html, body {{
-            width: 1064px;  /* ✅ UPDATED: 1080 - 16px (8px margins × 2) */
+            width: 1064px;  /* ✅ 1080 - 16px (8px margins × 2) */
             margin: 0 !important;
             padding: 0px !important;
             font-family: 'Inter', sans-serif;
         }}
         
         .pdf-container {{
-            width: 1064px;  /* ✅ UPDATED: Match body width */
+            width: 1064px;
             margin: 0;
             padding: 0;
             position: relative;
         }}
         
         .template-base {{
-            width: 1064px !important;  /* ✅ UPDATED: Match container width */
-            min-height: 1334px !important;  /* ✅ UPDATED: 1350 - 16px margins */
+            width: 1064px !important;
+            min-height: 1334px !important;  /* ✅ Keep original height since only first page has larger bottom margin */
             margin: 0 !important;
-            padding: 30px !important;  /* ✅ Internal padding for content spacing */
+            padding: 30px !important;
             position: relative;
             box-sizing: border-box;
             page-break-inside: auto;
@@ -449,31 +563,31 @@ def create_enhanced_pdf_html(content, template, captured_styles=''):
         h1, h2, h3, h4, h5, h6 {{
             page-break-after: avoid;
             page-break-inside: avoid;
-            margin-top: 0;  /* ✅ Prevent extra top spacing */
+            margin-top: 0;
         }}
 
         /* ✅ IMAGE HANDLING FOR PDF - PROPERLY CENTERED */
         img {{
-            max-width: 1004px !important;   /* ✅ UPDATED: 1064 - 60px for padding */
-            width: 100% !important;         /* ✅ Responsive width */
+            max-width: 1004px !important;
+            width: 100% !important;
             height: auto !important;
             display: block !important;
             page-break-inside: avoid;
-            margin: 20px auto !important;   /* ✅ Center with top/bottom margins */
+            margin: 20px auto !important;
             object-fit: contain !important;
             border-radius: 16px !important;
-            position: relative !important;  /* ✅ Relative positioning */
+            position: relative !important;
         }}
         
         /* ✅ Specific spacing for content elements */
         .template-base > *:first-child {{
-            margin-top: 0 !important;  /* Remove top margin from first element */
+            margin-top: 0 !important;
         }}
         
         .template-base > h1:first-child,
         .template-base > h2:first-child,
         .template-base > h3:first-child {{
-            padding-top: 10px;  /* Add some breathing room from top */
+            padding-top: 10px;
         }}
         
         p, li {{
@@ -483,7 +597,7 @@ def create_enhanced_pdf_html(content, template, captured_styles=''):
         
         table, pre, blockquote {{
             page-break-inside: avoid;
-            margin: 15px 0;  /* ✅ Consistent spacing */
+            margin: 15px 0;
         }}
         
         /* ✅ Content spacing improvements */
@@ -497,7 +611,7 @@ def create_enhanced_pdf_html(content, template, captured_styles=''):
         }}
         
         h1:first-child, h2:first-child, h3:first-child {{
-            margin-top: 0;  /* No top margin for first heading */
+            margin-top: 0;
         }}
         
         /* Additional captured styles */
