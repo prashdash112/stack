@@ -4,7 +4,737 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GeniusPost AI - Transform Your LinkedIn Presence</title>
-    <link rel="stylesheet" href="../static/homepage.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: linear-gradient(45deg, #0a0a0a, #1a1a2e, #16213e, #0f3460);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                        radial-gradient(circle at 40% 80%, rgba(120, 219, 255, 0.3) 0%, transparent 50%);
+            animation: pulseGlow 8s ease-in-out infinite alternate;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes pulseGlow {
+            0% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        /* Floating particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            animation: float 20s linear infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Navigation */
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            animation: slideDown 1s ease-out;
+            position: relative;
+            padding-right: 4rem;
+        }
+
+        .nav-logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: #a0a0a0;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
+        }
+
+        /* Profile Dropdown */
+        .profile-container {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+        }
+
+        .profile-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid rgba(255,255,255,0.5);
+        }
+
+        .profile-card {
+            display: none;
+            position: absolute;
+            top: 120%;
+            right: 0;
+            background: #1a1a2e;
+            color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            padding: 0.5rem 1rem;
+            min-width: 140px;
+            z-index: 10;
+        }
+
+        .profile-card.visible {
+            display: block;
+        }
+
+        .profile-card-header {
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .profile-logout-btn {
+            display: block;
+            text-align: right;
+            margin-top: 0.25rem;
+            font-size: 0.85rem;
+            color: #ff6b6b;
+            text-decoration: none;
+        }
+
+        /* Zoom Section Base */
+        .zoom-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .zoom-section.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .zoom-section.zoom-out {
+            opacity: 0.3;
+            transform: scale(1.2);
+        }
+
+        /* Hero Section */
+        .hero-section {
+            text-align: center;
+            padding: 100px 0;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(102, 126, 234, 0.1);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: 25px;
+            padding: 8px 20px;
+            font-size: 0.9rem;
+            color: #667eea;
+            margin-bottom: 30px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .hero-title {
+            font-size: 4.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.1;
+        }
+
+        .hero-subtitle {
+            font-size: 1.8rem;
+            color: #ffffff;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .hero-description {
+            font-size: 1.2rem;
+            color: #cccccc;
+            margin-bottom: 50px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 50px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.4);
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        /* Content Showcase Section */
+        .showcase-section {
+            padding: 100px 0;
+        }
+
+        .showcase-title {
+            text-align: center;
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 60px;
+            color: #ffffff;
+        }
+
+        .showcase-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 60px;
+            align-items: center;
+        }
+
+        .showcase-content {
+            text-align: left;
+        }
+
+        .showcase-content h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .showcase-content p {
+            font-size: 1.1rem;
+            color: #a0a0a0;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .showcase-features {
+            list-style: none;
+        }
+
+        .showcase-features li {
+            padding: 8px 0;
+            color: #cccccc;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .showcase-features li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .showcase-visual {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(193, 18, 18, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            min-height: 400px;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .visual-placeholder {
+            text-align: center;
+            color: #667eea;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .visual-placeholder::before {
+            content: '🖼️';
+            display: block;
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        /* Features Section */
+        .features-section {
+            padding: 100px 0;
+        }
+
+        .features-title {
+            text-align: center;
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #ffffff;
+        }
+
+        .features-subtitle {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #a0a0a0;
+            margin-bottom: 60px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+
+        .feature-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #ffffff;
+        }
+
+        .feature-description {
+            color: #a0a0a0;
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+
+        /* Use Cases Section */
+        .usecases-section {
+            padding: 100px 0;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .usecases-title {
+            text-align: center;
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 60px;
+            color: #ffffff;
+        }
+
+        .usecases-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .usecase-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 15px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .usecase-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .usecase-emoji {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .usecase-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 10px;
+        }
+
+        .usecase-desc {
+            font-size: 0.9rem;
+            color: #a0a0a0;
+            line-height: 1.5;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            padding: 100px 0;
+        }
+
+        .stats-title {
+            text-align: center;
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #ffffff;
+        }
+
+        .stats-subtitle {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #a0a0a0;
+            margin-bottom: 60px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 40px 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: #cccccc;
+            font-weight: 500;
+        }
+
+        /* Testimonials Section */
+        .testimonials-section {
+            padding: 100px 0;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .testimonials-title {
+            text-align: center;
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 60px;
+            color: #ffffff;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .testimonial-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .testimonial-text {
+            font-size: 1rem;
+            color: #cccccc;
+            margin-bottom: 20px;
+            font-style: italic;
+            line-height: 1.6;
+        }
+
+        .testimonial-author {
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .testimonial-role {
+            font-size: 0.9rem;
+            color: #a0a0a0;
+            margin-top: 5px;
+        }
+
+        /* Final CTA Section */
+        .final-cta-section {
+            padding: 100px 0;
+            text-align: center;
+        }
+
+        .final-cta-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .final-cta-description {
+            font-size: 1.3rem;
+            color: #a0a0a0;
+            margin-bottom: 40px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 40px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            color: #a0a0a0;
+            font-size: 0.9rem;
+        }
+
+        /* Animations */
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.3rem;
+            }
+            
+            .hero-description {
+                font-size: 1rem;
+            }
+            
+            .cta-button {
+                padding: 16px 40px;
+                font-size: 1.1rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .showcase-grid,
+            .features-grid,
+            .usecases-grid,
+            .stats-grid,
+            .testimonials-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .showcase-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .features-title,
+            .stats-title,
+            .testimonials-title,
+            .usecases-title,
+            .showcase-title {
+                font-size: 2.2rem;
+            }
+
+            .final-cta-title {
+                font-size: 2.8rem;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 4px;
+        } 
+    </style>
 </head>
 <body>
     <!-- Animated Background -->
@@ -19,10 +749,11 @@
             <div class="nav-logo">GeniusPost AI</div>
             <div class="nav-links">
                 <a href="#features" class="nav-link">Features</a>
+                <a href="#showcase" class="nav-link">Gallery</a>
                 <a href="#testimonials" class="nav-link">Success Stories</a>
                 <a href="{{ url_for('pricing') }}" class="nav-link">Pricing</a>
-                <!-- <a href="#" class="cta-nav-btn">Try Free</a> -->
             </div>
+
             {% if current_user.is_authenticated %}
             <div class="profile-container">
                 <img
@@ -44,170 +775,261 @@
         </nav>
 
         <!-- Hero Section -->
-        <section class="hero">
-            <h1 class="hero-title">Transform Your LinkedIn Presence</h1>
-            <p class="hero-subtitle">Build Your Brand Faster with Smart AI Content</p>
-            <p class="hero-description">
-                Elevate your LinkedIn game with AI-crafted infographics and carousels that deliver 11.2× the reach and 3.7× the engagement.🚀
-            </p>
-            <a href="{{ url_for('login', next=url_for('geniuspost')) }}" class="cta-button" id="tryGeniusBtn">Try GeniusPost AI</a>
+        <section class="zoom-section hero-section" id="hero">
+            <div>
+                <div class="hero-badge">🚀 Get the most out of LinkedIn</div>
+                <h1 class="hero-title">10x Your LinkedIn Reach</h1>
+                <h2 class="hero-subtitle">With AI-Powered Carousels & Infographics</h2>
+                <p class="hero-description">
+                    Create stunning visual content that used to take hours, now in minutes. 
+                    Build Personal brand, Generate leads, and Dominate LinkedIn with content that gets 10× more reach.
+                </p>
+                <a href="{{ url_for('login', next=url_for('geniuspost')) }}" class="cta-button" id="tryGeniusBtn">Try GeniusPost AI</a>
+            </div>
         </section>
 
-        <!-- Stats Section -->
-        <section class="stats-section">
-            <h2 class="stats-title">Proven Results That Speak Volumes</h2>
-            <p class="stats-subtitle">Join many professionals who've transformed their LinkedIn presence with GeniusPost AI</p>
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-number">11.2x</div>
-                    <div class="stat-label">Increased Reach</div>
+        <!-- Content Showcase Section -->
+        <section class="zoom-section showcase-section" id="showcase">
+            <div>
+                <h2 class="showcase-title">See What You Can Create</h2>
+                
+                <!-- Carousel Showcase -->
+                <div class="showcase-grid">
+                    <div class="showcase-content">
+                        <h3>Beautiful Carousels</h3>
+                        <p>Create professional carousels that boost engagement by 3.7x. Perfect for tutorials, tips, code snippets, and storytelling that keeps your audience scrolling.</p>
+                        <ul class="showcase-features">
+                            <li>12+ Professional Templates</li>
+                            <li>Code Syntax Highlighting</li>
+                            <li>Custom Branding Options</li>
+                            <li>One-Click Publishing</li>
+                        </ul>
+                    </div>
+                    <div class="showcase-visual">
+                        <img src="../images/carousel_template2.png" alt="Carousel Example" style="width: 50%; height: auto; border-radius: 15px;">
+                        <img src="../images/carousel_template1.png" alt="Carousel Example" style="width: 50%; height: auto; border-radius: 15px;">
+                    </div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-number">3.7x</div>
-                    <div class="stat-label">Higher Engagement</div>
+
+                <!-- Infographic Showcase -->
+                <div class="showcase-grid" style="margin-top: 80px;">
+                    <div class="showcase-visual">
+                        <img src="../images/carousel_template5.png" alt="Carousel Example" style="width: 50%; height: 50%; border-radius: 15px; ">
+                        <img src="../images/carousel_template4.png" alt="Carousel Example" style="width: 50%; height: 60%; border-radius: 15px; ">
+                    </div>
+                    <div class="showcase-content">
+                        <h3>Stunning Infographics</h3>
+                        <p>Create eye-catching infographics. Stand out in the LinkedIn feed with visually compelling content that gets shared.</p>
+                        <ul class="showcase-features">
+                            <li>Code snippets and tables</li>
+                            <li>Industry-Specific Templates</li>
+                            <li>Custom Charts & Graphs</li>
+                        </ul>
+                    </div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-number">1B+</div>
-                    <div class="stat-label">LinkedIn Users to Influence</div>
+
+                <!-- Templates Showcase -->
+                <div class="showcase-grid" style="margin-top: 80px;">
+                    <div class="showcase-content">
+                        <h3>Professional Templates</h3>
+                        <p>Choose from 12+ elegant templates designed for various content types - from SaaS and products to marketing, design, and thought leadership content.</p>
+                        <ul class="showcase-features">
+                            <li>SaaS & Tech Templates</li>
+                            <li>Marketing & Branding Designs</li>
+                            <li>Educational Content Layouts</li>
+                            <li>Personal Branding Themes</li>
+                        </ul>
+                    </div>
+                    <div class="showcase-visual">
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; width: 100%; padding: 20px;">
+                        <img src="../images/carousel_template6.png" alt="Carousel 1" style="width: 100%; height: 500px;  border-radius: 10px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2);">
+                        <img src="../images/carousel_template8.png" alt="Carousel 3" style="width: 120%; height: 400px;  border-radius: 10px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2);">
+                    </div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-number">90%</div>
-                    <div class="stat-label">Time Saved</div>
+                </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Use Cases Section -->
+        <section class="zoom-section usecases-section" id="usecases">
+            <div>
+                <h2 class="usecases-title">Perfect for Every Professional</h2>
+                <div class="usecases-grid">
+                    <div class="usecase-card">
+                        <span class="usecase-emoji">🎨</span>
+                        <div class="usecase-title">Creators</div>
+                        <div class="usecase-desc">Build engaging content that grows your audience and personal brand</div>
+                    </div>
+                    <div class="usecase-card">
+                        <span class="usecase-emoji">👨‍💻</span>
+                        <div class="usecase-title">Developers</div>
+                        <div class="usecase-desc">Create & share code cheatsheets, tutorials, and technical documentation</div>
+                    </div>
+                    <div class="usecase-card">
+                        <span class="usecase-emoji">📈</span>
+                        <div class="usecase-title">Marketers</div>
+                        <div class="usecase-desc">Design marketing carousels and brand awareness campaigns</div>
+                    </div>
+                    <div class="usecase-card">
+                        <span class="usecase-emoji">🚀</span>
+                        <div class="usecase-title">Founders</div>
+                        <div class="usecase-desc">Create product decks, pitch presentations, and company updates</div>
+                    </div>
+                    <div class="usecase-card">
+                        <span class="usecase-emoji">💼</span>
+                        <div class="usecase-title">Professionals</div>
+                        <div class="usecase-desc">Build thought leadership and generate quality leads</div>
+                    </div>
+                    <div class="usecase-card">
+                        <span class="usecase-emoji">🎯</span>
+                        <div class="usecase-title">Consultants</div>
+                        <div class="usecase-desc">Share insights, case studies, and industry expertise.</div>
+                    </div>
                 </div>
             </div>
         </section>
 
         <!-- Features Section -->
-        <section class="features-section" id="features">
-            <h2 class="features-title">Everything You Need to Dominate LinkedIn</h2>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">🚀</div>
-                    <h3 class="feature-title">AI Content Generation</h3>
-                    <p class="feature-description">
-                        Generate professional LinkedIn posts in seconds. Our AI understands your industry, tone, and audience to create content that resonates and drives engagement.
-                    </p>
+        <section class="zoom-section features-section" id="features">
+            <div>
+                <h2 class="features-title">AI Magic at Your Fingertips</h2>
+                <p class="features-subtitle">Everything you need to create professional LinkedIn content in seconds</p>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🤖</div>
+                        <h3 class="feature-title">AI Generate</h3>
+                        <p class="feature-description">
+                            Generate carousels & infographics with blazing fast speed. Our AI understands your industry and creates content that resonates.
+                        </p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">✏️</div>
+                        <h3 class="feature-title">Rich Text Editor</h3>
+                        <p class="feature-description">
+                            We dont believe in spamming AI content hence our editor lets you create, edit, add insights and publish.
+                            Making every piece of content authentic and personal. 
+                        </p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">🎨</div>
+                        <h3 class="feature-title">Stunning Visuals</h3>
+                        <p class="feature-description">
+                            Add visuals, infographics, tweet screenshots, charts, and custom graphics to make your content stand out.
+                        </p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">🎯</div>
+                        <h3 class="feature-title">Professional Templates</h3>
+                        <p class="feature-description">
+                            12+ elegant templates designed for various content types from SaaS, products to marketing, design and more.
+                        </p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">⚡</div>
+                        <h3 class="feature-title">Lightning Fast</h3>
+                        <p class="feature-description">
+                            Content that used to take hours now takes a minute. Focus on strategy while AI handles the creation.
+                        </p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">🚀</div>
+                        <h3 class="feature-title">LinkedIn Optimized</h3>
+                        <p class="feature-description">
+                            Specifically designed to dominate LinkedIn with formats and styles proven to increase reach and engagement.
+                        </p>
+                    </div>
                 </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">📊</div>
-                    <h3 class="feature-title">Stunning Infographics</h3>
-                    <p class="feature-description">
-                        Create eye-catching infographics that increase your reach by 11.2x. Stand out in the LinkedIn feed with visually compelling content that gets shared.
-                    </p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">🎨</div>
-                    <h3 class="feature-title">Beautiful Carousels</h3>
-                    <p class="feature-description">
-                        Design professional carousel posts that boost engagement by 3.7x. Perfect for tutorials, tips, and storytelling that keeps your audience scrolling.
-                    </p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">✏️</div>
-                    <h3 class="feature-title">Rich Text Editor</h3>
-                    <p class="feature-description">
-                        Edit and customize your content with our advanced editor. Add formatting, code snippets, tables, and images to create posts that sounds human and personalised.
-                    </p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">⚡</div>
-                    <h3 class="feature-title">Lightning Fast</h3>
-                    <p class="feature-description">
-                        No more spending hours researching content. Generate, style, and format professional content in minutes, not hours. Focus on what matters most.
-                    </p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">🎯</div>
-                    <h3 class="feature-title">Personal Branding</h3>
-                    <p class="feature-description">
-                        Build your thought leadership and personal brand. Create consistent, high-quality content that positions you as an industry expert and influencer.
-                    </p>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="zoom-section stats-section" id="stats">
+            <div>
+                <h2 class="stats-title">Results That Speak Volumes</h2>
+                <p class="stats-subtitle">Join professionals who've transformed their LinkedIn presence with AI-powered content</p>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">11.2x</div>
+                        <div class="stat-label">Increased Reach</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">3.7x</div>
+                        <div class="stat-label">Higher Engagement</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">1 min</div>
+                        <div class="stat-label">Content Creation Time</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">12+</div>
+                        <div class="stat-label">Professional Templates</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">1B</div>
+                        <div class="stat-label">LinkedIn Users to Reach</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">80%</div>
+                        <div class="stat-label">Time Saved</div>
+                    </div>
                 </div>
             </div>
         </section>
 
         <!-- Testimonials Section -->
-        <section class="testimonials-section" id="testimonials">
-            <h2 class="testimonials-title">Success Stories from LinkedIn Leaders</h2>
-            <div class="testimonials-grid">
-                
-                <div class="testimonial-card">
-                    <p class="testimonial-text">
-                        "The infographics feature is game-changing. My content now stands out in the feed, and I've gained 2,000 new followers in just 3 months."
-                    </p>
-                    <div class="testimonial-author">Prashant Singh</div>
-                    <div class="testimonial-role">Sr. MLE, Axtria</div>
-                </div>
-
-                <div class="testimonial-card">
-                    <p class="testimonial-text">
-                        "GeniusPost AI transformed my LinkedIn presence completely. My posts now get 4x more engagement, and I've landed 3 speaking opportunities this month alone!"
-                    </p>
-                    <div class="testimonial-author">Edgar Furtado</div>
-                    <div class="testimonial-role">Investor, Fund</div>
-                </div>
-                
-                <div class="testimonial-card">
-                    <p class="testimonial-text">
-                        "I went from struggling to write posts to creating viral content. GeniusPost AI helped me establish thought leadership in my industry."
-                    </p>
-                    <div class="testimonial-author">Emily Johnson</div>
-                    <div class="testimonial-role">Consultant & Speaker</div>
+        <section class="zoom-section testimonials-section" id="testimonials">
+            <div>
+                <h2 class="testimonials-title">Success Stories from LinkedIn Leaders</h2>
+                <div class="testimonials-grid">
+                    <div class="testimonial-card">
+                        <p class="testimonial-text">
+                            "GeniusPost AI transformed my LinkedIn presence completely. My posts now get 4x more engagement, and I've landed 3 speaking opportunities this month alone!"
+                        </p>
+                        <div class="testimonial-author">Edgar Furtado</div>
+                        <div class="testimonial-role">Investor, Fund</div>
+                    </div>
+                    
+                    <div class="testimonial-card">
+                        <p class="testimonial-text">
+                            "The infographics feature is game-changing. My content now stands out in the feed, and I've gained 2,000 new followers in just 3 months."
+                        </p>
+                        <div class="testimonial-author">Prashant Singh</div>
+                        <div class="testimonial-role">Sr. MLE, Axtria</div>
+                    </div>
+                    
+                    <div class="testimonial-card">
+                        <p class="testimonial-text">
+                            "I went from struggling to write posts to creating viral content. GeniusPost AI helped me establish thought leadership in my industry."
+                        </p>
+                        <div class="testimonial-author">Emily Johnson</div>
+                        <div class="testimonial-role">Consultant & Speaker</div>
+                    </div>
                 </div>
             </div>
         </section>
 
         <!-- Final CTA Section -->
-        <section class="cta-section">
-            <h2 class="cta-title">Ready to Dominate LinkedIn?</h2>
-            <p class="cta-description">
-                Join professionals who are transforming their careers with AI-powered content. 
-                Start building your influence today.
-            </p>
-            <a href="{{ url_for('login', next=url_for('geniuspost')) }}" class="cta-button" id="tryGeniusFinalBtn">Try GeniusPost AI - It's Free</a>
+        <section class="zoom-section final-cta-section" id="final-cta">
+            <div>
+                <h2 class="final-cta-title">Ready to 10x Your LinkedIn Game?</h2>
+                <p class="final-cta-description">
+                    Join professionals who are building brands and visibility with AI-powered content. 
+                    Start building your influence, generating leads, and establishing thought leadership today.
+                </p>
+                <a href="{{ url_for('login', next=url_for('geniuspost')) }}" class="cta-button" id="tryGeniusFinalBtn">Try GeniusPost AI - It's Free</a>
+            </div>
         </section>
 
         <!-- Footer -->
-        <!-- <footer class="footer">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>Product</h3>
-                    <ul class="footer-links">
-                        <li><a href="#">Features</a></li>
-                        <li><a href="#">Pricing</a></li>
-                        <li><a href="#">API</a></li>
-                        <li><a href="#">Integrations</a></li>
-                    </ul>
-                </div>
-                
-                <div class="footer-section">
-                    <h3>Resources</h3>
-                    <ul class="footer-links">
-                        <li><a href="#">Blog</a></li>
-                        <li><a href="#">LinkedIn Tips</a></li>
-                        <li><a href="#">Templates</a></li>
-                        <li><a href="#">Help Center</a></li>
-                    </ul>
-                </div>
-                
-                <div class="footer-section">
-                    <h3>Company</h3>
-                    <ul class="footer-links">
-                        <li><a href="#">About</a></li>
-                        <li><a href="#">Careers</a></li>
-                        <li><a href="#">Contact</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
-                    </ul>
-                </div>
-            </div> -->
-            
-            <div class="footer-bottom">
-                <p>&copy;2024 GeniusPost AI. All rights reserved. Transform your LinkedIn presence with AI.</p>
+        <footer class="footer">
+            <div>
+                <p>&copy; 2024 GeniusPost AI. All rights reserved. Transform your LinkedIn presence with AI.</p>
             </div>
         </footer>
     </div>
@@ -227,6 +1049,55 @@
             }
         }
 
+        // Zoom scroll effect inspired by soniclamb.com
+        function initZoomScroll() {
+            const sections = document.querySelectorAll('.zoom-section');
+            
+            function updateSections() {
+                const scrollY = window.scrollY;
+                const windowHeight = window.innerHeight;
+                
+                sections.forEach((section, index) => {
+                    const rect = section.getBoundingClientRect();
+                    const sectionCenter = rect.top + rect.height / 2;
+                    const distanceFromCenter = Math.abs(sectionCenter - windowHeight / 2);
+                    const maxDistance = windowHeight;
+                    
+                    // Calculate opacity and scale based on distance from viewport center
+                    let opacity = 1 - (distanceFromCenter / maxDistance) * 0.7;
+                    let scale = 1 - (distanceFromCenter / maxDistance) * 0.2;
+                    
+                    // Ensure minimum values
+                    opacity = Math.max(0.3, Math.min(1, opacity));
+                    scale = Math.max(0.8, Math.min(1, scale));
+                    
+                    // Apply the effect
+                    if (rect.bottom > 0 && rect.top < windowHeight) {
+                        section.classList.add('visible');
+                        section.style.opacity = opacity;
+                        section.style.transform = `scale(${scale})`;
+                    } else {
+                        section.classList.remove('visible');
+                    }
+                });
+            }
+            
+            // Throttled scroll handler
+            let ticking = false;
+            function handleScroll() {
+                if (!ticking) {
+                    requestAnimationFrame(() => {
+                        updateSections();
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            }
+            
+            window.addEventListener('scroll', handleScroll);
+            updateSections(); // Initial call
+        }
+
         // Smooth scrolling for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
@@ -235,39 +1106,47 @@
                 if (target) {
                     target.scrollIntoView({
                         behavior: 'smooth',
-                        block: 'start'
+                        block: 'center'
                     });
                 }
             });
         });
 
-        // // CTA button click handlers
-        // document.getElementById('tryGeniusBtn').addEventListener('click', function(e) {
-        //     e.preventDefault();
-        //     // Redirect to your app page or show modal
-        //     window.location.href = '/app'; // Update this to your actual app URL
-        // });
-
-        // document.getElementById('tryGeniusFinalBtn').addEventListener('click', function(e) {
-        //     e.preventDefault();
-        //     // Redirect to your app page or show modal
-        //     window.location.href = '/app'; // Update this to your actual app URL
-        // });
-        // CTA button click handlers that defer to the anchor's href
+        // CTA button handlers
         document.querySelectorAll('#tryGeniusBtn, #tryGeniusFinalBtn').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            e.preventDefault();
-            // simply navigate to whatever the <a href> actually is
-            window.location.href = this.href;
-        });
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                // Add your navigation logic here
+                console.log('Navigating to GeniusPost AI...');
+            });
         });
 
+        // Profile dropdown functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            const icon = document.getElementById('profileIcon');
+            const card = document.getElementById('profileCard');
+            
+            if (icon && card) {
+                icon.addEventListener('click', e => {
+                    e.stopPropagation();
+                    card.classList.toggle('visible');
+                });
 
-        // Add interactive hover effects for mouse movement
+                // Click outside closes the card
+                document.addEventListener('click', () => {
+                    card.classList.remove('visible');
+                });
+
+                // Prevent clicks inside the card from bubbling out
+                card.addEventListener('click', e => e.stopPropagation());
+            }
+        });
+
+        // Interactive hover effects for mouse movement
         document.addEventListener('mousemove', function(e) {
             const particles = document.querySelectorAll('.particle');
-            particles.forEach(particle => {
-                const speed = Math.random() * 2 + 1;
+            particles.forEach((particle, index) => {
+                const speed = (index % 3 + 1) * 0.5;
                 const x = (e.clientX * speed) / 100;
                 const y = (e.clientY * speed) / 100;
                 
@@ -275,82 +1154,75 @@
             });
         });
 
-        // Initialize everything when DOM loads
-        document.addEventListener('DOMContentLoaded', function() {
-            createParticles();
-            
-            // Add intersection observer for animations
-            const observerOptions = {
-                threshold: 0.1,
-                rootMargin: '0px 0px -100px 0px'
-            };
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.animationPlayState = 'running';
-                    }
-                });
-            }, observerOptions);
-
-            // Observe all animated sections
-            document.querySelectorAll('.stats-section, .features-section, .testimonials-section, .cta-section').forEach(section => {
-                observer.observe(section);
-            });
-        });
-
-        // Add scroll-triggered counter animation for stats
+        // Counter animation for stats
         function animateCounters() {
             const statNumbers = document.querySelectorAll('.stat-number');
             
             statNumbers.forEach(stat => {
                 const finalValue = stat.textContent;
+                const hasDecimal = finalValue.includes('.');
+                const hasMultiplier = finalValue.includes('x') || finalValue.includes('+') || finalValue.includes('s') || finalValue.includes('%');
+                
+                if (!hasMultiplier) return; // Skip if not a number we want to animate
+                
                 let currentValue = 0;
-                const increment = parseFloat(finalValue) / 100;
+                const numericValue = parseFloat(finalValue);
+                const increment = numericValue / 60; // 60 frames for smooth animation
                 
                 const counter = setInterval(() => {
                     currentValue += increment;
                     
                     if (finalValue.includes('x')) {
                         stat.textContent = currentValue.toFixed(1) + 'x';
-                    } else if (finalValue.includes('B+')) {
-                        stat.textContent = Math.floor(currentValue) + 'B+';
+                    } else if (finalValue.includes('+')) {
+                        stat.textContent = Math.floor(currentValue) + '+';
+                    } else if (finalValue.includes('s')) {
+                        stat.textContent = Math.floor(currentValue) + 's';
                     } else if (finalValue.includes('%')) {
                         stat.textContent = Math.floor(currentValue) + '%';
                     }
                     
-                    if (currentValue >= parseFloat(finalValue)) {
+                    if (currentValue >= numericValue) {
                         stat.textContent = finalValue;
                         clearInterval(counter);
                     }
-                }, 20);
+                }, 50);
             });
         }
 
-        // Trigger counter animation when stats section is visible
+        // Intersection observer for counter animation
         const statsObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     animateCounters();
-                    statsObserver.unobserve}})}) 
+                    statsObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
 
+        // Initialize everything when DOM loads
+        document.addEventListener('DOMContentLoaded', function() {
+            createParticles();
+            initZoomScroll();
+            
+            // Observe stats section for counter animation
+            const statsSection = document.querySelector('#stats');
+            if (statsSection) {
+                statsObserver.observe(statsSection);
+            }
+        });
 
-  document.addEventListener('DOMContentLoaded', () => {
-    const icon = document.getElementById('profileIcon');
-    const card = document.getElementById('profileCard');
-    if (!icon || !card) return;
-
-    icon.addEventListener('click', e => {
-      e.stopPropagation();
-      card.classList.toggle('visible');
-    });
-
-    // click outside closes the card
-    document.addEventListener('click', () => {
-      card.classList.remove('visible');
-    });
-
-    // prevent clicks inside the card from bubbling out
-    card.addEventListener('click', e => e.stopPropagation());
-  });
-
+        // Lazy load effect for showcase visuals
+        document.querySelectorAll('.showcase-visual').forEach(visual => {
+            visual.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(1.7)';
+                this.style.transition = 'transform 0.15s ease';
+            });
+            
+            visual.addEventListener('mouseleave', function() {
+                this.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>
