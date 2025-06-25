@@ -401,7 +401,7 @@ def generate_pdf():
         print(f"PDF generation error: {str(e)}")
         return jsonify({'success': False, 'error': str(e)}), 500
     
-def create_enhanced_pdf_html(content, template, captured_styles=''):
+def create_enhanced_pdf_html(content, template, captured_styles=''): 
     """Create complete HTML document with all captured styles"""
     
     complete_template_styles = f"""
@@ -411,7 +411,7 @@ def create_enhanced_pdf_html(content, template, captured_styles=''):
         /* PDF PAGE CONTROL - CUSTOM SIZE */
         @page {{
             size: 1080px 1350px;
-            margin: 8px;
+            margin: 8px;  /* ✅ 8px margins on all sides */
             padding: 0px;
         }}
         
@@ -422,24 +422,24 @@ def create_enhanced_pdf_html(content, template, captured_styles=''):
         }}
         
         html, body {{
-            width: 1080px;
+            width: 1064px;  /* ✅ UPDATED: 1080 - 16px (8px margins × 2) */
             margin: 0 !important;
             padding: 0px !important;
             font-family: 'Inter', sans-serif;
         }}
         
         .pdf-container {{
-            width: 1080px;
+            width: 1064px;  /* ✅ UPDATED: Match body width */
             margin: 0;
             padding: 0;
             position: relative;
         }}
         
         .template-base {{
-            width: 1080px !important;
-            min-height: 1350px !important;
+            width: 1064px !important;  /* ✅ UPDATED: Match container width */
+            min-height: 1334px !important;  /* ✅ UPDATED: 1350 - 16px margins */
             margin: 0 !important;
-            padding: 40px !important;
+            padding: 30px !important;  /* ✅ Internal padding for content spacing */
             position: relative;
             box-sizing: border-box;
             page-break-inside: auto;
@@ -449,19 +449,31 @@ def create_enhanced_pdf_html(content, template, captured_styles=''):
         h1, h2, h3, h4, h5, h6 {{
             page-break-after: avoid;
             page-break-inside: avoid;
+            margin-top: 0;  /* ✅ Prevent extra top spacing */
         }}
 
-        /* IMAGE HANDLING FOR PDF - CRITICAL */
+        /* ✅ IMAGE HANDLING FOR PDF - PROPERLY CENTERED */
         img {{
-            min-width: 1080px !important;    /* Minimum 1080px wide */
-            width: 1080px !important;
+            max-width: 1004px !important;   /* ✅ UPDATED: 1064 - 60px for padding */
+            width: 100% !important;         /* ✅ Responsive width */
             height: auto !important;
             display: block !important;
             page-break-inside: avoid;
-            margin: 10px 0 !important;
+            margin: 20px auto !important;   /* ✅ Center with top/bottom margins */
             object-fit: contain !important;
-            border-radius: 16px !important;  /* Match your style */
-            position: absolute;
+            border-radius: 16px !important;
+            position: relative !important;  /* ✅ Relative positioning */
+        }}
+        
+        /* ✅ Specific spacing for content elements */
+        .template-base > *:first-child {{
+            margin-top: 0 !important;  /* Remove top margin from first element */
+        }}
+        
+        .template-base > h1:first-child,
+        .template-base > h2:first-child,
+        .template-base > h3:first-child {{
+            padding-top: 10px;  /* Add some breathing room from top */
         }}
         
         p, li {{
@@ -471,6 +483,21 @@ def create_enhanced_pdf_html(content, template, captured_styles=''):
         
         table, pre, blockquote {{
             page-break-inside: avoid;
+            margin: 15px 0;  /* ✅ Consistent spacing */
+        }}
+        
+        /* ✅ Content spacing improvements */
+        p {{
+            margin-bottom: 12px;
+        }}
+        
+        h1, h2, h3, h4, h5, h6 {{
+            margin-bottom: 10px;
+            margin-top: 20px;
+        }}
+        
+        h1:first-child, h2:first-child, h3:first-child {{
+            margin-top: 0;  /* No top margin for first heading */
         }}
         
         /* Additional captured styles */
