@@ -518,7 +518,7 @@ def create_enhanced_pdf_html(content, template, captured_styles=''):
         
         /* ✅ FIRST PAGE ONLY - Footer */
         @page :first {{
-            margin: 8px 8px 20px 8px; 
+            margin: 8px 8px 30px 8px; 
             
             @bottom-center {{
                 content: "Generated with GeniusPost AI";
@@ -532,7 +532,7 @@ def create_enhanced_pdf_html(content, template, captured_styles=''):
                 letter-spacing: 1px;
                 text-transform: uppercase;
                 box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-                margin-top: 15px;
+                margin-top: 5px;
             }}
         }}
         
