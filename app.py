@@ -24,6 +24,10 @@ app = Flask(__name__, template_folder="templates", static_folder="static")
 CORS(app)
 # openai.api_key = os.getenv("OPENAI_API_KEY")  # Set in environment
 app.secret_key = os.environ['SECRET_KEY']
+# Add this near the top with other configurations
+app.config['SESSION_COOKIE_DOMAIN'] = '.geniuspostai.com'  # Allow cookies across subdomains
+app.config['SESSION_COOKIE_SECURE'] = True  # HTTPS only
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 # ─── Database Configuration ────────────────────────────
 # Render will inject DATABASE_URL into your environment
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ["DATABASE_URL"] 
@@ -404,107 +408,6 @@ def generate_pdf():
 def create_enhanced_pdf_html(content, template, captured_styles=''): 
     """Create complete HTML document with all captured styles"""
     
-    # complete_template_styles = f"""
-    # <style>
-    #     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
-        
-    #     /* PDF PAGE CONTROL - CUSTOM SIZE */
-    #     @page {{
-    #         size: 1080px 1350px;
-    #         margin: 8px;  /* ✅ 8px margins on all sides */
-    #         padding: 0px;
-    #     }}
-        
-    #     * {{
-    #         box-sizing: border-box;
-    #         margin: 0;
-    #         padding: 0;
-    #     }}
-        
-    #     html, body {{
-    #         width: 1064px;  /* ✅ UPDATED: 1080 - 16px (8px margins × 2) */
-    #         margin: 0 !important;
-    #         padding: 0px !important;
-    #         font-family: 'Inter', sans-serif;
-    #     }}
-        
-    #     .pdf-container {{
-    #         width: 1064px;  /* ✅ UPDATED: Match body width */
-    #         margin: 0;
-    #         padding: 0;
-    #         position: relative;
-    #     }}
-        
-    #     .template-base {{
-    #         width: 1064px !important;  /* ✅ UPDATED: Match container width */
-    #         min-height: 1334px !important;  /* ✅ UPDATED: 1350 - 16px margins */
-    #         margin: 0 !important;
-    #         padding: 30px !important;  /* ✅ Internal padding for content spacing */
-    #         position: relative;
-    #         box-sizing: border-box;
-    #         page-break-inside: auto;
-    #     }}
-        
-    #     /* PAGE BREAK CONTROLS */
-    #     h1, h2, h3, h4, h5, h6 {{
-    #         page-break-after: avoid;
-    #         page-break-inside: avoid;
-    #         margin-top: 0;  /* ✅ Prevent extra top spacing */
-    #     }}
-
-    #     /* ✅ IMAGE HANDLING FOR PDF - PROPERLY CENTERED */
-    #     img {{
-    #         max-width: 1004px !important;   /* ✅ UPDATED: 1064 - 60px for padding */
-    #         width: 100% !important;         /* ✅ Responsive width */
-    #         height: auto !important;
-    #         display: block !important;
-    #         page-break-inside: avoid;
-    #         margin: 20px auto !important;   /* ✅ Center with top/bottom margins */
-    #         object-fit: contain !important;
-    #         border-radius: 16px !important;
-    #         position: relative !important;  /* ✅ Relative positioning */
-    #     }}
-        
-    #     /* ✅ Specific spacing for content elements */
-    #     .template-base > *:first-child {{
-    #         margin-top: 0 !important;  /* Remove top margin from first element */
-    #     }}
-        
-    #     .template-base > h1:first-child,
-    #     .template-base > h2:first-child,
-    #     .template-base > h3:first-child {{
-    #         padding-top: 10px;  /* Add some breathing room from top */
-    #     }}
-        
-    #     p, li {{
-    #         orphans: 3;
-    #         widows: 3;
-    #     }}
-        
-    #     table, pre, blockquote {{
-    #         page-break-inside: avoid;
-    #         margin: 15px 0;  /* ✅ Consistent spacing */
-    #     }}
-        
-    #     /* ✅ Content spacing improvements */
-    #     p {{
-    #         margin-bottom: 12px;
-    #     }}
-        
-    #     h1, h2, h3, h4, h5, h6 {{
-    #         margin-bottom: 10px;
-    #         margin-top: 20px;
-    #     }}
-        
-    #     h1:first-child, h2:first-child, h3:first-child {{
-    #         margin-top: 0;  /* No top margin for first heading */
-    #     }}
-        
-    #     /* Additional captured styles */
-    #     {captured_styles}
-    # </style>
-    # """
-
     complete_template_styles = f"""
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
@@ -644,6 +547,13 @@ def create_enhanced_pdf_html(content, template, captured_styles=''):
     </html>
     """
 
+@app.route("/debug")
+def debug():
+    return jsonify({
+        "host": request.host,
+        "redirect_uri": os.environ.get("REDIRECT_URI"),
+        "current_user": current_user.is_authenticated if current_user else False
+    })
 ##################################################
 
 if __name__ == '__main__':
