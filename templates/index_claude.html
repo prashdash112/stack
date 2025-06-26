@@ -404,22 +404,6 @@ function createShortImageUrl(file, callback) {
             });
 
             // Download PDF carousel
-            // document.getElementById('downloadCarousel').addEventListener('click', async () => {
-            //     const templateFrame = document.getElementById('templatePreviewFrame');
-            //     if (!templateFrame.contentWindow) {
-            //         alert('Template not loaded yet!');
-            //         return;
-            //     }
-                
-            //     // Trigger download from iframe
-            //     templateFrame.contentWindow.postMessage({ 
-            //         action: 'downloadPDF' 
-            //     }, '*');
-                
-            //     // Trigger feedback widget on first download
-            //     triggerFeedbackOnFirstDownload();
-            // });
-            // Download PDF carousel with progress animation
             document.getElementById('downloadCarousel').addEventListener('click', async () => {
                 const templateFrame = document.getElementById('templatePreviewFrame');
                 if (!templateFrame.contentWindow) {
@@ -427,24 +411,15 @@ function createShortImageUrl(file, callback) {
                     return;
                 }
                 
-                const downloadBtn = document.getElementById('downloadCarousel');
-                
-                // Start progress animation
-                startDownloadProgress(downloadBtn);
-                
                 // Trigger download from iframe
                 templateFrame.contentWindow.postMessage({ 
                     action: 'downloadPDF' 
                 }, '*');
                 
-                // Simulate progress (adjust timing based on your actual download speed)
-                setTimeout(() => {
-                    stopDownloadProgress(downloadBtn);
-                }, 15000); // 4 seconds - adjust as needed
-                
                 // Trigger feedback widget on first download
                 triggerFeedbackOnFirstDownload();
             });
+            
         }
         function cleanAndFormatHTML(html) {
             // Create temporary div to process HTML
@@ -986,83 +961,6 @@ function triggerFeedbackOnFirstDownload() {
         // Show feedback widget after a short delay
         setTimeout(showFeedbackWidget, 1500);
     }
-}
-
-function startDownloadProgress(button) {
-    // Add downloading class
-    button.classList.add('downloading');
-    
-    // Store original content
-    const originalText = button.innerHTML;
-    button.dataset.originalText = originalText;
-    
-    // Create progress elements
-    const progressOverlay = document.createElement('div');
-    progressOverlay.className = 'progress-overlay animating';
-    
-    const progressText = document.createElement('span');
-    progressText.className = 'progress-text';
-    progressText.textContent = '📄 Generating PDF...';
-    
-    const bubblesContainer = document.createElement('div');
-    bubblesContainer.className = 'progress-bubbles';
-    
-    // Create bubbles
-    for (let i = 0; i < 4; i++) {
-        const bubble = document.createElement('div');
-        bubble.className = 'bubble';
-        bubblesContainer.appendChild(bubble);
-    }
-    
-    // Clear button and add new elements
-    button.innerHTML = '';
-    button.appendChild(progressOverlay);
-    button.appendChild(progressText);
-    button.appendChild(bubblesContainer);
-    
-    // Progress text updates
-    let progress = 0;
-    const progressInterval = setInterval(() => {
-        progress += Math.random() * 25 + 10; // Random increment between 10-35
-        if (progress >= 100) {
-            progress = 100;
-            progressText.textContent = '✅ Download Ready!';
-            clearInterval(progressInterval);
-        } else {
-            progressText.textContent = `📄 Generating PDF... ${Math.round(progress)}%`;
-        }
-    }, 300);
-    
-    // Store interval for cleanup
-    button.dataset.progressInterval = progressInterval;
-}
-
-function stopDownloadProgress(button) {
-    // Clear any running intervals
-    const progressInterval = button.dataset.progressInterval;
-    if (progressInterval) {
-        clearInterval(progressInterval);
-        delete button.dataset.progressInterval;
-    }
-    
-    // Remove downloading class
-    button.classList.remove('downloading');
-    
-    // Restore original content
-    const originalText = button.dataset.originalText;
-    if (originalText) {
-        button.innerHTML = originalText;
-        delete button.dataset.originalText;
-    }
-    
-    // Brief success state
-    button.style.background = '#4CAF50';
-    button.innerHTML = '✅ Downloaded!';
-    
-    setTimeout(() => {
-        button.style.background = '';
-        button.innerHTML = originalText || '📄 Export Carousel';
-    }, 2000);
 }
 
 document.addEventListener('DOMContentLoaded', function() {
