@@ -1311,12 +1311,8 @@
 .dark-neon-template h1 {
     font-size: 2.5rem;
     font-weight: 800;
-    background: linear-gradient(135deg, #ff006e, #8338ec, #3a86ff);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    text-shadow: 0 0 30px rgba(255, 0, 110, 0.5);
-    animation: glow 3s ease-in-out infinite;
+    color: #ff006e; /* Primary gradient color */
+    text-shadow: 0 0 20px rgba(255, 0, 110, 0.5);
 }
 
 .dark-neon-template h2 {
@@ -1393,10 +1389,7 @@
 .dark-neon-template code {
     font-family: 'Courier New', monospace !important;
 }
-@keyframes glow {
-    0%, 100% { text-shadow: 0 0 20px rgba(255, 0, 110, 0.5); }
-    50% { text-shadow: 0 0 30px rgba(255, 0, 110, 0.8); }
-}
+
 
 /* Sketchy Minimal Template */
 .sketchy-minimal-template {
@@ -1704,13 +1697,9 @@ font-family:'Kalam', sans-serif !important;
     right: 0;
     bottom: 0;
     background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, transparent 50%, rgba(255,255,255,0.1) 100%);
-    animation: shimmer 3s ease-in-out infinite;
+    opacity: 0.5;
 }
 
-@keyframes shimmer {
-    0%, 100% { opacity: 0.3; }
-    50% { opacity: 0.8; }
-}
 
 .gradient-pro-template > * {
     position: relative;
@@ -1720,10 +1709,7 @@ font-family:'Kalam', sans-serif !important;
 .gradient-pro-template h1 {
     font-size: 2.6rem;
     font-weight: 800;
-    background: linear-gradient(135deg, #ffffff, #f8f9fa, #ffffff);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #ffffff;
     text-align: center;
     text-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
@@ -1731,10 +1717,7 @@ font-family:'Kalam', sans-serif !important;
 .gradient-pro-template h2 {
     font-size: 2rem;
     font-weight: 700;
-    background: linear-gradient(135deg, #ffd89b, #19547b);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #ffd89b;
 }
 
 .gradient-pro-template li::before {
@@ -1782,10 +1765,7 @@ font-family:'Kalam', sans-serif !important;
 }
 
 .gradient-pro-template strong {
-    background: linear-gradient(135deg, #ffd89b, #19547b);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #ffd89b;
     font-weight: 800;
 }
 
@@ -2000,21 +1980,25 @@ font-family:'Kalam', sans-serif !important;
 .glass-morph-template h1 {
     font-size: 2.5rem;
     font-weight: 800;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #667eea;
     text-align: center;
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .glass-morph-template h2 {
     font-size: 2rem;
     font-weight: 700;
-    background: linear-gradient(135deg, #f093fb, #f5576c);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #f5576c;
+}
+
+.glass-morph-template strong {
+    color: #667eea;
+    font-weight: 800;
+}
+
+.glass-morph-template a {
+    color: #f5576c;
+    text-decoration: none;
 }
 
 .glass-morph-template li::before {
@@ -2062,21 +2046,6 @@ font-family:'Kalam', sans-serif !important;
     box-shadow: 0 8px 32px rgba(0,0,0,0.1);
 }
 
-.glass-morph-template strong {
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    font-weight: 800;
-}
-
-.glass-morph-template a {
-    background: linear-gradient(135deg, #f093fb, #f5576c);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    text-decoration: none;
-}
 
 .glass-morph-template hr {
     background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.6), transparent);
