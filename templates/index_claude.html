@@ -2,7 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
     <title>GeniusPost AI</title>
     <link rel="stylesheet" href="../static/index.css">
     <link rel="stylesheet" href="../static/feedback_widget.css"> 
@@ -13,7 +15,14 @@
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
+
 <body>
+    <!-- Mobile menu toggle -->
+    <div class="mobile-menu-toggle" id="mobileMenuToggle">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
     <div class="bg-animation"></div>
     
     <!-- NEW: Main layout wrapper -->
@@ -1015,6 +1024,29 @@ document.addEventListener('DOMContentLoaded', function() {
         const btn = document.getElementById(id);
         if (btn) btn.addEventListener("click", () => trackAction(action));
     });
+});
+
+// Mobile menu functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+    const leftSidebar = document.querySelector('.left-sidebar');
+    
+    if (mobileMenuToggle && leftSidebar) {
+        mobileMenuToggle.addEventListener('click', function() {
+            mobileMenuToggle.classList.toggle('active');
+            leftSidebar.classList.toggle('open');
+        });
+        
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(e) {
+            if (window.innerWidth <= 768) {
+                if (!leftSidebar.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
+                    leftSidebar.classList.remove('open');
+                    mobileMenuToggle.classList.remove('active');
+                }
+            }
+        });
+    }
 });
 
     </script>
