@@ -243,8 +243,8 @@ def generate():
     #         n=1                   # Number of responses to generate
     #     )
         
-    #     text = response.choices[0].message.content.strip()
-
+    #     text = response.choices[0].message.content.strip() 
+    
     client = anthropic.Anthropic(
         api_key=os.environ["CLAUDE_APIKEY"]
     )

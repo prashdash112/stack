@@ -719,6 +719,38 @@
             .final-cta-title {
                 font-size: 2.8rem;
             }
+
+            .differentiator-title {
+        font-size: 2.5rem;
+    }
+    
+    .differentiator-subtitle {
+        font-size: 1.1rem;
+        margin-bottom: 60px;
+    }
+    
+    .differentiator-grid {
+        grid-template-columns: 1fr;
+        gap: 25px;
+        margin-bottom: 60px;
+    }
+    
+    .diff-card {
+        padding: 25px;
+    }
+    
+    .comparison-callout {
+        padding: 30px 20px;
+    }
+    
+    .comparison-grid {
+        grid-template-columns: 1fr;
+        gap: 25px;
+    }
+    
+    .comparison-column {
+        padding: 20px;
+    }
         }
 
         /* Custom Scrollbar */
@@ -734,12 +766,258 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             border-radius: 4px;
         } 
+
+        .hero-description .linkedin-highlight {
+    background: #0077b5;
+    color: #ffffff;
+    padding: 10px 18px;
+    border-radius: 30px;
+    font-weight: 700;
+    position: relative;
+    display: inline-block;
+    box-shadow: 0 4px 12px rgba(0, 119, 181, 0.3);
+    border: 2px solid #005582;
+    line-height: 1.4;
+    transform: rotate(-0.5deg);
+}
+
+/* Multiple sketchy borders */
+.hero-description .linkedin-highlight::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    border: 2px solid #0088cc;
+    border-radius: 32px;
+    z-index: -1;
+    transform: rotate(1deg);
+    opacity: 0.5;
+}
+
+.hero-description .linkedin-highlight::after {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    border: 1px solid #66b3d9;
+    border-radius: 35px;
+    z-index: -2;
+    transform: rotate(-0.8deg);
+    opacity: 0.3;
+}
+
+/* Differentiator Section Styles */
+.differentiator-section {
+    padding: 120px 0;
+    background: rgba(255, 255, 255, 0.01);
+    position: relative;
+}
+
+.differentiator-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(102, 126, 234, 0.05) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+.differentiator-title {
+    text-align: center;
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.differentiator-subtitle {
+    text-align: center;
+    font-size: 1.3rem;
+    color: #cccccc;
+    margin-bottom: 80px;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
+}
+
+.differentiator-subtitle em {
+    color: #667eea;
+    font-style: normal;
+    font-weight: 700;
+}
+
+.differentiator-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 30px;
+    margin-bottom: 80px;
+}
+
+.diff-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 35px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.diff-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(102, 126, 234, 0.2);
+    border-color: rgba(102, 126, 234, 0.3);
+}
+
+.diff-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.diff-card:hover::before {
+    left: 100%;
+}
+
+.diff-icon {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    display: block;
+}
+
+.diff-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 15px;
+    line-height: 1.3;
+}
+
+.diff-description {
+    color: #cccccc;
+    line-height: 1.7;
+    margin-bottom: 20px;
+    font-size: 1rem;
+}
+
+.diff-description strong {
+    color: #667eea;
+    font-weight: 600;
+}
+
+.diff-highlight {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    display: inline-block;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+/* Comparison Callout */
+.comparison-callout {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+    border-radius: 25px;
+    padding: 50px;
+    border: 2px solid rgba(102, 126, 234, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.comparison-callout::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(102, 126, 234, 0.05), transparent, rgba(118, 75, 162, 0.05));
+    pointer-events: none;
+}
+
+.comparison-content {
+    position: relative;
+    z-index: 1;
+}
+
+.comparison-content h3 {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 40px;
+}
+
+.comparison-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 40px;
+}
+
+.comparison-column {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    padding: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.comparison-column h4 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.comparison-column ul {
+    list-style: none;
+    padding: 0;
+}
+
+.comparison-column li {
+    padding: 8px 0;
+    color: #cccccc;
+    font-size: 1rem;
+    position: relative;
+    padding-left: 25px;
+}
+
+.comparison-column:first-child li::before {
+    content: '❌';
+    position: absolute;
+    left: 0;
+    font-size: 0.9rem;
+}
+
+.comparison-column:last-child li::before {
+    content: '✅';
+    position: absolute;
+    left: 0;
+    font-size: 0.9rem;
+}
     </style>
 </head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GeniusPost AI - 10x Your LinkedIn Reach</title>
-    <meta name="description" content="Create stunning AI-powered LinkedIn carousels & infographics in minutes. Build your personal brand and generate leads with content that gets 10x more reach.">
+    <title>GeniusPost AI - 3x Your LinkedIn Reach</title>
+    <meta name="description" content="Build Reach with stunning visual content that used to take hours- now in minutes">
     <meta property="og:image" content="{{ url_for('static', filename='images/thumbnail.png', _external=True) }}">
 <body>
     <!-- Animated Background -->
@@ -783,11 +1061,10 @@
         <section class="zoom-section hero-section" id="hero">
             <div>
                 <div class="hero-badge">🚀 Get the most out of LinkedIn</div>
-                <h1 class="hero-title">10x Your LinkedIn Reach</h1>
+                <h1 class="hero-title">3x Your LinkedIn Reach</h1>
                 <h2 class="hero-subtitle">With AI-Powered Carousels & Infographics</h2>
                 <p class="hero-description">
-                    Create stunning visual content that used to take hours, now in minutes. 
-                    Build Personal brand, Generate leads, and Dominate LinkedIn with content that gets 10× more reach.
+                    <span class="linkedin-highlight" data-text="Build Reach with stunning carousels that used to take hours to build- now in mins">Build Reach with stunning carousels that used to take hours to build- now in mins</span> 
                 </p>
                 <a href="{{ url_for('login', next=url_for('geniuspost')) }}" class="cta-button" id="tryGeniusBtn">Try GeniusPost AI</a>
             </div>
@@ -806,7 +1083,7 @@
                         <h3>Beautiful Carousels</h3>
                         <p>Create professional carousels that boost engagement by 3.7x. Perfect for tutorials, tips, code snippets, and storytelling that keeps your audience scrolling.</p>
                         <ul class="showcase-features">
-                            <li>12+ Professional Templates</li>
+                            <li>17+ Professional Templates</li>
                             <li>Code Syntax Highlighting</li>
                             <li>Custom Branding Options</li>
                             <li>One-Click Publishing</li>
@@ -839,7 +1116,7 @@
                 <div class="showcase-grid" style="margin-top: 80px;">
                     <div class="showcase-content">
                         <h3>Professional Templates</h3>
-                        <p>Choose from 12+ elegant templates designed for various content types - from SaaS and products to marketing, design, and thought leadership content.</p>
+                        <p>Choose from 17+ elegant templates designed for various content types - from SaaS and products to marketing, design, and thought leadership content.</p>
                         <ul class="showcase-features">
                             <li>SaaS & Tech Templates</li>
                             <li>Marketing & Branding Designs</li>
@@ -897,12 +1174,128 @@
                 </div>
             </div>
         </section>
+        <!-- How GeniusPost AI is Different Section -->
+<section class="zoom-section differentiator-section" id="differentiator">
+    <div>
+        <h2 class="differentiator-title">Why GeniusPost AI is Different</h2>
+        <p class="differentiator-subtitle">
+            Stop settling for static images. Create <em>actual documents</em> that work like documents.
+        </p>
+        
+        <div class="differentiator-grid">
+            <!-- Feature 1 -->
+            <div class="diff-card">
+                <div class="diff-icon">📄</div>
+                <h3 class="diff-title">Real Documents, Not Screenshots</h3>
+                <p class="diff-description">
+                    Unlike other tools that generate static images, we create <strong>living documents</strong>. 
+                    Your audience can copy code snippets, click links, and interact with tables— just like a real document.
+                </p>
+                <div class="diff-highlight">
+                    ✨ Copy-paste functionality built-in
+                </div>
+            </div>
 
+            <!-- Feature 2 -->
+            <div class="diff-card">
+                <div class="diff-icon">🎛️</div>
+                <h3 class="diff-title">Granular Creative Control</h3>
+                <p class="diff-description">
+                    Edit anything, anytime. <strong>Slice, dice, mark, format</strong>—you're not locked into rigid templates. 
+                    Add tables, insert visuals, adjust layouts. Your content, your way.
+                </p>
+                <div class="diff-highlight">
+                    🚀 Full markdown editor + visual controls
+                </div>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="diff-card">
+                <div class="diff-icon">🎯</div>
+                <h3 class="diff-title">Purpose-Built Templates</h3>
+                <p class="diff-description">
+                    Each template is <strong>strategically designed</strong> for specific use cases. 
+                    Developer tutorials, founder updates, marketing campaigns- we understand your audience.
+                </p>
+                <div class="diff-highlight">
+                    🎨 17+ industry-specific templates
+                </div>
+            </div>
+
+            <!-- Feature 4 -->
+            <div class="diff-card">
+                <div class="diff-icon">⚡</div>
+                <h3 class="diff-title">AI That Actually Gets It</h3>
+                <p class="diff-description">
+                    Our AI doesn't just generate content—it <strong>optimizes for LinkedIn engagement</strong>.
+                </p>
+                <div class="diff-highlight">
+                    📈 3.7x higher engagement rates
+                </div>
+            </div>
+
+            <!-- Feature 5 -->
+            <div class="diff-card">
+                <div class="diff-icon">🔄</div>
+                <h3 class="diff-title">Export Anywhere, Anytime</h3>
+                <p class="diff-description">
+                    <strong>PDF for presentations</strong>, PNG for social media, or keep it as markdown. 
+                    No vendor lock-in.
+                </p>
+                <div class="diff-highlight">
+                    💼 Multiple export formats
+                </div>
+            </div>
+
+            <!-- Feature 6 -->
+            <div class="diff-card">
+                <div class="diff-icon">🔥</div>
+                <h3 class="diff-title">Built for Professionals</h3>
+                <p class="diff-description">
+                    No more "design for everyone, work for no one." <strong>We built this for professionals</strong> 
+                    who need real results, not pretty pictures.
+                </p>
+                <div class="diff-highlight">
+                    💼 Professional-grade quality
+                </div>
+            </div>
+        </div>
+
+        <!-- Comparison Callout -->
+        <div class="comparison-callout">
+            <div class="comparison-content">
+                <h3>Other Tools vs GeniusPost AI</h3>
+                <div class="comparison-grid">
+                    <div class="comparison-column">
+                        <h4>❌ Other Carousel Makers</h4>
+                        <ul>
+                            <li>Takes hours to create.</li>
+                            <li>Static documents only - No content copy-paste, No links.</li>
+                            <li>Template limitations</li>
+                            <li>Generic content</li>
+                            <li>Design-first approach</li>
+                        </ul>
+                    </div>
+                    <div class="comparison-column">
+                        <h4>✅ GeniusPost AI</h4>
+                        <ul>
+                            <li>Make under minutes</li>
+                            <li>Interactive documents - Copy paste contet, browse links.</li>
+                            <li>Full creative control</li>
+                            <li>AI-optimized content</li>
+                            <li>Results-first approach</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
         <!-- Features Section -->
         <section class="zoom-section features-section" id="features">
             <div>
                 <h2 class="features-title">AI Magic at Your Fingertips</h2>
-                <p class="features-subtitle">Everything you need to create professional LinkedIn content in seconds</p>
+                <p class="features-subtitle">Everything you need to create professional LinkedIn content in minutes</p>
                 <div class="features-grid">
                     <div class="feature-card">
                         <div class="feature-icon">🤖</div>
@@ -933,7 +1326,7 @@
                         <div class="feature-icon">🎯</div>
                         <h3 class="feature-title">Professional Templates</h3>
                         <p class="feature-description">
-                            12+ elegant templates designed for various content types from SaaS, products to marketing, design and more.
+                            17+ elegant templates designed for various content types from SaaS, products to marketing, design and more.
                         </p>
                     </div>
                     
@@ -941,7 +1334,7 @@
                         <div class="feature-icon">⚡</div>
                         <h3 class="feature-title">Lightning Fast</h3>
                         <p class="feature-description">
-                            Content that used to take hours now takes a minute. Focus on strategy while AI handles the creation.
+                            Content that used to take hours now takes minutes. Focus on strategy while AI handles the creation.
                         </p>
                     </div>
                     
@@ -963,11 +1356,11 @@
                 <p class="stats-subtitle">Join professionals who've transformed their LinkedIn presence with AI-powered content</p>
                 <div class="stats-grid">
                     <div class="stat-card">
-                        <div class="stat-number">11.2x</div>
+                        <div class="stat-number">3.7x</div>
                         <div class="stat-label">Increased Reach</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-number">3.7x</div>
+                        <div class="stat-number">2x</div>
                         <div class="stat-label">Higher Engagement</div>
                     </div>
                     <div class="stat-card">
@@ -975,7 +1368,7 @@
                         <div class="stat-label">Content Creation Time</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-number">12+</div>
+                        <div class="stat-number">17+</div>
                         <div class="stat-label">Professional Templates</div>
                     </div>
                     <div class="stat-card">
@@ -983,7 +1376,7 @@
                         <div class="stat-label">LinkedIn Users to Reach</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-number">80%</div>
+                        <div class="stat-number">90%</div>
                         <div class="stat-label">Time Saved</div>
                     </div>
                 </div>
@@ -1005,7 +1398,7 @@
                     
                     <div class="testimonial-card">
                         <p class="testimonial-text">
-                            "The infographics feature is game-changing. My content now stands out in the feed, and I've gained 2,000 new followers in just 3 months."
+                            "The carousel feature is game-changing. My content now stands out in the feed, and I've gained 1,000 new followers in just 3 months."
                         </p>
                         <div class="testimonial-author">Prashant Singh</div>
                         <div class="testimonial-role">Sr. MLE, Axtria</div>
@@ -1013,10 +1406,10 @@
                     
                     <div class="testimonial-card">
                         <p class="testimonial-text">
-                            "I went from struggling to write posts to creating viral content. GeniusPost AI helped me establish thought leadership in my industry."
+                            "I went from struggling to write posts to creating viral documents. GeniusPost AI helped me establish thought leadership in my industry."
                         </p>
-                        <div class="testimonial-author">Emily Johnson</div>
-                        <div class="testimonial-role">Consultant & Speaker</div>
+                        <div class="testimonial-author">Puneet Sharma</div>
+                        <div class="testimonial-role">Lead QA, Ford</div>
                     </div>
                 </div>
             </div>
@@ -1025,10 +1418,9 @@
         <!-- Final CTA Section -->
         <section class="zoom-section final-cta-section" id="final-cta">
             <div>
-                <h2 class="final-cta-title">Ready to 10x Your LinkedIn Game?</h2>
-                <p class="final-cta-description">
-                    Join professionals who are building brands and visibility with AI-powered content. 
-                    Start building your influence, generating leads, and establishing thought leadership today.
+                <h3>Start building your influence.</h3>
+                <h2 class="final-cta-title">Start GeniusPost AI.</h2>
+                <p class="final-cta-description"> 
                 </p>
                 <a href="{{ url_for('login', next=url_for('geniuspost')) }}" class="cta-button" id="tryGeniusFinalBtn">Try GeniusPost AI - It's Free</a>
             </div>
@@ -1037,7 +1429,7 @@
         <!-- Footer -->
         <footer class="footer">
             <div>
-                <p>&copy; 2024 GeniusPost AI. All rights reserved. Transform your LinkedIn presence with AI.</p>
+                <p>&copy; 2025 GeniusPost AI. All rights reserved. Transform your LinkedIn presence with AI.</p>
             </div>
         </footer>
     </div>
