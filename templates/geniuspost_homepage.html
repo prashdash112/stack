@@ -189,27 +189,25 @@
             color: #ff6b6b;
             text-decoration: none;
         }
+        /* new section */
+        html {
+            scroll-behavior: smooth;
+        }
 
-        /* Zoom Section Base */
-        .zoom-section {
+        .scroll-section {
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
             opacity: 0;
-            transform: scale(0.8);
-            transition: all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transform: translateY(50px);
+            transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
-        .zoom-section.visible {
+        .scroll-section.visible {
             opacity: 1;
-            transform: scale(1);
-        }
-
-        .zoom-section.zoom-out {
-            opacity: 0.3;
-            transform: scale(1.2);
+            transform: translateY(0);
         }
 
         /* Hero Section */
@@ -1058,7 +1056,7 @@
         </nav>
 
         <!-- Hero Section -->
-        <section class="zoom-section hero-section" id="hero">
+        <section class="scroll-section hero-section" id="hero">
             <div>
                 <div class="hero-badge">🚀 Get the most out of LinkedIn</div>
                 <h1 class="hero-title">3x Your LinkedIn Reach</h1>
@@ -1073,7 +1071,7 @@
         
 
         <!-- Content Showcase Section -->
-        <section class="zoom-section showcase-section" id="showcase">
+        <section class="scroll-section showcase-section" id="showcase">
             <div>
                 <h2 class="showcase-title">See What You Can Create</h2>
                 
@@ -1137,7 +1135,7 @@
         </section>
 
         <!-- Use Cases Section -->
-        <section class="zoom-section usecases-section" id="usecases">
+        <section class="scroll-section usecases-section" id="usecases">
             <div>
                 <h2 class="usecases-title">Perfect for Every Professional</h2>
                 <div class="usecases-grid">
@@ -1175,7 +1173,7 @@
             </div>
         </section>
         <!-- How GeniusPost AI is Different Section -->
-<section class="zoom-section differentiator-section" id="differentiator">
+<section class="scroll-section differentiator-section" id="differentiator">
     <div>
         <h2 class="differentiator-title">Why GeniusPost AI is Different</h2>
         <p class="differentiator-subtitle">
@@ -1292,7 +1290,7 @@
     </div>
 </section>
         <!-- Features Section -->
-        <section class="zoom-section features-section" id="features">
+        <section class="scroll-section features-section" id="features">
             <div>
                 <h2 class="features-title">AI Magic at Your Fingertips</h2>
                 <p class="features-subtitle">Everything you need to create professional LinkedIn content in minutes</p>
@@ -1350,7 +1348,7 @@
         </section>
 
         <!-- Stats Section -->
-        <section class="zoom-section stats-section" id="stats">
+        <section class="scroll-section stats-section" id="stats">
             <div>
                 <h2 class="stats-title">Results That Speak Volumes</h2>
                 <p class="stats-subtitle">Join professionals who've transformed their LinkedIn presence with AI-powered content</p>
@@ -1384,7 +1382,7 @@
         </section>
 
         <!-- Testimonials Section -->
-        <section class="zoom-section testimonials-section" id="testimonials">
+        <section class="scroll-section testimonials-section" id="testimonials">
             <div>
                 <h2 class="testimonials-title">Success Stories from LinkedIn Leaders</h2>
                 <div class="testimonials-grid">
@@ -1416,7 +1414,7 @@
         </section>
 
         <!-- Final CTA Section -->
-        <section class="zoom-section final-cta-section" id="final-cta">
+        <section class="scroll-section final-cta-section" id="final-cta">
             <div>
                 <h3>Start building your influence.</h3>
                 <h2 class="final-cta-title">Start GeniusPost AI.</h2>
@@ -1449,40 +1447,22 @@
             }
         }
 
-        // Zoom scroll effect inspired by soniclamb.com
-        function initZoomScroll() {
-            const sections = document.querySelectorAll('.zoom-section');
+        // Simple scroll animation
+        function initSmoothScroll() {
+            const sections = document.querySelectorAll('.scroll-section');
             
             function updateSections() {
-                const scrollY = window.scrollY;
                 const windowHeight = window.innerHeight;
                 
-                sections.forEach((section, index) => {
+                sections.forEach((section) => {
                     const rect = section.getBoundingClientRect();
-                    const sectionCenter = rect.top + rect.height / 2;
-                    const distanceFromCenter = Math.abs(sectionCenter - windowHeight / 2);
-                    const maxDistance = windowHeight;
                     
-                    // Calculate opacity and scale based on distance from viewport center
-                    let opacity = 1 - (distanceFromCenter / maxDistance) * 0.7;
-                    let scale = 1 - (distanceFromCenter / maxDistance) * 0.2;
-                    
-                    // Ensure minimum values
-                    opacity = Math.max(0.3, Math.min(1, opacity));
-                    scale = Math.max(0.8, Math.min(1, scale));
-                    
-                    // Apply the effect
-                    if (rect.bottom > 0 && rect.top < windowHeight) {
+                    if (rect.bottom > windowHeight * 0.2 && rect.top < windowHeight * 0.8) {
                         section.classList.add('visible');
-                        section.style.opacity = opacity;
-                        section.style.transform = `scale(${scale})`;
-                    } else {
-                        section.classList.remove('visible');
                     }
                 });
             }
             
-            // Throttled scroll handler
             let ticking = false;
             function handleScroll() {
                 if (!ticking) {
@@ -1495,7 +1475,7 @@
             }
             
             window.addEventListener('scroll', handleScroll);
-            updateSections(); // Initial call
+            updateSections();
         }
 
         // Smooth scrolling for navigation links
@@ -1594,7 +1574,8 @@
         // Initialize everything when DOM loads
         document.addEventListener('DOMContentLoaded', function() {
             createParticles();
-            initZoomScroll();
+            initSmoothScroll();
+
             
             // Observe stats section for counter animation
             const statsSection = document.querySelector('#stats');
