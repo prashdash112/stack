@@ -223,7 +223,7 @@ def pricing():
 def generate():
     data = request.json or {}
     prompt = data.get('prompt', '').strip()
-    prompt_decorator = 'Important: 1) Dont give unnecessary information.' 
+    prompt_decorator = 'Important: 1) Dont give unnecessary information. 2) Sound as human-like as possible. Understand when to be creative, formal, casual, smart. 3) Always use headings and subheadings unless mentioned otherwise.' 
     prompt = prompt + prompt_decorator
     if not prompt:
         return jsonify({'error': 'Prompt is required.'}), 400
@@ -251,7 +251,7 @@ def generate():
     try:
         response = client.messages.create(
             model="claude-sonnet-4-20250514",
-            max_tokens=1000,
+            max_tokens=2000,
             temperature=1,
             messages=[
                 {
