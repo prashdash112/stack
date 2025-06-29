@@ -2253,21 +2253,25 @@ font-family:'Kalam', sans-serif !important;
                 transition: all 0.2s ease;
             }
 
-/* LaTeX Book Style Template - 100% Markdown Compliant */
+/* LaTeX Book Style Template - Elegant Notepad Style */
 .latex-book-template {
-    background: #fefefe;
-    color: #2c2c2c;
+    background: #f9f9f9;
+    color: #1a1a1a;
     font-family: 'Crimson Text', 'Times New Roman', serif;
     line-height: 1.7;
     font-size: 16px;
-    padding: 60px 80px;
+    padding: 40px;
     position: relative;
-    max-width: 850px;
-    margin: 0 auto;
-    box-shadow: 0 0 30px rgba(0,0,0,0.1);
+    min-height: 100vh;
+    /* Notepad paper texture */
+    background-image: 
+        linear-gradient(rgba(0,0,0,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,0,0,0.02) 1px, transparent 1px);
+    background-size: 100% 30px, 30px 100%;
+    background-position: 0 0, 0 0;
 }
 
-/* Elegant paper texture background */
+/* Elegant paper texture overlay */
 .latex-book-template::before {
     content: '';
     position: absolute;
@@ -2276,26 +2280,21 @@ font-family:'Kalam', sans-serif !important;
     right: 0;
     bottom: 0;
     background: 
-        radial-gradient(circle at 20% 80%, rgba(120,119,198,0.02) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(255,183,77,0.02) 0%, transparent 50%),
-        linear-gradient(45deg, transparent 49%, rgba(0,0,0,0.01) 50%, transparent 51%);
+        radial-gradient(circle at 20% 80%, rgba(0,0,0,0.008) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(0,0,0,0.008) 0%, transparent 50%);
     pointer-events: none;
     z-index: 0;
 }
 
-/* Parallel text bars (like LaTeX margin notes) */
+/* Dark margin line (like notebook paper) */
 .latex-book-template::after {
     content: '';
     position: absolute;
-    top: 60px;
-    bottom: 60px;
-    left: 40px;
+    top: 0;
+    bottom: 0;
+    left: 80px;
     width: 2px;
-    background: linear-gradient(to bottom, 
-        transparent 0%, 
-        #d4af37 10%, 
-        #d4af37 90%, 
-        transparent 100%);
+    background: rgba(0,0,0,0.15);
     z-index: 0;
 }
 
@@ -2322,7 +2321,7 @@ font-family:'Kalam', sans-serif !important;
     display: block;
     width: 120px;
     height: 3px;
-    background: linear-gradient(90deg, transparent, #d4af37, transparent);
+    background: linear-gradient(90deg, transparent, #333333, transparent);
     margin: 1rem auto 0;
 }
 
@@ -2330,9 +2329,9 @@ font-family:'Kalam', sans-serif !important;
     font-family: 'Playfair Display', serif;
     font-size: 2.2rem;
     font-weight: 600;
-    color: #2c2c2c;
+    color: #1a1a1a;
     margin: 2.5rem 0 1.5rem 0;
-    border-bottom: 2px solid #e8e8e8;
+    border-bottom: 2px solid #cccccc;
     padding-bottom: 0.5rem;
     position: relative;
 }
@@ -2341,7 +2340,7 @@ font-family:'Kalam', sans-serif !important;
     font-family: 'Playfair Display', serif;
     font-size: 1.6rem;
     font-weight: 600;
-    color: #3a3a3a;
+    color: #2a2a2a;
     margin: 2rem 0 1rem 0;
     position: relative;
 }
@@ -2351,30 +2350,18 @@ font-family:'Kalam', sans-serif !important;
 .latex-book-template h6 {
     font-family: 'Crimson Text', serif;
     font-weight: 600;
-    color: #4a4a4a;
+    color: #333333;
     margin: 1.5rem 0 0.8rem 0;
 }
 
-/* Paragraphs and Body Text */
+/* Paragraphs and Body Text - No indentation for notepad style */
 .latex-book-template p {
     font-family: 'Crimson Text', serif;
     font-size: 16px;
     line-height: 1.8;
-    color: #2c2c2c;
+    color: #1a1a1a;
     margin: 0 0 1.2rem 0;
-    text-align: justify;
-    hyphens: auto;
-    text-indent: 1.5em;
-}
-
-/* First paragraph after headings - no indent */
-.latex-book-template h1 + p,
-.latex-book-template h2 + p,
-.latex-book-template h3 + p,
-.latex-book-template h4 + p,
-.latex-book-template h5 + p,
-.latex-book-template h6 + p {
-    text-indent: 0;
+    text-align: left; /* Left align for notepad style */
 }
 
 /* Lists */
@@ -2389,16 +2376,16 @@ font-family:'Kalam', sans-serif !important;
     font-family: 'Crimson Text', serif;
     font-size: 16px;
     line-height: 1.8;
-    color: #2c2c2c;
+    color: #1a1a1a;
     margin: 0.8rem 0;
     padding-left: 2rem;
     position: relative;
-    text-align: justify;
+    text-align: left;
 }
 
 .latex-book-template ul li::before {
-    content: '●';
-    color: #d4af37;
+    content: '•';
+    color: #333333;
     font-size: 1.2rem;
     position: absolute;
     left: 0.5rem;
@@ -2412,7 +2399,7 @@ font-family:'Kalam', sans-serif !important;
 .latex-book-template ol li::before {
     content: counter(list-counter) ".";
     counter-increment: list-counter;
-    color: #d4af37;
+    color: #333333;
     font-weight: 600;
     position: absolute;
     left: 0;
@@ -2420,20 +2407,20 @@ font-family:'Kalam', sans-serif !important;
     min-width: 1.5rem;
 }
 
-/* Code Blocks */
+/* Code Blocks - Cleaner notepad style */
 .latex-book-template pre {
-    background: #f8f8f8;
-    border: 1px solid #e0e0e0;
-    border-left: 4px solid #d4af37;
-    border-radius: 4px;
+    background: #f5f5f5;
+    border: 1px solid #cccccc;
+    border-left: 4px solid #333333;
+    border-radius: 6px;
     padding: 1.5rem;
     margin: 2rem 0;
     font-family: 'JetBrains Mono', 'Courier New', monospace;
     font-size: 14px;
     line-height: 1.6;
-    color: #2c2c2c;
+    color: #1a1a1a;
     overflow-x: auto;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     position: relative;
 }
 
@@ -2442,8 +2429,8 @@ font-family:'Kalam', sans-serif !important;
     position: absolute;
     top: -10px;
     left: 20px;
-    background: #f8f8f8;
-    color: #666;
+    background: #f5f5f5;
+    color: #555555;
     font-size: 12px;
     font-weight: 600;
     padding: 0 8px;
@@ -2453,42 +2440,41 @@ font-family:'Kalam', sans-serif !important;
 }
 
 .latex-book-template code {
-    background: #f5f5f5;
-    border: 1px solid #e8e8e8;
-    border-radius: 3px;
+    background: #f0f0f0;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
     padding: 2px 6px;
     font-family: 'JetBrains Mono', 'Courier New', monospace;
     font-size: 14px;
-    color: #c7254e;
+    color: #333333;
     font-weight: 500;
 }
 
 .latex-book-template p code {
-    background: #f8f2f2;
-    color: #a0356b;
+    background: #f0f0f0;
+    color: #333333;
 }
 
-/* Tables */
+/* Tables - Clean notepad style, no shadow chopping */
 .latex-book-template table {
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
     margin: 2rem 0;
-    background: #fff;
-    border: 1px solid #ddd;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    background: #ffffff;
+    border: 1px solid #cccccc;
     border-radius: 6px;
     overflow: hidden;
     font-family: 'Crimson Text', serif;
 }
 
 .latex-book-template th {
-    background: linear-gradient(135deg, #f8f8f8, #eeeeee);
-    color: #2c2c2c;
+    background: linear-gradient(135deg, #f5f5f5, #e9e9e9);
+    color: #1a1a1a;
     font-weight: 700;
     text-align: left;
     padding: 1rem 1.5rem;
-    border-bottom: 2px solid #d4af37;
+    border-bottom: 2px solid #333333;
     font-size: 15px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -2496,8 +2482,8 @@ font-family:'Kalam', sans-serif !important;
 
 .latex-book-template td {
     padding: 1rem 1.5rem;
-    border-bottom: 1px solid #f0f0f0;
-    color: #2c2c2c;
+    border-bottom: 1px solid #e0e0e0;
+    color: #1a1a1a;
     font-size: 15px;
     line-height: 1.6;
 }
@@ -2507,23 +2493,23 @@ font-family:'Kalam', sans-serif !important;
 }
 
 .latex-book-template tr:nth-child(even) td {
-    background: #fafafa;
+    background: #f9f9f9;
 }
 
-/* Blockquotes */
+/* Blockquotes - Notepad style */
 .latex-book-template blockquote {
     position: relative;
     margin: 2rem 0;
     padding: 1.5rem 2rem 1.5rem 3rem;
-    background: #fafafa;
-    border-left: 4px solid #d4af37;
-    border-radius: 4px;
+    background: #f5f5f5;
+    border-left: 4px solid #333333;
+    border-radius: 6px;
     font-family: 'Playfair Display', serif;
     font-style: italic;
     font-size: 17px;
     line-height: 1.8;
-    color: #4a4a4a;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    color: #2a2a2a;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
 
 .latex-book-template blockquote::before {
@@ -2532,16 +2518,15 @@ font-family:'Kalam', sans-serif !important;
     top: 10px;
     left: 15px;
     font-size: 3rem;
-    color: #d4af37;
+    color: #333333;
     font-family: 'Playfair Display', serif;
     font-weight: 700;
     line-height: 1;
-    opacity: 0.7;
+    opacity: 0.6;
 }
 
 .latex-book-template blockquote p {
     margin: 0;
-    text-indent: 0;
 }
 
 /* Strong and Emphasis */
@@ -2556,9 +2541,9 @@ font-family:'Kalam', sans-serif !important;
     color: #3a3a3a;
 }
 
-/* Links */
+/* Links - Notepad style */
 .latex-book-template a {
-    color: #8b4513;
+    color: #333333;
     text-decoration: none;
     border-bottom: 1px solid transparent;
     transition: all 0.3s ease;
@@ -2566,40 +2551,40 @@ font-family:'Kalam', sans-serif !important;
 }
 
 .latex-book-template a:hover {
-    color: #d4af37;
-    border-bottom-color: #d4af37;
+    color: #000000;
+    border-bottom-color: #000000;
 }
 
-/* Horizontal Rules */
+/* Horizontal Rules - Simple notepad style */
 .latex-book-template hr {
     border: none;
     height: 1px;
-    background: linear-gradient(90deg, transparent, #d4af37, transparent);
+    background: linear-gradient(90deg, transparent, #333333, transparent);
     margin: 3rem 0;
     position: relative;
 }
 
 .latex-book-template hr::after {
-    content: '❦';
+    content: '✦';
     position: absolute;
     top: -10px;
     left: 50%;
     transform: translateX(-50%);
-    background: #fefefe;
-    color: #d4af37;
-    font-size: 18px;
+    background: #f9f9f9;
+    color: #333333;
+    font-size: 16px;
     padding: 0 10px;
 }
 
-/* Mark/Highlight - Only if your markdown parser supports ==text== syntax */
+/* Mark/Highlight - Notepad style highlighting */
 .latex-book-template mark {
-    background: linear-gradient(135deg, #fff3cd, #ffeaa7);
-    color: #856404;
+    background: linear-gradient(135deg, #f0f0f0, #e8e8e8);
+    color: #1a1a1a;
     padding: 2px 6px;
     border-radius: 3px;
     font-weight: 600;
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    border: 1px solid #f5d56b;
+    border: 1px solid #cccccc;
 }
 
 /* Font declarations for all elements */
@@ -2951,7 +2936,15 @@ font-family:'Kalam', sans-serif !important;
             if (action === 'updateContent') {
                 try {
                     // Parse markdown to HTML first
-                    const htmlContent = marked.parse(content || '');
+                    let htmlContent = marked.parse(content || '');
+                    
+                    //ADD: Process highlighting syntax (same as markdown editor)
+                    htmlContent = htmlContent.replace(/==(.*?)==/g, '<mark>$1</mark>');
+                    
+                    //ADD: Process other syntax if needed
+                    htmlContent = htmlContent.replace(/~(.*?)~/g, '<sub>$1</sub>');
+                    htmlContent = htmlContent.replace(/\^(.*?)\^/g, '<sup>$1</sup>');
+                    
                     preview.innerHTML = htmlContent;
                     preview.className = template + '-template template-base';
                     currentTemplate = template;
@@ -2977,4 +2970,3 @@ font-family:'Kalam', sans-serif !important;
     </script>
 </body>
 </html>
-
