@@ -12,11 +12,14 @@ from datetime import datetime, timezone
 
 from weasyprint import HTML, CSS
 from weasyprint.text.fonts import FontConfiguration
+from bs4 import BeautifulSoup
+
 import tempfile
 import base64
 from io import BytesIO
 import markdown
 import time
+
 
 
 
@@ -203,7 +206,7 @@ def logout():
 @app.route('/')
 def home():
     # return render_template('index_claude.html')
-    return render_template('geniuspost_homepage.html',current_user=current_user)
+    return render_template('geniuspost_homepage.html',current_user=current_user) 
 
 @app.before_request
 def require_login_for_genius():
@@ -223,7 +226,7 @@ def pricing():
 def generate():
     data = request.json or {}
     prompt = data.get('prompt', '').strip()
-    prompt_decorator = 'Important: 1) Dont give unnecessary information. 2) Sound as human-like as possible. Understand when to be creative, formal, casual, or smart. 3) Always use headings and subheadings unless mentioned otherwise. 4) Always split code into smaller chunks.' 
+    prompt_decorator = 'Important: 1) Dont give unnecessary information. 2) Sound as human-like as possible. Understand when to be creative, formal, casual, or smart. 3) Always use headings and subheadings unless mentioned otherwise. 4) Always split the code into smaller chunks.' 
     prompt = prompt + prompt_decorator
     if not prompt:
         return jsonify({'error': 'Prompt is required.'}), 400
@@ -251,7 +254,7 @@ def generate():
     try:
         response = client.messages.create(
             model="claude-sonnet-4-20250514",
-            max_tokens=2000,
+            max_tokens=1200,
             temperature=1,
             messages=[
                 {
@@ -354,59 +357,202 @@ def check_feedback_status():
 
 ##################################################
 # Replace your existing /generate-pdf endpoint with this enhanced version
-@app.route('/generate-pdf', methods=['POST'])
-def generate_pdf():
-    try:
-        data = request.get_json()
-        content = data.get('content', '')
-        template = data.get('template', 'tech-neural')
-        styles = data.get('styles', '')
+# @app.route('/generate-pdf', methods=['POST'])
+# def generate_pdf():
+#     try:
+#         data = request.get_json()
+#         content = data.get('content', '')
+#         template = data.get('template', 'tech-neural')
+#         styles = data.get('styles', '')
         
-        # Create the complete HTML document with all styles
-        full_html = create_enhanced_pdf_html(content, template, styles)
+#         # Create the complete HTML document with all styles
+#         full_html = create_enhanced_pdf_html(content, template, styles)
         
-        # Generate PDF using WeasyPrint with proper image handling
-        font_config = FontConfiguration()
+#         # Generate PDF using WeasyPrint with proper image handling
+#         font_config = FontConfiguration()
         
-        # Create temporary file for PDF
-        with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as tmp_file:
-            HTML(
-                string=full_html, 
-                base_url=request.url_root,  # ✅ CRITICAL: This allows relative image URLs
-                encoding='utf-8'
-            ).write_pdf(
-                tmp_file.name,
-                font_config=font_config,
-                optimize_images=False,  # ✅ CHANGED: Don't optimize to prevent corruption
-                presentational_hints=True,
-                # ✅ NEW: Add these for better image handling
-                stylesheets=[],
-                attachments=[]
-            )
-            tmp_file_path = tmp_file.name
+#         # Create temporary file for PDF
+#         with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as tmp_file:
+#             HTML(
+#                 string=full_html, 
+#                 base_url=request.url_root,  # ✅ CRITICAL: This allows relative image URLs
+#                 encoding='utf-8'
+#             ).write_pdf(
+#                 tmp_file.name,
+#                 font_config=font_config,
+#                 optimize_images=False,  # ✅ CHANGED: Don't optimize to prevent corruption
+#                 presentational_hints=True,
+#                 # ✅ NEW: Add these for better image handling
+#                 stylesheets=[],
+#                 attachments=[]
+#             )
+#             tmp_file_path = tmp_file.name
         
-        # Read PDF content
-        with open(tmp_file_path, 'rb') as pdf_file:
-            pdf_content = pdf_file.read()
+#         # Read PDF content
+#         with open(tmp_file_path, 'rb') as pdf_file:
+#             pdf_content = pdf_file.read()
         
-        # Clean up temporary file
-        os.unlink(tmp_file_path)
+#         # Clean up temporary file
+#         os.unlink(tmp_file_path)
         
-        # Return PDF as base64 encoded string
-        pdf_base64 = base64.b64encode(pdf_content).decode('utf-8')
+#         # Return PDF as base64 encoded string
+#         pdf_base64 = base64.b64encode(pdf_content).decode('utf-8')
         
-        return jsonify({
-            'success': True,
-            'pdf_data': pdf_base64,
-            'filename': f'carousel-{template}-{int(time.time())}.pdf'
-        })
+#         return jsonify({
+#             'success': True,
+#             'pdf_data': pdf_base64,
+#             'filename': f'carousel-{template}-{int(time.time())}.pdf'
+#         })
         
-    except Exception as e:
-        print(f"PDF generation error: {str(e)}")
-        return jsonify({'success': False, 'error': str(e)}), 500
+#     except Exception as e:
+#         print(f"PDF generation error: {str(e)}")
+#         return jsonify({'success': False, 'error': str(e)}), 500
     
+# def create_enhanced_pdf_html(content, template, captured_styles=''): 
+#     """Create complete HTML document with all captured styles"""
+    
+#     complete_template_styles = f"""
+#     <style>
+#         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+        
+#         /* PDF PAGE CONTROL - CUSTOM SIZE */
+#         @page {{
+#             size: 1080px 1350px;
+#             margin: 8px;
+#             padding: 0px;
+#         }}
+        
+#         /* ✅ FIRST PAGE ONLY - Footer */
+#         @page :first {{
+#             margin: 8px 8px 30px 8px; 
+            
+#             @bottom-center {{
+#                 content: "Generated with GeniusPost AI";
+#                 font-family: 'Space Grotesk', sans-serif;
+#                 font-size: 18px;
+#                 font-weight: 700;
+#                 color: #2c3e50;
+#                 background: rgba(255,255,255,0.9);
+#                 padding: 8px 16px;
+#                 border-radius: 20px;
+#                 letter-spacing: 1px;
+#                 text-transform: uppercase;
+#                 box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+#                 margin-top: 5px;
+#             }}
+#         }}
+        
+#         * {{
+#             box-sizing: border-box;
+#             margin: 0;
+#             padding: 0;
+#         }}
+        
+#         html, body {{
+#             width: 1064px;  /* ✅ 1080 - 16px (8px margins × 2) */
+#             margin: 0 !important;
+#             padding: 0px !important;
+#             font-family: 'Inter', sans-serif;
+#         }}
+        
+#         .pdf-container {{
+#             width: 1064px;
+#             margin: 0;
+#             padding: 0;
+#             position: relative;
+#         }}
+        
+#         .template-base {{
+#             width: 1064px !important;
+#             min-height: 1324px !important;  /* ✅ Keep original height since only first page has larger bottom margin */
+#             margin: 0 !important;
+#             padding: 30px !important;
+#             position: relative;
+#             box-sizing: border-box;
+#             page-break-inside: auto;
+#         }}
+        
+#         /* PAGE BREAK CONTROLS */
+#         h1, h2, h3, h4, h5, h6 {{
+#             page-break-after: avoid;
+#             page-break-inside: avoid;
+#             margin-top: 0;
+#         }}
+
+#         /* ✅ IMAGE HANDLING FOR PDF - PROPERLY CENTERED */
+#         img {{
+#             max-width: 1004px !important;
+#             width: 100% !important;
+#             height: auto !important;
+#             display: block !important;
+#             page-break-inside: avoid;
+#             margin: 20px auto !important;
+#             object-fit: contain !important;
+#             border-radius: 16px !important;
+#             position: relative !important;
+#         }}
+        
+#         /* ✅ Specific spacing for content elements */
+#         .template-base > *:first-child {{
+#             margin-top: 0 !important;
+#         }}
+        
+#         .template-base > h1:first-child,
+#         .template-base > h2:first-child,
+#         .template-base > h3:first-child {{
+#             padding-top: 10px;
+#         }}
+        
+#         p, li {{
+#             orphans: 3;
+#             widows: 3;
+#         }}
+        
+#         table, pre, blockquote {{
+#             page-break-inside: avoid;
+#             margin: 15px 0;
+#         }}
+        
+#         /* ✅ Content spacing improvements */
+#         p {{
+#             margin-bottom: 12px;
+#         }}
+        
+#         h1, h2, h3, h4, h5, h6 {{
+#             margin-bottom: 10px;
+#             margin-top: 20px;
+#         }}
+        
+#         h1:first-child, h2:first-child, h3:first-child {{
+#             margin-top: 0;
+#         }}
+        
+#         /* Additional captured styles */
+#         {captured_styles}
+#     </style>
+#     """
+    
+#     return f"""
+#     <!DOCTYPE html>
+#     <html>
+#     <head>
+#         <meta charset="UTF-8">
+#         <title>Carousel PDF - {template}</title>
+#         {complete_template_styles}
+#     </head>
+#     <body>
+#         <div class="pdf-container">
+#             <div class="{template}-template template-base">
+#                 {content}
+#             </div>
+#         </div>
+#     </body>
+#     </html>
+#     """
+# Replace your existing create_enhanced_pdf_html function with this enhanced version
+
 def create_enhanced_pdf_html(content, template, captured_styles=''): 
-    """Create complete HTML document with all captured styles"""
+    """Create complete HTML document with smart page break handling"""
     
     complete_template_styles = f"""
     <style>
@@ -446,7 +592,7 @@ def create_enhanced_pdf_html(content, template, captured_styles=''):
         }}
         
         html, body {{
-            width: 1064px;  /* ✅ 1080 - 16px (8px margins × 2) */
+            width: 1064px;
             margin: 0 !important;
             padding: 0px !important;
             font-family: 'Inter', sans-serif;
@@ -461,7 +607,7 @@ def create_enhanced_pdf_html(content, template, captured_styles=''):
         
         .template-base {{
             width: 1064px !important;
-            min-height: 1324px !important;  /* ✅ Keep original height since only first page has larger bottom margin */
+            min-height: 1324px !important;
             margin: 0 !important;
             padding: 30px !important;
             position: relative;
@@ -469,65 +615,197 @@ def create_enhanced_pdf_html(content, template, captured_styles=''):
             page-break-inside: auto;
         }}
         
-        /* PAGE BREAK CONTROLS */
+        /* 🔥 SMART PAGE BREAK CONTROLS - BULLETPROOF SOLUTION */
+        
+        /* Allow content to break naturally */
         h1, h2, h3, h4, h5, h6 {{
-            page-break-after: avoid;
+            page-break-after: auto !important;
             page-break-inside: avoid;
-            margin-top: 0;
+            page-break-before: auto;
+            margin-top: 20px;
+            margin-bottom: 15px;
+            orphans: 2;
+            widows: 2;
         }}
 
-        /* ✅ IMAGE HANDLING FOR PDF - PROPERLY CENTERED */
+        /* Prevent orphans/widows but allow breaks */
+        p {{
+            page-break-inside: auto;
+            orphans: 2;
+            widows: 2;
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }}
+        
+        /* Smart list handling */
+        ul, ol {{
+            page-break-inside: auto;
+            margin: 15px 0;
+        }}
+        
+        li {{
+            page-break-inside: auto;
+            orphans: 2;
+            widows: 2;
+            margin-bottom: 8px;
+        }}
+        
+        /* Long content elements - allow smart breaking */
+        blockquote {{
+            page-break-inside: auto;
+            margin: 20px 0;
+            padding: 15px 20px;
+            border-left: 4px solid #ddd;
+            background: #f9f9f9;
+            orphans: 2;
+            widows: 2;
+        }}
+        
+        /* Code blocks - allow breaking with proper formatting */
+        pre {{
+            page-break-inside: auto;
+            margin: 15px 0;
+            padding: 20px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            overflow-wrap: break-word;
+            white-space: pre-wrap;
+            font-size: 14px;
+            line-height: 1.4;
+            orphans: 3;
+            widows: 3;
+        }}
+        
+        code {{
+            page-break-inside: auto;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }}
+        
+        /* Tables - smart breaking */
+        table {{
+            page-break-inside: auto;
+            margin: 20px 0;
+            width: 100%;
+            border-collapse: collapse;
+        }}
+        
+        thead {{
+            page-break-after: avoid;
+        }}
+        
+        tbody tr {{
+            page-break-inside: avoid;
+            page-break-after: auto;
+        }}
+        
+        th, td {{
+            padding: 12px;
+            border: 1px solid #ddd;
+            vertical-align: top;
+        }}
+        
+        /* Images - keep together but allow page breaks around them */
         img {{
             max-width: 1004px !important;
             width: 100% !important;
             height: auto !important;
             display: block !important;
             page-break-inside: avoid;
+            page-break-before: auto;
+            page-break-after: auto;
             margin: 20px auto !important;
             object-fit: contain !important;
             border-radius: 16px !important;
             position: relative !important;
         }}
         
-        /* ✅ Specific spacing for content elements */
-        .template-base > *:first-child {{
-            margin-top: 0 !important;
+        /* Div containers - allow natural breaking */
+        div {{
+            page-break-inside: auto;
         }}
         
-        .template-base > h1:first-child,
-        .template-base > h2:first-child,
-        .template-base > h3:first-child {{
-            padding-top: 10px;
-        }}
-        
-        p, li {{
+        /* Special handling for long paragraphs */
+        p.long-content {{
+            page-break-inside: auto;
             orphans: 3;
             widows: 3;
         }}
         
-        table, pre, blockquote {{
-            page-break-inside: avoid;
-            margin: 15px 0;
-        }}
+        /* 🔥 SMART SPACING THAT PREVENTS BLANK PAGES */
         
-        /* ✅ Content spacing improvements */
-        p {{
-            margin-bottom: 12px;
-        }}
-        
-        h1, h2, h3, h4, h5, h6 {{
-            margin-bottom: 10px;
-            margin-top: 20px;
-        }}
-        
+        /* Reduce excessive margins that cause page breaks */
         h1:first-child, h2:first-child, h3:first-child {{
-            margin-top: 0;
+            margin-top: 0 !important;
+            padding-top: 10px;
+        }}
+        
+        /* Ensure reasonable spacing */
+        .template-base > *:first-child {{
+            margin-top: 0 !important;
+        }}
+        
+        .template-base > *:last-child {{
+            margin-bottom: 0 !important;
+        }}
+        
+        /* Prevent large gaps */
+        br + br {{
+            display: none;
+        }}
+        
+        /* 🔥 ADVANCED ORPHAN/WIDOW CONTROL */
+        
+        /* Apply to all text content */
+        p, li, td, th, blockquote, figcaption {{
+            orphans: 2;
+            widows: 2;
+        }}
+        
+        /* Stricter control for headings */
+        h1, h2, h3 {{
+            orphans: 3;
+            widows: 3;
+        }}
+        
+        /* 🔥 FORCE CONTENT TO FLOW NATURALLY */
+        
+        /* Remove restrictive page-break-inside: avoid from containers */
+        .content-section, .card, .panel {{
+            page-break-inside: auto !important;
+        }}
+        
+        /* Allow flexible breaking for content blocks */
+        .content-block {{
+            page-break-inside: auto;
+            margin: 10px 0;
         }}
         
         /* Additional captured styles */
         {captured_styles}
+        
+        /* 🔥 OVERRIDE ANY RESTRICTIVE STYLES FROM CAPTURED CSS */
+        
+        /* Force natural page breaking for common containers */
+        section, article, aside, main {{
+            page-break-inside: auto !important;
+        }}
+        
+        /* Ensure text can break naturally */
+        span, strong, em, b, i {{
+            page-break-inside: auto;
+        }}
+        
+        /* Smart handling of flex/grid layouts in print */
+        .flex, .grid, .container {{
+            display: block !important;
+            page-break-inside: auto !important;
+        }}
     </style>
     """
+    
+    # 🔥 PREPROCESS CONTENT FOR BETTER PAGE BREAKS
+    processed_content = preprocess_content_for_pdf(content)
     
     return f"""
     <!DOCTYPE html>
@@ -540,12 +818,175 @@ def create_enhanced_pdf_html(content, template, captured_styles=''):
     <body>
         <div class="pdf-container">
             <div class="{template}-template template-base">
-                {content}
+                {processed_content}
             </div>
         </div>
     </body>
     </html>
     """
+
+def preprocess_content_for_pdf(content):
+    """
+    Preprocess HTML content to optimize for PDF page breaks
+    """
+    from bs4 import BeautifulSoup
+    
+    try:
+        soup = BeautifulSoup(content, 'html.parser')
+        
+        # 🔥 SMART CONTENT SPLITTING
+        
+        # Find very long paragraphs and add soft breaks
+        for p in soup.find_all('p'):
+            if p.get_text() and len(p.get_text()) > 800:  # Long paragraphs
+                p['class'] = p.get('class', []) + ['long-content']
+                
+                # Split very long paragraphs at sentence boundaries
+                text = p.get_text()
+                if len(text) > 1200:  # Very long content
+                    sentences = text.split('. ')
+                    if len(sentences) > 3:
+                        # Split into smaller paragraphs
+                        p.clear()
+                        mid_point = len(sentences) // 2
+                        
+                        # First half
+                        first_half = '. '.join(sentences[:mid_point]) + '.'
+                        first_p = soup.new_tag('p', **{'class': 'long-content'})
+                        first_p.string = first_half
+                        
+                        # Second half  
+                        second_half = '. '.join(sentences[mid_point:])
+                        if not second_half.endswith('.'):
+                            second_half += '.'
+                        second_p = soup.new_tag('p', **{'class': 'long-content'})
+                        second_p.string = second_half
+                        
+                        # Replace original paragraph
+                        p.insert_before(first_p)
+                        p.insert_before(second_p)
+                        p.decompose()
+        
+        # 🔥 OPTIMIZE LISTS FOR PAGE BREAKS
+        for ul in soup.find_all(['ul', 'ol']):
+            items = ul.find_all('li')
+            if len(items) > 8:  # Long lists
+                # Add page break hints every 6-8 items
+                for i, item in enumerate(items):
+                    if i > 0 and i % 7 == 0:  # Every 7th item
+                        item['style'] = item.get('style', '') + ' page-break-before: auto;'
+        
+        # 🔥 HANDLE LARGE CODE BLOCKS
+        for pre in soup.find_all('pre'):
+            code_text = pre.get_text()
+            if len(code_text) > 1000:  # Long code blocks
+                # Add line break opportunities
+                lines = code_text.split('\n')
+                if len(lines) > 25:  # Many lines
+                    # Split into smaller code blocks
+                    pre.clear()
+                    chunk_size = 20
+                    
+                    for i in range(0, len(lines), chunk_size):
+                        chunk_lines = lines[i:i + chunk_size]
+                        new_pre = soup.new_tag('pre')
+                        new_pre.string = '\n'.join(chunk_lines)
+                        
+                        if i > 0:  # Add spacing between chunks
+                            spacing = soup.new_tag('div', style='height: 10px;')
+                            pre.insert_before(spacing)
+                        
+                        pre.insert_before(new_pre)
+                    
+                    pre.decompose()
+        
+        # 🔥 ADD SMART BREAK OPPORTUNITIES
+        
+        # Add break opportunities after every few headings
+        headings = soup.find_all(['h1', 'h2', 'h3', 'h4', 'h5', 'h6'])
+        for i, heading in enumerate(headings):
+            if i > 0 and i % 3 == 0:  # Every 3rd heading
+                # Add a subtle break opportunity
+                break_div = soup.new_tag('div', **{
+                    'class': 'page-break-opportunity',
+                    'style': 'page-break-before: auto; height: 1px;'
+                })
+                heading.insert_before(break_div)
+        
+        # 🔥 REMOVE EXCESSIVE WHITE SPACE
+        
+        # Remove multiple consecutive <br> tags
+        for br in soup.find_all('br'):
+            next_sibling = br.next_sibling
+            if next_sibling and next_sibling.name == 'br':
+                br.decompose()
+        
+        # Clean up empty paragraphs
+        for p in soup.find_all('p'):
+            if not p.get_text().strip() and not p.find('img'):
+                p.decompose()
+        
+        return str(soup)
+    
+    except Exception as e:
+        print(f"Content preprocessing error: {e}")
+        return content  # Return original content if preprocessing fails
+
+
+# 🔥 ENHANCED PDF GENERATION WITH BETTER WEASYPRINT SETTINGS
+@app.route('/generate-pdf', methods=['POST'])
+def generate_pdf():
+    try:
+        data = request.get_json()
+        content = data.get('content', '')
+        template = data.get('template', 'tech-neural')
+        styles = data.get('styles', '')
+        
+        # Create the complete HTML document with smart page breaks
+        full_html = create_enhanced_pdf_html(content, template, styles)
+        
+        # 🔥 ENHANCED WEASYPRINT CONFIGURATION
+        font_config = FontConfiguration()
+        
+        # Create temporary file for PDF
+        with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as tmp_file:
+            HTML(
+                string=full_html, 
+                base_url=request.url_root,
+                encoding='utf-8'
+            ).write_pdf(
+                tmp_file.name,
+                font_config=font_config,
+                optimize_images=False,
+                presentational_hints=True,
+                # 🔥 ENHANCED SETTINGS FOR BETTER PAGE BREAKING
+                stylesheets=[],
+                attachments=[],
+                # Additional WeasyPrint options for better rendering
+                uncompressed_pdf=False,  # Keep file size reasonable
+                pdf_version='1.7',       # Modern PDF version
+            )
+            tmp_file_path = tmp_file.name
+        
+        # Read PDF content
+        with open(tmp_file_path, 'rb') as pdf_file:
+            pdf_content = pdf_file.read()
+        
+        # Clean up temporary file
+        os.unlink(tmp_file_path)
+        
+        # Return PDF as base64 encoded string
+        pdf_base64 = base64.b64encode(pdf_content).decode('utf-8')
+        
+        return jsonify({
+            'success': True,
+            'pdf_data': pdf_base64,
+            'filename': f'carousel-{template}-{int(time.time())}.pdf'
+        })
+        
+    except Exception as e:
+        print(f"PDF generation error: {str(e)}")
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 @app.route("/debug")
 def debug():
