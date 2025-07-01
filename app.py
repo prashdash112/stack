@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for,send_file
+from flask import Flask, render_template, request, jsonify, redirect, url_for,send_file,Response
 import requests
 from flask_cors import CORS
 import os
@@ -17,8 +17,9 @@ from bs4 import BeautifulSoup
 import tempfile
 import base64
 from io import BytesIO
-import markdown
+import markdown 
 import time
+import json 
 
 
 
@@ -222,6 +223,60 @@ def geniuspost():
 def pricing():
     return render_template('pricing.html') 
 
+################################################################################
+# 1. ADD THIS NEW STREAMING ENDPOINT - Replace your existing /generate route
+
+@app.route('/generate-stream', methods=['POST'])
+def generate_stream():
+    """Streaming endpoint that sends chunks as they're generated"""
+    data = request.json or {}
+    prompt = data.get('prompt', '').strip()
+    prompt_decorator = 'Important: 1) Dont give unnecessary information. 2) Sound as human-like as possible. Understand when to be creative, formal, casual, or smart. 3) Always use headings and subheadings unless mentioned otherwise. 4) Always split the code into smaller chunks.' 
+    prompt = prompt + prompt_decorator
+    
+    if not prompt:
+        return jsonify({'error': 'Prompt is required.'}), 400
+
+    def generate_chunks():
+        """Generator function that yields chunks as they come from Claude"""
+        try:
+            client = anthropic.Anthropic(api_key=os.environ["CLAUDE_APIKEY"])
+            
+            # 🔥 USE STREAMING API - This is the key change
+            with client.messages.stream(
+                model="claude-sonnet-4-20250514",
+                max_tokens=1200,
+                temperature=1,
+                messages=[{
+                    "role": "user", 
+                    "content": prompt
+                }]
+            ) as stream:
+                for text in stream.text_stream:
+                    if text:  # Only send non-empty chunks
+                        # Format as Server-Sent Events
+                        yield f"data: {json.dumps({'chunk': text, 'done': False})}\n\n"
+            
+            # Send completion signal
+            yield f"data: {json.dumps({'chunk': '', 'done': True})}\n\n"
+            
+        except Exception as e:
+            # Send error
+            yield f"data: {json.dumps({'error': str(e), 'done': True})}\n\n"
+
+    return Response(
+        generate_chunks(),
+        content_type='text/plain; charset=utf-8',
+        headers={
+            'Cache-Control': 'no-cache',
+            'Connection': 'keep-alive',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Headers': 'Content-Type',
+        }
+    )
+
+# 2. KEEP YOUR EXISTING /generate ROUTE AS FALLBACK (in case streaming fails)
+###################################################################################
 @app.route('/generate', methods=['POST'])
 def generate():
     data = request.json or {}
@@ -355,200 +410,7 @@ def check_feedback_status():
     existing_feedback = UserFeedback.query.filter_by(user_id=current_user.id).first()
     return jsonify({"has_submitted": existing_feedback is not None})
 
-##################################################
-# Replace your existing /generate-pdf endpoint with this enhanced version
-# @app.route('/generate-pdf', methods=['POST'])
-# def generate_pdf():
-#     try:
-#         data = request.get_json()
-#         content = data.get('content', '')
-#         template = data.get('template', 'tech-neural')
-#         styles = data.get('styles', '')
-        
-#         # Create the complete HTML document with all styles
-#         full_html = create_enhanced_pdf_html(content, template, styles)
-        
-#         # Generate PDF using WeasyPrint with proper image handling
-#         font_config = FontConfiguration()
-        
-#         # Create temporary file for PDF
-#         with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as tmp_file:
-#             HTML(
-#                 string=full_html, 
-#                 base_url=request.url_root,  # ✅ CRITICAL: This allows relative image URLs
-#                 encoding='utf-8'
-#             ).write_pdf(
-#                 tmp_file.name,
-#                 font_config=font_config,
-#                 optimize_images=False,  # ✅ CHANGED: Don't optimize to prevent corruption
-#                 presentational_hints=True,
-#                 # ✅ NEW: Add these for better image handling
-#                 stylesheets=[],
-#                 attachments=[]
-#             )
-#             tmp_file_path = tmp_file.name
-        
-#         # Read PDF content
-#         with open(tmp_file_path, 'rb') as pdf_file:
-#             pdf_content = pdf_file.read()
-        
-#         # Clean up temporary file
-#         os.unlink(tmp_file_path)
-        
-#         # Return PDF as base64 encoded string
-#         pdf_base64 = base64.b64encode(pdf_content).decode('utf-8')
-        
-#         return jsonify({
-#             'success': True,
-#             'pdf_data': pdf_base64,
-#             'filename': f'carousel-{template}-{int(time.time())}.pdf'
-#         })
-        
-#     except Exception as e:
-#         print(f"PDF generation error: {str(e)}")
-#         return jsonify({'success': False, 'error': str(e)}), 500
-    
-# def create_enhanced_pdf_html(content, template, captured_styles=''): 
-#     """Create complete HTML document with all captured styles"""
-    
-#     complete_template_styles = f"""
-#     <style>
-#         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
-        
-#         /* PDF PAGE CONTROL - CUSTOM SIZE */
-#         @page {{
-#             size: 1080px 1350px;
-#             margin: 8px;
-#             padding: 0px;
-#         }}
-        
-#         /* ✅ FIRST PAGE ONLY - Footer */
-#         @page :first {{
-#             margin: 8px 8px 30px 8px; 
-            
-#             @bottom-center {{
-#                 content: "Generated with GeniusPost AI";
-#                 font-family: 'Space Grotesk', sans-serif;
-#                 font-size: 18px;
-#                 font-weight: 700;
-#                 color: #2c3e50;
-#                 background: rgba(255,255,255,0.9);
-#                 padding: 8px 16px;
-#                 border-radius: 20px;
-#                 letter-spacing: 1px;
-#                 text-transform: uppercase;
-#                 box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-#                 margin-top: 5px;
-#             }}
-#         }}
-        
-#         * {{
-#             box-sizing: border-box;
-#             margin: 0;
-#             padding: 0;
-#         }}
-        
-#         html, body {{
-#             width: 1064px;  /* ✅ 1080 - 16px (8px margins × 2) */
-#             margin: 0 !important;
-#             padding: 0px !important;
-#             font-family: 'Inter', sans-serif;
-#         }}
-        
-#         .pdf-container {{
-#             width: 1064px;
-#             margin: 0;
-#             padding: 0;
-#             position: relative;
-#         }}
-        
-#         .template-base {{
-#             width: 1064px !important;
-#             min-height: 1324px !important;  /* ✅ Keep original height since only first page has larger bottom margin */
-#             margin: 0 !important;
-#             padding: 30px !important;
-#             position: relative;
-#             box-sizing: border-box;
-#             page-break-inside: auto;
-#         }}
-        
-#         /* PAGE BREAK CONTROLS */
-#         h1, h2, h3, h4, h5, h6 {{
-#             page-break-after: avoid;
-#             page-break-inside: avoid;
-#             margin-top: 0;
-#         }}
 
-#         /* ✅ IMAGE HANDLING FOR PDF - PROPERLY CENTERED */
-#         img {{
-#             max-width: 1004px !important;
-#             width: 100% !important;
-#             height: auto !important;
-#             display: block !important;
-#             page-break-inside: avoid;
-#             margin: 20px auto !important;
-#             object-fit: contain !important;
-#             border-radius: 16px !important;
-#             position: relative !important;
-#         }}
-        
-#         /* ✅ Specific spacing for content elements */
-#         .template-base > *:first-child {{
-#             margin-top: 0 !important;
-#         }}
-        
-#         .template-base > h1:first-child,
-#         .template-base > h2:first-child,
-#         .template-base > h3:first-child {{
-#             padding-top: 10px;
-#         }}
-        
-#         p, li {{
-#             orphans: 3;
-#             widows: 3;
-#         }}
-        
-#         table, pre, blockquote {{
-#             page-break-inside: avoid;
-#             margin: 15px 0;
-#         }}
-        
-#         /* ✅ Content spacing improvements */
-#         p {{
-#             margin-bottom: 12px;
-#         }}
-        
-#         h1, h2, h3, h4, h5, h6 {{
-#             margin-bottom: 10px;
-#             margin-top: 20px;
-#         }}
-        
-#         h1:first-child, h2:first-child, h3:first-child {{
-#             margin-top: 0;
-#         }}
-        
-#         /* Additional captured styles */
-#         {captured_styles}
-#     </style>
-#     """
-    
-#     return f"""
-#     <!DOCTYPE html>
-#     <html>
-#     <head>
-#         <meta charset="UTF-8">
-#         <title>Carousel PDF - {template}</title>
-#         {complete_template_styles}
-#     </head>
-#     <body>
-#         <div class="pdf-container">
-#             <div class="{template}-template template-base">
-#                 {content}
-#             </div>
-#         </div>
-#     </body>
-#     </html>
-#     """
 # Replace your existing create_enhanced_pdf_html function with this enhanced version
 
 def create_enhanced_pdf_html(content, template, captured_styles=''): 
@@ -829,7 +691,6 @@ def preprocess_content_for_pdf(content):
     """
     Preprocess HTML content to optimize for PDF page breaks
     """
-    from bs4 import BeautifulSoup
     
     try:
         soup = BeautifulSoup(content, 'html.parser')
