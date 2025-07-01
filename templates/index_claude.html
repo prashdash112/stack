@@ -518,65 +518,328 @@ function createShortImageUrl(file, callback) {
             return tableHTML;
         }
         // Generate content function
+        // async function generateContent() {
+        //     const promptInput = document.getElementById('promptInput');
+        //     const generateBtn = document.getElementById('generateBtn');
+        //     const btnText = generateBtn.querySelector('.btn-text');
+        //     const loadingSpinner = document.getElementById('loadingSpinner');
+
+        //     currentPrompt = promptInput.value.trim();
+
+        //     if (!currentPrompt) {
+        //         promptInput.focus();
+        //         promptInput.style.borderColor = '#ff6b6b';
+        //         setTimeout(() => {
+        //             promptInput.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+        //         }, 2000);
+        //         return;
+        //     }
+
+        //     // Start loading
+        //     generateBtn.classList.add('loading');
+        //     btnText.style.display = 'none';
+        //     loadingSpinner.style.display = 'block';
+
+        //     try {
+        //         const response = await mockApiCall(currentPrompt);
+                
+        //         // Convert markdown to HTML with better formatting
+        //         const markdownHTML = marked.parse(response.content);
+        //         const cleanedHTML = cleanAndFormatHTML(markdownHTML);
+
+        //         // Set content in markdown editor
+        //         const iframe = document.getElementById('markdownEditorFrame');
+        //         iframe.onload = function() {
+        //             iframe.contentWindow.markdownEditor.setMarkdownContent(response.content);
+        //             updateStyledPreviewFromMarkdown();
+        //         };
+        //         if (iframe.contentDocument.readyState === 'complete') {
+        //             iframe.contentWindow.markdownEditor.setMarkdownContent(response.content);
+        //             updateStyledPreviewFromMarkdown();
+        //         }
+                
+        //         // Update preview
+        //         updateStyledPreviewFromMarkdown();
+                
+        //         // Hide the AI widget after generation
+        //         hideAIWidget();
+
+        //         // Update empty state hint
+        //         updateEmptyStateHint();
+
+        //     } catch (error) {
+        //         console.error('Error generating content:', error);
+        //         alert('Failed to generate content. Please try again.');
+        //     } finally {
+        //         // End loading
+        //         generateBtn.classList.remove('loading');
+        //         btnText.style.display = 'block';
+        //         loadingSpinner.style.display = 'none';
+        //     }
+        // }
+        /////////////////////added code /////////////////
         async function generateContent() {
-            const promptInput = document.getElementById('promptInput');
-            const generateBtn = document.getElementById('generateBtn');
-            const btnText = generateBtn.querySelector('.btn-text');
-            const loadingSpinner = document.getElementById('loadingSpinner');
+    const promptInput = document.getElementById('promptInput');
+    const generateBtn = document.getElementById('generateBtn');
+    const btnText = generateBtn.querySelector('.btn-text');
+    const loadingSpinner = document.getElementById('loadingSpinner');
 
-            currentPrompt = promptInput.value.trim();
+    currentPrompt = promptInput.value.trim();
 
-            if (!currentPrompt) {
-                promptInput.focus();
-                promptInput.style.borderColor = '#ff6b6b';
-                setTimeout(() => {
-                    promptInput.style.borderColor = 'rgba(255, 255, 255, 0.2)';
-                }, 2000);
-                return;
+    if (!currentPrompt) {
+        promptInput.focus();
+        promptInput.style.borderColor = '#ff6b6b';
+        setTimeout(() => {
+            promptInput.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+        }, 2000);
+        return;
+    }
+
+    // Start loading state
+    generateBtn.classList.add('loading');
+    btnText.style.display = 'none';
+    loadingSpinner.style.display = 'block';
+    generateBtn.disabled = true;
+
+    try {
+        // 🔥 USE STREAMING APPROACH
+        await streamingGenerate(currentPrompt);
+        
+        // Hide the AI widget after successful generation
+        hideAIWidget();
+        updateEmptyStateHint();
+
+    } catch (error) {
+        console.error('Error generating content:', error);
+        alert('Failed to generate content. Please try again.');
+    } finally {
+        // Reset button state
+        generateBtn.classList.remove('loading');
+        btnText.style.display = 'block';
+        loadingSpinner.style.display = 'none';
+        generateBtn.disabled = false;
+    }
+}
+
+// 2. ADD THIS NEW STREAMING FUNCTION:
+
+// Replace the streamingGenerate function with this enhanced version:
+async function streamingGenerate(prompt) {
+    return new Promise((resolve, reject) => {
+        let accumulatedContent = '';
+        let isFirstChunk = true;
+        
+        updateGenerateButtonState('connecting');
+        
+        fetch('/generate-stream', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ prompt })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
             }
-
-            // Start loading
-            generateBtn.classList.add('loading');
-            btnText.style.display = 'none';
-            loadingSpinner.style.display = 'block';
-
-            try {
-                const response = await mockApiCall(currentPrompt);
-                
-                // Convert markdown to HTML with better formatting
-                const markdownHTML = marked.parse(response.content);
-                const cleanedHTML = cleanAndFormatHTML(markdownHTML);
-
-                // Set content in markdown editor
-                const iframe = document.getElementById('markdownEditorFrame');
-                iframe.onload = function() {
-                    iframe.contentWindow.markdownEditor.setMarkdownContent(response.content);
-                    updateStyledPreviewFromMarkdown();
-                };
-                if (iframe.contentDocument.readyState === 'complete') {
-                    iframe.contentWindow.markdownEditor.setMarkdownContent(response.content);
-                    updateStyledPreviewFromMarkdown();
-                }
-                
-                // Update preview
-                updateStyledPreviewFromMarkdown();
-                
-                // Hide the AI widget after generation
-                hideAIWidget();
-
-                // Update empty state hint
-                updateEmptyStateHint();
-
-            } catch (error) {
-                console.error('Error generating content:', error);
-                alert('Failed to generate content. Please try again.');
-            } finally {
-                // End loading
-                generateBtn.classList.remove('loading');
-                btnText.style.display = 'block';
-                loadingSpinner.style.display = 'none';
+            
+            updateGenerateButtonState('streaming');
+            
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder();
+            
+            function readStream() {
+                reader.read().then(({ done, value }) => {
+                    if (done) {
+                        updateGenerateButtonState('finishing');
+                        setTimeout(() => {
+                            updateGenerateButtonState('idle');
+                            resolve(accumulatedContent);
+                        }, 500);
+                        return;
+                    }
+                    
+                    const chunk = decoder.decode(value, { stream: true });
+                    const lines = chunk.split('\n');
+                    
+                    for (const line of lines) {
+                        if (line.startsWith('data: ')) {
+                            try {
+                                const jsonStr = line.slice(6);
+                                if (jsonStr.trim()) {
+                                    const data = JSON.parse(jsonStr);
+                                    
+                                    if (data.error) {
+                                        updateGenerateButtonState('idle');
+                                        reject(new Error(data.error));
+                                        return;
+                                    }
+                                    
+                                    if (data.done) {
+                                        updateGenerateButtonState('finishing');
+                                        setTimeout(() => {
+                                            updateGenerateButtonState('idle');
+                                            resolve(accumulatedContent);
+                                        }, 500);
+                                        return;
+                                    }
+                                    
+                                    if (data.chunk) {
+                                        accumulatedContent += data.chunk;
+                                        updateMarkdownEditorStreaming(accumulatedContent, isFirstChunk);
+                                        isFirstChunk = false;
+                                    }
+                                }
+                            } catch (parseError) {
+                                console.warn('Failed to parse chunk:', parseError);
+                            }
+                        }
+                    }
+                    
+                    readStream();
+                    
+                }).catch(error => {
+                    updateGenerateButtonState('idle');
+                    reject(error);
+                });
             }
+            
+            readStream();
+            
+        })
+        .catch(error => {
+            console.warn('Streaming failed, falling back to regular API:', error);
+            fallbackToRegularAPI(prompt).then(resolve).catch(reject);
+        });
+    });
+}
+// 3. ADD STREAMING UPDATE FUNCTION:
+
+function updateMarkdownEditorStreaming(content, isFirstChunk = false) {
+    const iframe = document.getElementById('markdownEditorFrame');
+    
+    if (iframe.contentWindow && iframe.contentWindow.markdownEditor) {
+        // 🔥 CLEAR EDITOR ON FIRST CHUNK, THEN STREAM UPDATES
+        if (isFirstChunk) {
+            iframe.contentWindow.markdownEditor.setMarkdownContent('');
         }
+        
+        // Set the accumulated content
+        iframe.contentWindow.markdownEditor.setMarkdownContent(content);
+        
+        // Update preview in real-time
+        updateStyledPreviewFromMarkdown();
+        
+        // 🔥 SMOOTH SCROLL TO BOTTOM OF EDITOR
+        const editor = iframe.contentWindow.document.getElementById('markdownEditor');
+        if (editor) {
+            editor.scrollTop = editor.scrollHeight;
+        }
+    }
+}
+
+// 4. ADD FALLBACK FUNCTION (uses your existing API):
+
+async function fallbackToRegularAPI(prompt) {
+    try {
+        const response = await fetch('/generate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt })
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Server error (${response.status}): ${errorText}`);
+        }
+
+        const data = await response.json();
+        if (data.error) {
+            throw new Error(data.error);
+        }
+
+        // 🔥 SIMULATE STREAMING FOR FALLBACK
+        await simulateStreamingEffect(data.result);
+        return data.result;
+
+    } catch (error) {
+        console.error('Fallback API also failed:', error);
+        throw error;
+    }
+}
+
+// 5. ADD SIMULATED STREAMING FOR FALLBACK:
+
+async function simulateStreamingEffect(fullContent) {
+    const iframe = document.getElementById('markdownEditorFrame');
+    if (!iframe.contentWindow || !iframe.contentWindow.markdownEditor) return;
+    
+    // Clear editor first
+    iframe.contentWindow.markdownEditor.setMarkdownContent('');
+    
+    // 🔥 STREAM WORDS AT ~20 WORDS PER SECOND
+    const words = fullContent.split(' ');
+    let currentContent = '';
+    
+    for (let i = 0; i < words.length; i++) {
+        currentContent += (i > 0 ? ' ' : '') + words[i];
+        
+        // Update editor
+        iframe.contentWindow.markdownEditor.setMarkdownContent(currentContent);
+        updateStyledPreviewFromMarkdown();
+        
+        // Scroll to bottom
+        const editor = iframe.contentWindow.document.getElementById('markdownEditor');
+        if (editor) {
+            editor.scrollTop = editor.scrollHeight;
+        }
+        
+        // 🔥 DELAY FOR STREAMING EFFECT (~20 words/sec)
+        if (i % 3 === 0) { // Every 3 words = ~50ms delay
+            await new Promise(resolve => setTimeout(resolve, 50));
+        }
+    }
+}
+        // 🔥 ALSO UPDATE THE BUTTON TEXT DURING STREAMING
+
+// 6. ADD THIS ENHANCED BUTTON STATE MANAGEMENT:
+
+function updateGenerateButtonState(state) {
+    const generateBtn = document.getElementById('generateBtn');
+    const btnText = generateBtn.querySelector('.btn-text');
+    const loadingSpinner = document.getElementById('loadingSpinner');
+    
+    switch(state) {
+        case 'idle':
+            generateBtn.classList.remove('loading');
+            btnText.textContent = '⚡️Compose';
+            btnText.style.display = 'block';
+            loadingSpinner.style.display = 'none';
+            generateBtn.disabled = false;
+            break;
+            
+        case 'connecting':
+            generateBtn.classList.add('loading');
+            btnText.textContent = 'Connecting...';
+            btnText.style.display = 'block';
+            loadingSpinner.style.display = 'none';
+            generateBtn.disabled = true;
+            break;
+            
+        case 'streaming':
+            generateBtn.classList.add('loading');
+            btnText.textContent = 'AI Writing...';
+            btnText.style.display = 'block';
+            loadingSpinner.style.display = 'none';
+            generateBtn.disabled = true;
+            break;
+            
+        case 'finishing':
+            btnText.textContent = 'Finishing...';
+            break;
+    }
+}
+        ///////////////////////// END ////////////////////////
 
         // Mock API call
         async function mockApiCall(prompt) {
@@ -605,52 +868,52 @@ function createShortImageUrl(file, callback) {
         }
 
         // Dynamic placeholder functionality
-        function initializePlaceholder() {
-            const textarea = document.getElementById('promptInput');
-            const samples = [
-                'Write a short engaging post on ML systems using headings, subheadings.',
-                'Generate an infographic on finance with proper tables.',
-                'Write a carousel with 10 code snippets covering entire MCP workflow.',
-                'Create a thought leadership post on Real estate, Leave [2-3] sentence blank for my insights.',
-                'Write, edit, style, format, add image and download stunning infographics and Carousels.'
-            ];
+        // function initializePlaceholder() {
+        //     const textarea = document.getElementById('promptInput');
+        //     const samples = [
+        //         'Write a short engaging post on ML systems using headings, subheadings.',
+        //         'Generate an infographic on finance with proper tables.',
+        //         'Write a carousel with 10 code snippets covering entire MCP workflow.',
+        //         'Create a thought leadership post on Real estate, Leave [2-3] sentence blank for my insights.',
+        //         'Write, edit, style, format, add image and download stunning infographics and Carousels.'
+        //     ];
             
-            let loopTimer, charTimer;
-            let sampleIdx = 0, charIdx = 0, deleting = false;
+        //     let loopTimer, charTimer;
+        //     let sampleIdx = 0, charIdx = 0, deleting = false;
 
-            function startTyping() {
-                const current = samples[sampleIdx];
-                if (!deleting) {
-                    textarea.placeholder = current.slice(0, ++charIdx);
-                } else {
-                    textarea.placeholder = current.slice(0, charIdx--);
-                }
+        //     function startTyping() {
+        //         const current = samples[sampleIdx];
+        //         if (!deleting) {
+        //             textarea.placeholder = current.slice(0, ++charIdx);
+        //         } else {
+        //             textarea.placeholder = current.slice(0, charIdx--);
+        //         }
 
-                const delay = deleting ? 20 : 60;
-                charTimer = setTimeout(() => {
-                    if (!deleting && charIdx === current.length) {
-                        deleting = true;
-                        clearTimeout(charTimer);
-                        loopTimer = setTimeout(startTyping, 1000);
-                    } else if (deleting && charIdx === 0) {
-                        deleting = false;
-                        sampleIdx = (sampleIdx + 1) % samples.length;
-                        clearTimeout(charTimer);
-                        loopTimer = setTimeout(startTyping, 500);
-                    } else {
-                        startTyping();
-                    }
-                }, delay);
-            }
+        //         const delay = deleting ? 20 : 60;
+        //         charTimer = setTimeout(() => {
+        //             if (!deleting && charIdx === current.length) {
+        //                 deleting = true;
+        //                 clearTimeout(charTimer);
+        //                 loopTimer = setTimeout(startTyping, 1000);
+        //             } else if (deleting && charIdx === 0) {
+        //                 deleting = false;
+        //                 sampleIdx = (sampleIdx + 1) % samples.length;
+        //                 clearTimeout(charTimer);
+        //                 loopTimer = setTimeout(startTyping, 500);
+        //             } else {
+        //                 startTyping();
+        //             }
+        //         }, delay);
+        //     }
 
-            loopTimer = setTimeout(startTyping, 500);
+        //     loopTimer = setTimeout(startTyping, 500);
 
-            textarea.addEventListener('focus', () => {
-                clearTimeout(loopTimer);
-                clearTimeout(charTimer);
-                textarea.placeholder = '';
-            });
-        }
+        //     textarea.addEventListener('focus', () => {
+        //         clearTimeout(loopTimer);
+        //         clearTimeout(charTimer);
+        //         textarea.placeholder = '';
+        //     });
+        // }
 
         // Profile functionality
         function initializeProfile() {
@@ -978,7 +1241,7 @@ function triggerFeedbackOnFirstDownload() {
 
 document.addEventListener('DOMContentLoaded', function() {
     addRequiredStyles();
-    initializePlaceholder();
+    // initializePlaceholder();
     initializeProfile();
     initializeTabSystem();
     initializeImageUpload();
