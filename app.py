@@ -747,12 +747,6 @@ def create_enhanced_pdf_html(content, template, captured_styles=''):
             font-weight: 300 700;
             font-style: normal;
         }}
-        @font-face {{
-            font-family: 'Space Grotesk';
-            src: url('file://{fonts_dir}/SpaceGrotesk-Italic-VariableFont.ttf') format('truetype');
-            font-weight: 300 700;
-            font-style: italic;
-        }}
 
         @font-face {{
             font-family: 'Crimson Pro';
@@ -796,19 +790,19 @@ def create_enhanced_pdf_html(content, template, captured_styles=''):
         /* Static fonts */
         @font-face {{
             font-family: 'Kalam';
-            src: url('file://{fonts_dir}/kalam-light.ttf') format('truetype');
+            src: url('file://{fonts_dir}/Kalam-Light.ttf') format('truetype');
             font-weight: 300;
             font-style: normal;
         }}
         @font-face {{
             font-family: 'Kalam';
-            src: url('file://{fonts_dir}/kalam-regular.ttf') format('truetype');
+            src: url('file://{fonts_dir}/Kalam-Regular.ttf') format('truetype');
             font-weight: 400;
             font-style: normal;
         }}
         @font-face {{
             font-family: 'Kalam';
-            src: url('file://{fonts_dir}/kalam-bold.ttf') format('truetype');
+            src: url('file://{fonts_dir}/Kalam-Bold.ttf') format('truetype');
             font-weight: 700;
             font-style: normal;
         }}
@@ -938,7 +932,7 @@ def create_enhanced_pdf_html(content, template, captured_styles=''):
             page-break-inside: auto;
             word-wrap: break-word;
             overflow-wrap: break-word;
-            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            font-family: 'JetBrains Mono', 'Courier New', monospace; 
         }}
         
         table {{
@@ -991,10 +985,12 @@ def create_enhanced_pdf_html(content, template, captured_styles=''):
         
         /* Tech Neural Template */
         .tech-neural-template, .tech-neural-template * {{
-            font-family: 'Inter', Arial, sans-serif !important;
+            /* font-family: 'Inter', Arial, sans-serif !important; */
+            font-family: 'Kalam', Arial, sans-serif !important;
         }}
         .tech-neural-template h1, .tech-neural-template h2, .tech-neural-template h3 {{
-            font-family: 'Space Grotesk', Arial, sans-serif !important;
+            /* font-family: 'Space Grotesk', Arial, sans-serif !important; */ 
+            font-family: 'Kalam', Arial, sans-serif !important;
         }}
         .tech-neural-template pre, .tech-neural-template code {{
             font-family: 'JetBrains Mono', 'Courier New', monospace !important;
