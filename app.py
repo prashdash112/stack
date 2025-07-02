@@ -840,6 +840,7 @@ def create_enhanced_pdf_html(content, template, captured_styles=''):
             }}
         }}
         
+        /* BASIC PDF LAYOUT - NO FONT OVERRIDES */
         * {{
             box-sizing: border-box;
             margin: 0;
@@ -850,7 +851,7 @@ def create_enhanced_pdf_html(content, template, captured_styles=''):
             width: 1064px;
             margin: 0 !important;
             padding: 0px !important;
-            font-family: 'Inter', Arial, sans-serif;
+            /* NO font-family here - let captured styles handle it */
         }}
         
         .pdf-container {{
@@ -870,7 +871,7 @@ def create_enhanced_pdf_html(content, template, captured_styles=''):
             page-break-inside: auto;
         }}
         
-        /* 🔥 SMART PAGE BREAK CONTROLS */
+        /* 🔥 PAGE BREAK CONTROLS - NO FONT OVERRIDES */
         h1, h2, h3, h4, h5, h6 {{
             page-break-after: auto !important;
             page-break-inside: avoid;
@@ -887,7 +888,7 @@ def create_enhanced_pdf_html(content, template, captured_styles=''):
             widows: 2;
             margin-bottom: 12px;
             line-height: 1.6;
-            font-family: 'Inter', Arial, sans-serif;
+            /* NO font-family - let captured styles handle it */
         }}
         
         ul, ol {{
@@ -900,7 +901,7 @@ def create_enhanced_pdf_html(content, template, captured_styles=''):
             orphans: 2;
             widows: 2;
             margin-bottom: 8px;
-            font-family: 'Inter', Arial, sans-serif;
+            /* NO font-family - let captured styles handle it */
         }}
         
         blockquote {{
@@ -911,28 +912,6 @@ def create_enhanced_pdf_html(content, template, captured_styles=''):
             background: #f9f9f9;
             orphans: 2;
             widows: 2;
-        }}
-        
-        pre {{
-            page-break-inside: auto;
-            margin: 15px 0;
-            padding: 20px;
-            background: #f5f5f5;
-            border-radius: 8px;
-            overflow-wrap: break-word;
-            white-space: pre-wrap;
-            font-size: 14px;
-            line-height: 1.4;
-            orphans: 3;
-            widows: 3;
-            font-family: 'JetBrains Mono', 'Courier New', monospace;
-        }}
-        
-        code {{
-            page-break-inside: auto;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-            font-family: 'JetBrains Mono', 'Courier New', monospace; 
         }}
         
         table {{
@@ -955,12 +934,12 @@ def create_enhanced_pdf_html(content, template, captured_styles=''):
             padding: 12px;
             border: 1px solid #ddd;
             vertical-align: top;
-            font-family: 'Inter', Arial, sans-serif;
+            /* NO font-family - let captured styles handle it */
         }}
         
         th {{
-            font-family: 'Space Grotesk', Arial, sans-serif;
             font-weight: 600;
+            /* NO font-family - let captured styles handle it */
         }}
         
         img {{
@@ -981,92 +960,22 @@ def create_enhanced_pdf_html(content, template, captured_styles=''):
             page-break-inside: auto;
         }}
         
-        /* 🔥 TEMPLATE-SPECIFIC FONT ASSIGNMENTS */
+        /* CAPTURED STYLES - This handles all fonts and styling */
+        {captured_styles}
         
-        /* Tech Neural Template */
-        .tech-neural-template, .tech-neural-template * {{
-            /* font-family: 'Inter', Arial, sans-serif !important; */
-            font-family: 'Kalam', Arial, sans-serif !important;
-        }}
-        .tech-neural-template h1, .tech-neural-template h2, .tech-neural-template h3 {{
-            /* font-family: 'Space Grotesk', Arial, sans-serif !important; */ 
-            font-family: 'Kalam', Arial, sans-serif !important;
-        }}
-        .tech-neural-template pre, .tech-neural-template code {{
+        /* 🔥 MINIMAL OVERRIDES - Only fix what breaks in PDF */
+        @import {{ display: none !important; }}
+        
+        /* Only override code fonts (functional requirement) */
+        pre, code {{
             font-family: 'JetBrains Mono', 'Courier New', monospace !important;
         }}
         
-        /* Ultra Dark Template */
-        .ultra-dark-template, .ultra-dark-template * {{
-            font-family: 'Inter', Arial, sans-serif !important;
-        }}
-        .ultra-dark-template h1, .ultra-dark-template h2, .ultra-dark-template h3, .ultra-dark-template h4 {{
-            font-family: 'Playfair Display', Georgia, serif !important;
-        }}
-        .ultra-dark-template pre, .ultra-dark-template code {{
-            font-family: 'JetBrains Mono', 'Courier New', monospace !important;
-        }}
-        
-        /* Novel Handwriting Template */
-        .novel-handwriting-template, .novel-handwriting-template * {{
-            font-family: 'Kalam', cursive, sans-serif !important;
-        }}
-        .novel-handwriting-template h1, .novel-handwriting-template h2, .novel-handwriting-template h3 {{
-            font-family: 'Kalam', cursive, sans-serif !important;
-        }}
-        
-        /* Premium Templates */
-        .executive-board-template, .executive-board-template * {{
-            font-family: 'Crimson Pro', Georgia, serif !important;
-        }}
-        .executive-board-template h1, .executive-board-template h2, .executive-board-template h3 {{
-            font-family: 'Fraunces', Georgia, serif !important;
-        }}
-        
-        /* General Templates */
-        .product-modern-template, .product-premium-template,
-        .finance-gold-template, .finance-elite-template,
-        .health-care-template, .health-medical-template,
-        .saas-modern-template, .saas-enterprise-template {{
-            font-family: 'Open Sans', Arial, sans-serif !important;
-        }}
-        
-        .product-modern-template h1, .product-modern-template h2, .product-modern-template h3,
-        .product-premium-template h1, .product-premium-template h2, .product-premium-template h3,
-        .finance-gold-template h1, .finance-gold-template h2, .finance-gold-template h3,
-        .finance-elite-template h1, .finance-elite-template h2, .finance-elite-template h3,
-        .health-care-template h1, .health-care-template h2, .health-care-template h3,
-        .health-medical-template h1, .health-medical-template h2, .health-medical-template h3,
-        .saas-modern-template h1, .saas-modern-template h2, .saas-modern-template h3,
-        .saas-enterprise-template h1, .saas-enterprise-template h2, .saas-enterprise-template h3 {{
-            font-family: 'Space Grotesk', Arial, sans-serif !important;
-        }}
-        
-        /* Code elements for all templates */
-        *[class*="-template"] pre, *[class*="-template"] code {{
-            font-family: 'JetBrains Mono', 'Courier New', monospace !important;
-        }}
-        
-        /* Force font rendering */
+        /* Print optimization */
         * {{
             -webkit-print-color-adjust: exact !important;
             color-adjust: exact !important;
         }}
-        
-        /* Additional captured styles with font fallbacks */
-        {captured_styles}
-        
-        /* 🔥 FINAL FONT OVERRIDES - Ensure captured styles don't override our fonts */
-        .template-base {{
-            font-family: 'Inter', Arial, sans-serif !important;
-        }}
-        
-        .template-base h1, .template-base h2, .template-base h3, .template-base h4, .template-base h5, .template-base h6 {{
-            font-family: 'Space Grotesk', Arial, sans-serif !important;
-        }}
-        
-        /* Remove any font imports from captured styles */
-        @import {{ display: none !important; }}
     </style>
     """
     
