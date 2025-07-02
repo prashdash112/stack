@@ -1,0 +1,112 @@
+/* Variable Font Definitions */
+@font-face {
+    font-family: 'Inter';
+    src: url('./fonts/Inter-VariableFont.ttf') format('truetype');
+    font-weight: 100 900; /* Inter supports 100-900 */
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Inter';
+    src: url('./fonts/Inter-Italic-VariableFont.ttf') format('truetype');
+    font-weight: 100 900;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'JetBrains Mono';
+    src: url('./fonts/JetBrainsMono-VariableFont.ttf') format('truetype');
+    font-weight: 100 800; /* JetBrains supports 100-800 */
+    font-style: normal;
+}
+@font-face { 
+    font-family: 'JetBrains Mono';
+    src: url('./fonts/JetBrainsMono-Italic-VariableFont.ttf') format('truetype');
+    font-weight: 100 800;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Playfair Display';
+    src: url('./fonts/PlayfairDisplay-VariableFont.ttf') format('truetype');
+    font-weight: 400 900; /* Playfair supports 400-900 */
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Playfair Display';
+    src: url('./fonts/PlayfairDisplay-Italic-VariableFont.ttf') format('truetype');
+    font-weight: 400 900;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Space Grotesk';
+    src: url('./fonts/SpaceGrotesk-VariableFont.ttf') format('truetype');
+    font-weight: 300 700; /* Space Grotesk supports 300-700 */
+    font-style: normal;
+}
+/* Add this if you have Space Grotesk italic file */
+@font-face {
+    font-family: 'Space Grotesk';
+    src: url('./fonts/SpaceGrotesk-Italic-VariableFont.ttf') format('truetype');
+    font-weight: 300 700;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Crimson Pro';
+    src: url('./fonts/CrimsonPro-VariableFont.ttf') format('truetype');
+    font-weight: 200 900; /* Crimson Pro supports 200-900 */
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Crimson Pro';
+    src: url('./fonts/CrimsonPro-Italic-VariableFont.ttf') format('truetype');
+    font-weight: 200 900;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Fraunces';
+    src: url('./fonts/Fraunces-VariableFont.ttf') format('truetype');
+    font-weight: 100 900; /* Fraunces supports 100-900 */
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Fraunces';
+    src: url('./fonts/Fraunces-Italic-VariableFont.ttf') format('truetype');
+    font-weight: 100 900;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Open Sans';
+    src: url('./fonts/OpenSans-VariableFont.ttf') format('truetype');
+    font-weight: 300 800; /* Open Sans supports 300-800 */
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Open Sans';
+    src: url('./fonts/OpenSans-Italic-VariableFont.ttf') format('truetype');
+    font-weight: 300 800;
+    font-style: italic;
+}
+
+/* Static fonts */
+@font-face {
+    font-family: 'Kalam';
+    src: url('./fonts/kalam-light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Kalam';
+    src: url('./fonts/kalam-regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Kalam';
+    src: url('./fonts/kalam-bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+}

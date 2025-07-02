@@ -413,12 +413,411 @@ def check_feedback_status():
 
 # Replace your existing create_enhanced_pdf_html function with this enhanced version
 
-def create_enhanced_pdf_html(content, template, captured_styles=''): 
-    """Create complete HTML document with smart page break handling"""
+# def create_enhanced_pdf_html(content, template, captured_styles=''): 
+#     """Create complete HTML document with smart page break handling"""
+    
+#     complete_template_styles = f"""
+#     <style>
+#         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+        
+#         /* PDF PAGE CONTROL - CUSTOM SIZE */
+#         @page {{
+#             size: 1080px 1350px;
+#             margin: 8px;
+#             padding: 0px;
+#         }}
+        
+#         /* ✅ FIRST PAGE ONLY - Footer */
+#         @page :first {{
+#             margin: 8px 8px 30px 8px; 
+            
+#             @bottom-center {{
+#                 content: "Generated with GeniusPost AI";
+#                 font-family: 'Space Grotesk', sans-serif;
+#                 font-size: 18px;
+#                 font-weight: 700;
+#                 color: #2c3e50;
+#                 background: rgba(255,255,255,0.9);
+#                 padding: 8px 16px;
+#                 border-radius: 20px;
+#                 letter-spacing: 1px;
+#                 text-transform: uppercase;
+#                 box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+#                 margin-top: 5px;
+#             }}
+#         }}
+        
+#         * {{
+#             box-sizing: border-box;
+#             margin: 0;
+#             padding: 0;
+#         }}
+        
+#         html, body {{
+#             width: 1064px;
+#             margin: 0 !important;
+#             padding: 0px !important;
+#             font-family: 'Inter', sans-serif;
+#         }}
+        
+#         .pdf-container {{
+#             width: 1064px;
+#             margin: 0;
+#             padding: 0;
+#             position: relative;
+#         }}
+        
+#         .template-base {{
+#             width: 1064px !important;
+#             min-height: 1324px !important;
+#             margin: 0 !important;
+#             padding: 30px !important;
+#             position: relative;
+#             box-sizing: border-box;
+#             page-break-inside: auto;
+#         }}
+        
+#         /* 🔥 SMART PAGE BREAK CONTROLS - BULLETPROOF SOLUTION */
+        
+#         /* Allow content to break naturally */
+#         h1, h2, h3, h4, h5, h6 {{
+#             page-break-after: auto !important;
+#             page-break-inside: avoid;
+#             page-break-before: auto;
+#             margin-top: 20px;
+#             margin-bottom: 15px;
+#             orphans: 2;
+#             widows: 2;
+#         }}
+
+#         /* Prevent orphans/widows but allow breaks */
+#         p {{
+#             page-break-inside: auto;
+#             orphans: 2;
+#             widows: 2;
+#             margin-bottom: 12px;
+#             line-height: 1.6;
+#         }}
+        
+#         /* Smart list handling */
+#         ul, ol {{
+#             page-break-inside: auto;
+#             margin: 15px 0;
+#         }}
+        
+#         li {{
+#             page-break-inside: auto;
+#             orphans: 2;
+#             widows: 2;
+#             margin-bottom: 8px;
+#         }}
+        
+#         /* Long content elements - allow smart breaking */
+#         blockquote {{
+#             page-break-inside: auto;
+#             margin: 20px 0;
+#             padding: 15px 20px;
+#             border-left: 4px solid #ddd;
+#             background: #f9f9f9;
+#             orphans: 2;
+#             widows: 2;
+#         }}
+        
+#         /* Code blocks - allow breaking with proper formatting */
+#         pre {{
+#             page-break-inside: auto;
+#             margin: 15px 0;
+#             padding: 20px;
+#             background: #f5f5f5;
+#             border-radius: 8px;
+#             overflow-wrap: break-word;
+#             white-space: pre-wrap;
+#             font-size: 14px;
+#             line-height: 1.4;
+#             orphans: 3;
+#             widows: 3;
+#         }}
+        
+#         code {{
+#             page-break-inside: auto;
+#             word-wrap: break-word;
+#             overflow-wrap: break-word;
+#         }}
+        
+#         /* Tables - smart breaking */
+#         table {{
+#             page-break-inside: auto;
+#             margin: 20px 0;
+#             width: 100%;
+#             border-collapse: collapse;
+#         }}
+        
+#         thead {{
+#             page-break-after: avoid;
+#         }}
+        
+#         tbody tr {{
+#             page-break-inside: avoid;
+#             page-break-after: auto;
+#         }}
+        
+#         th, td {{
+#             padding: 12px;
+#             border: 1px solid #ddd;
+#             vertical-align: top;
+#         }}
+        
+#         /* Images - keep together but allow page breaks around them */
+#         img {{
+#             max-width: 1004px !important;
+#             width: 100% !important;
+#             height: auto !important;
+#             display: block !important;
+#             page-break-inside: avoid;
+#             page-break-before: auto;
+#             page-break-after: auto;
+#             margin: 20px auto !important;
+#             object-fit: contain !important;
+#             border-radius: 16px !important;
+#             position: relative !important;
+#         }}
+        
+#         /* Div containers - allow natural breaking */
+#         div {{
+#             page-break-inside: auto;
+#         }}
+        
+#         /* Special handling for long paragraphs */
+#         p.long-content {{
+#             page-break-inside: auto;
+#             orphans: 3;
+#             widows: 3;
+#         }}
+        
+#         /* 🔥 SMART SPACING THAT PREVENTS BLANK PAGES */
+        
+#         /* Reduce excessive margins that cause page breaks */
+#         h1:first-child, h2:first-child, h3:first-child {{
+#             margin-top: 0 !important;
+#             padding-top: 10px;
+#         }}
+        
+#         /* Ensure reasonable spacing */
+#         .template-base > *:first-child {{
+#             margin-top: 0 !important;
+#         }}
+        
+#         .template-base > *:last-child {{
+#             margin-bottom: 0 !important;
+#         }}
+        
+#         /* Prevent large gaps */
+#         br + br {{
+#             display: none;
+#         }}
+        
+#         /* 🔥 ADVANCED ORPHAN/WIDOW CONTROL */
+        
+#         /* Apply to all text content */
+#         p, li, td, th, blockquote, figcaption {{
+#             orphans: 2;
+#             widows: 2;
+#         }}
+        
+#         /* Stricter control for headings */
+#         h1, h2, h3 {{
+#             orphans: 3;
+#             widows: 3;
+#         }}
+        
+#         /* 🔥 FORCE CONTENT TO FLOW NATURALLY */
+        
+#         /* Remove restrictive page-break-inside: avoid from containers */
+#         .content-section, .card, .panel {{
+#             page-break-inside: auto !important;
+#         }}
+        
+#         /* Allow flexible breaking for content blocks */
+#         .content-block {{
+#             page-break-inside: auto;
+#             margin: 10px 0;
+#         }}
+        
+#         /* Additional captured styles */
+#         {captured_styles}
+        
+#         /* 🔥 OVERRIDE ANY RESTRICTIVE STYLES FROM CAPTURED CSS */
+        
+#         /* Force natural page breaking for common containers */
+#         section, article, aside, main {{
+#             page-break-inside: auto !important;
+#         }}
+        
+#         /* Ensure text can break naturally */
+#         span, strong, em, b, i {{
+#             page-break-inside: auto;
+#         }}
+        
+#         /* Smart handling of flex/grid layouts in print */
+#         .flex, .grid, .container {{
+#             display: block !important;
+#             page-break-inside: auto !important;
+#         }}
+#     </style>
+#     """
+    
+#     # 🔥 PREPROCESS CONTENT FOR BETTER PAGE BREAKS
+#     processed_content = preprocess_content_for_pdf(content)
+    
+#     return f"""
+#     <!DOCTYPE html>
+#     <html>
+#     <head>
+#         <meta charset="UTF-8">
+#         <title>Carousel PDF - {template}</title>
+#         {complete_template_styles}
+#     </head>
+#     <body>
+#         <div class="pdf-container">
+#             <div class="{template}-template template-base">
+#                 {processed_content}
+#             </div>
+#         </div>
+#     </body>
+#     </html>
+#     """
+
+def create_enhanced_pdf_html(content, template, captured_styles=''):
+    """Create complete HTML document with variable fonts for PDF generation"""
+    
+    # Get absolute path to static directory
+    static_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'static'))
+    fonts_dir = os.path.join(static_dir, 'fonts')
+    
+    # Debug: Print font paths to verify they exist
+    print(f"Static directory: {static_dir}")
+    print(f"Fonts directory: {fonts_dir}")
+    print(f"Fonts directory exists: {os.path.exists(fonts_dir)}")
+    
+    # Generate variable font-face declarations with absolute file paths
+    variable_font_css = f"""
+        /* Variable Font Definitions for PDF */
+        @font-face {{
+            font-family: 'Inter';
+            src: url('file://{fonts_dir}/Inter-VariableFont.ttf') format('truetype');
+            font-weight: 100 900;
+            font-style: normal;
+        }}
+        @font-face {{
+            font-family: 'Inter';
+            src: url('file://{fonts_dir}/Inter-Italic-VariableFont.ttf') format('truetype');
+            font-weight: 100 900;
+            font-style: italic;
+        }}
+
+        @font-face {{
+            font-family: 'JetBrains Mono';
+            src: url('file://{fonts_dir}/JetBrainsMono-VariableFont.ttf') format('truetype');
+            font-weight: 100 800;
+            font-style: normal;
+        }}
+        @font-face {{ 
+            font-family: 'JetBrains Mono';
+            src: url('file://{fonts_dir}/JetBrainsMono-Italic-VariableFont.ttf') format('truetype');
+            font-weight: 100 800;
+            font-style: italic;
+        }}
+
+        @font-face {{
+            font-family: 'Playfair Display';
+            src: url('file://{fonts_dir}/PlayfairDisplay-VariableFont.ttf') format('truetype');
+            font-weight: 400 900;
+            font-style: normal;
+        }}
+        @font-face {{
+            font-family: 'Playfair Display';
+            src: url('file://{fonts_dir}/PlayfairDisplay-Italic-VariableFont.ttf') format('truetype');
+            font-weight: 400 900;
+            font-style: italic;
+        }}
+
+        @font-face {{
+            font-family: 'Space Grotesk';
+            src: url('file://{fonts_dir}/SpaceGrotesk-VariableFont.ttf') format('truetype');
+            font-weight: 300 700;
+            font-style: normal;
+        }}
+        @font-face {{
+            font-family: 'Space Grotesk';
+            src: url('file://{fonts_dir}/SpaceGrotesk-Italic-VariableFont.ttf') format('truetype');
+            font-weight: 300 700;
+            font-style: italic;
+        }}
+
+        @font-face {{
+            font-family: 'Crimson Pro';
+            src: url('file://{fonts_dir}/CrimsonPro-VariableFont.ttf') format('truetype');
+            font-weight: 200 900;
+            font-style: normal;
+        }}
+        @font-face {{
+            font-family: 'Crimson Pro';
+            src: url('file://{fonts_dir}/CrimsonPro-Italic-VariableFont.ttf') format('truetype');
+            font-weight: 200 900;
+            font-style: italic;
+        }}
+
+        @font-face {{
+            font-family: 'Fraunces';
+            src: url('file://{fonts_dir}/Fraunces-VariableFont.ttf') format('truetype');
+            font-weight: 100 900;
+            font-style: normal;
+        }}
+        @font-face {{
+            font-family: 'Fraunces';
+            src: url('file://{fonts_dir}/Fraunces-Italic-VariableFont.ttf') format('truetype');
+            font-weight: 100 900;
+            font-style: italic;
+        }}
+
+        @font-face {{
+            font-family: 'Open Sans';
+            src: url('file://{fonts_dir}/OpenSans-VariableFont.ttf') format('truetype');
+            font-weight: 300 800;
+            font-style: normal;
+        }}
+        @font-face {{
+            font-family: 'Open Sans';
+            src: url('file://{fonts_dir}/OpenSans-Italic-VariableFont.ttf') format('truetype');
+            font-weight: 300 800;
+            font-style: italic;
+        }}
+
+        /* Static fonts */
+        @font-face {{
+            font-family: 'Kalam';
+            src: url('file://{fonts_dir}/kalam-light.ttf') format('truetype');
+            font-weight: 300;
+            font-style: normal;
+        }}
+        @font-face {{
+            font-family: 'Kalam';
+            src: url('file://{fonts_dir}/kalam-regular.ttf') format('truetype');
+            font-weight: 400;
+            font-style: normal;
+        }}
+        @font-face {{
+            font-family: 'Kalam';
+            src: url('file://{fonts_dir}/kalam-bold.ttf') format('truetype');
+            font-weight: 700;
+            font-style: normal;
+        }}
+    """
     
     complete_template_styles = f"""
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+        /* VARIABLE FONT DEFINITIONS FOR PDF */
+        {variable_font_css}
         
         /* PDF PAGE CONTROL - CUSTOM SIZE */
         @page {{
@@ -433,7 +832,7 @@ def create_enhanced_pdf_html(content, template, captured_styles=''):
             
             @bottom-center {{
                 content: "Generated with GeniusPost AI";
-                font-family: 'Space Grotesk', sans-serif;
+                font-family: 'Space Grotesk', Arial, sans-serif;
                 font-size: 18px;
                 font-weight: 700;
                 color: #2c3e50;
@@ -457,7 +856,7 @@ def create_enhanced_pdf_html(content, template, captured_styles=''):
             width: 1064px;
             margin: 0 !important;
             padding: 0px !important;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', Arial, sans-serif;
         }}
         
         .pdf-container {{
@@ -477,9 +876,7 @@ def create_enhanced_pdf_html(content, template, captured_styles=''):
             page-break-inside: auto;
         }}
         
-        /* 🔥 SMART PAGE BREAK CONTROLS - BULLETPROOF SOLUTION */
-        
-        /* Allow content to break naturally */
+        /* 🔥 SMART PAGE BREAK CONTROLS */
         h1, h2, h3, h4, h5, h6 {{
             page-break-after: auto !important;
             page-break-inside: avoid;
@@ -490,16 +887,15 @@ def create_enhanced_pdf_html(content, template, captured_styles=''):
             widows: 2;
         }}
 
-        /* Prevent orphans/widows but allow breaks */
         p {{
             page-break-inside: auto;
             orphans: 2;
             widows: 2;
             margin-bottom: 12px;
             line-height: 1.6;
+            font-family: 'Inter', Arial, sans-serif;
         }}
         
-        /* Smart list handling */
         ul, ol {{
             page-break-inside: auto;
             margin: 15px 0;
@@ -510,9 +906,9 @@ def create_enhanced_pdf_html(content, template, captured_styles=''):
             orphans: 2;
             widows: 2;
             margin-bottom: 8px;
+            font-family: 'Inter', Arial, sans-serif;
         }}
         
-        /* Long content elements - allow smart breaking */
         blockquote {{
             page-break-inside: auto;
             margin: 20px 0;
@@ -523,7 +919,6 @@ def create_enhanced_pdf_html(content, template, captured_styles=''):
             widows: 2;
         }}
         
-        /* Code blocks - allow breaking with proper formatting */
         pre {{
             page-break-inside: auto;
             margin: 15px 0;
@@ -536,15 +931,16 @@ def create_enhanced_pdf_html(content, template, captured_styles=''):
             line-height: 1.4;
             orphans: 3;
             widows: 3;
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
         }}
         
         code {{
             page-break-inside: auto;
             word-wrap: break-word;
             overflow-wrap: break-word;
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
         }}
         
-        /* Tables - smart breaking */
         table {{
             page-break-inside: auto;
             margin: 20px 0;
@@ -565,9 +961,14 @@ def create_enhanced_pdf_html(content, template, captured_styles=''):
             padding: 12px;
             border: 1px solid #ddd;
             vertical-align: top;
+            font-family: 'Inter', Arial, sans-serif;
         }}
         
-        /* Images - keep together but allow page breaks around them */
+        th {{
+            font-family: 'Space Grotesk', Arial, sans-serif;
+            font-weight: 600;
+        }}
+        
         img {{
             max-width: 1004px !important;
             width: 100% !important;
@@ -582,91 +983,98 @@ def create_enhanced_pdf_html(content, template, captured_styles=''):
             position: relative !important;
         }}
         
-        /* Div containers - allow natural breaking */
         div {{
             page-break-inside: auto;
         }}
         
-        /* Special handling for long paragraphs */
-        p.long-content {{
-            page-break-inside: auto;
-            orphans: 3;
-            widows: 3;
+        /* 🔥 TEMPLATE-SPECIFIC FONT ASSIGNMENTS */
+        
+        /* Tech Neural Template */
+        .tech-neural-template, .tech-neural-template * {{
+            font-family: 'Inter', Arial, sans-serif !important;
+        }}
+        .tech-neural-template h1, .tech-neural-template h2, .tech-neural-template h3 {{
+            font-family: 'Space Grotesk', Arial, sans-serif !important;
+        }}
+        .tech-neural-template pre, .tech-neural-template code {{
+            font-family: 'JetBrains Mono', 'Courier New', monospace !important;
         }}
         
-        /* 🔥 SMART SPACING THAT PREVENTS BLANK PAGES */
-        
-        /* Reduce excessive margins that cause page breaks */
-        h1:first-child, h2:first-child, h3:first-child {{
-            margin-top: 0 !important;
-            padding-top: 10px;
+        /* Ultra Dark Template */
+        .ultra-dark-template, .ultra-dark-template * {{
+            font-family: 'Inter', Arial, sans-serif !important;
+        }}
+        .ultra-dark-template h1, .ultra-dark-template h2, .ultra-dark-template h3, .ultra-dark-template h4 {{
+            font-family: 'Playfair Display', Georgia, serif !important;
+        }}
+        .ultra-dark-template pre, .ultra-dark-template code {{
+            font-family: 'JetBrains Mono', 'Courier New', monospace !important;
         }}
         
-        /* Ensure reasonable spacing */
-        .template-base > *:first-child {{
-            margin-top: 0 !important;
+        /* Novel Handwriting Template */
+        .novel-handwriting-template, .novel-handwriting-template * {{
+            font-family: 'Kalam', cursive, sans-serif !important;
+        }}
+        .novel-handwriting-template h1, .novel-handwriting-template h2, .novel-handwriting-template h3 {{
+            font-family: 'Kalam', cursive, sans-serif !important;
         }}
         
-        .template-base > *:last-child {{
-            margin-bottom: 0 !important;
+        /* Premium Templates */
+        .executive-board-template, .executive-board-template * {{
+            font-family: 'Crimson Pro', Georgia, serif !important;
+        }}
+        .executive-board-template h1, .executive-board-template h2, .executive-board-template h3 {{
+            font-family: 'Fraunces', Georgia, serif !important;
         }}
         
-        /* Prevent large gaps */
-        br + br {{
-            display: none;
+        /* General Templates */
+        .product-modern-template, .product-premium-template,
+        .finance-gold-template, .finance-elite-template,
+        .health-care-template, .health-medical-template,
+        .saas-modern-template, .saas-enterprise-template {{
+            font-family: 'Open Sans', Arial, sans-serif !important;
         }}
         
-        /* 🔥 ADVANCED ORPHAN/WIDOW CONTROL */
-        
-        /* Apply to all text content */
-        p, li, td, th, blockquote, figcaption {{
-            orphans: 2;
-            widows: 2;
+        .product-modern-template h1, .product-modern-template h2, .product-modern-template h3,
+        .product-premium-template h1, .product-premium-template h2, .product-premium-template h3,
+        .finance-gold-template h1, .finance-gold-template h2, .finance-gold-template h3,
+        .finance-elite-template h1, .finance-elite-template h2, .finance-elite-template h3,
+        .health-care-template h1, .health-care-template h2, .health-care-template h3,
+        .health-medical-template h1, .health-medical-template h2, .health-medical-template h3,
+        .saas-modern-template h1, .saas-modern-template h2, .saas-modern-template h3,
+        .saas-enterprise-template h1, .saas-enterprise-template h2, .saas-enterprise-template h3 {{
+            font-family: 'Space Grotesk', Arial, sans-serif !important;
         }}
         
-        /* Stricter control for headings */
-        h1, h2, h3 {{
-            orphans: 3;
-            widows: 3;
+        /* Code elements for all templates */
+        *[class*="-template"] pre, *[class*="-template"] code {{
+            font-family: 'JetBrains Mono', 'Courier New', monospace !important;
         }}
         
-        /* 🔥 FORCE CONTENT TO FLOW NATURALLY */
-        
-        /* Remove restrictive page-break-inside: avoid from containers */
-        .content-section, .card, .panel {{
-            page-break-inside: auto !important;
+        /* Force font rendering */
+        * {{
+            -webkit-print-color-adjust: exact !important;
+            color-adjust: exact !important;
         }}
         
-        /* Allow flexible breaking for content blocks */
-        .content-block {{
-            page-break-inside: auto;
-            margin: 10px 0;
-        }}
-        
-        /* Additional captured styles */
+        /* Additional captured styles with font fallbacks */
         {captured_styles}
         
-        /* 🔥 OVERRIDE ANY RESTRICTIVE STYLES FROM CAPTURED CSS */
-        
-        /* Force natural page breaking for common containers */
-        section, article, aside, main {{
-            page-break-inside: auto !important;
+        /* 🔥 FINAL FONT OVERRIDES - Ensure captured styles don't override our fonts */
+        .template-base {{
+            font-family: 'Inter', Arial, sans-serif !important;
         }}
         
-        /* Ensure text can break naturally */
-        span, strong, em, b, i {{
-            page-break-inside: auto;
+        .template-base h1, .template-base h2, .template-base h3, .template-base h4, .template-base h5, .template-base h6 {{
+            font-family: 'Space Grotesk', Arial, sans-serif !important;
         }}
         
-        /* Smart handling of flex/grid layouts in print */
-        .flex, .grid, .container {{
-            display: block !important;
-            page-break-inside: auto !important;
-        }}
+        /* Remove any font imports from captured styles */
+        @import {{ display: none !important; }}
     </style>
     """
     
-    # 🔥 PREPROCESS CONTENT FOR BETTER PAGE BREAKS
+    # Preprocess content for better page breaks
     processed_content = preprocess_content_for_pdf(content)
     
     return f"""
@@ -686,6 +1094,7 @@ def create_enhanced_pdf_html(content, template, captured_styles=''):
     </body>
     </html>
     """
+
 
 def preprocess_content_for_pdf(content):
     """
@@ -855,6 +1264,57 @@ def debug():
         "host": request.host,
         "redirect_uri": os.environ.get("REDIRECT_URI"),
         "current_user": current_user.is_authenticated if current_user else False
+    })
+
+@app.route('/debug-fonts')
+def debug_fonts():
+    """Debug route to check variable font availability"""
+    fonts_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'static', 'fonts'))
+    
+    required_fonts = [
+        # Variable fonts
+        'Inter-VariableFont.ttf',
+        'Inter-Italic-VariableFont.ttf',
+        'JetBrainsMono-VariableFont.ttf',
+        'JetBrainsMono-Italic-VariableFont.ttf',
+        'PlayfairDisplay-VariableFont.ttf',
+        'PlayfairDisplay-Italic-VariableFont.ttf',
+        'SpaceGrotesk-VariableFont.ttf',
+        'SpaceGrotesk-Italic-VariableFont.ttf',
+        'CrimsonPro-VariableFont.ttf',
+        'CrimsonPro-Italic-VariableFont.ttf',
+        'Fraunces-VariableFont.ttf',
+        'Fraunces-Italic-VariableFont.ttf',
+        'OpenSans-VariableFont.ttf',
+        'OpenSans-Italic-VariableFont.ttf',
+        # Static fonts
+        'kalam-light.ttf',
+        'kalam-regular.ttf',
+        'kalam-bold.ttf'
+    ]
+    
+    font_status = {}
+    total_fonts = len(required_fonts)
+    fonts_found = 0
+    
+    for font in required_fonts:
+        font_path = os.path.join(fonts_dir, font)
+        exists = os.path.exists(font_path)
+        if exists:
+            fonts_found += 1
+        
+        font_status[font] = {
+            'exists': exists,
+            'path': font_path,
+            'size': os.path.getsize(font_path) if exists else 0
+        }
+    
+    return jsonify({
+        'fonts_dir': fonts_dir,
+        'fonts_dir_exists': os.path.exists(fonts_dir),
+        'fonts_found': f"{fonts_found}/{total_fonts}",
+        'all_fonts_available': fonts_found == total_fonts,
+        'fonts': font_status
     })
 ##################################################
 
