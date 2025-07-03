@@ -3063,6 +3063,125 @@ font-family:'Kalam', sans-serif !important;
    }
 }
 
+/* Novel Classic Template */
+.novel-template {
+    background: linear-gradient(135deg, #f7f3e8 0%, #ede5d6 100%);
+    color: #2d2a26;
+    font-family: 'Crimson Text', 'Georgia', 'Times New Roman', serif;
+}
+
+.novel-template::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 20% 50%, rgba(139,115,85,0.08), transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(160,130,98,0.06), transparent 50%);
+    pointer-events: none;
+    /* Paper grain texture */
+    background-image: 
+        radial-gradient(circle at 1px 1px, rgba(139,115,85,0.15) 1px, transparent 0),
+        radial-gradient(circle at 2px 3px, rgba(160,130,98,0.1) 1px, transparent 0);
+    background-size: 4px 4px, 6px 6px;
+}
+
+.novel-template > * {
+    position: relative;
+    z-index: 1;
+}
+
+.novel-template h1 {
+    font-size: 2.4rem;
+    color: #3a332b;
+    text-shadow: 0 1px 2px rgba(139,115,85,0.2);
+    font-style: italic;
+}
+
+.novel-template h2 {
+    font-size: 1.8rem;
+    color: #4a3f35;
+    border-bottom: 2px solid rgba(139,115,85,0.4);
+    padding-bottom: 8px;
+    font-style: italic;
+}
+
+.novel-template h3 {
+    font-size: 1.4rem;
+    color: #5d4e3f;
+    font-style: italic;
+}
+
+.novel-template li::before {
+    content: '❦';
+    position: absolute;
+    left: 0;
+    color: #8b7355;
+    font-size: 1.2rem;
+}
+
+.novel-template pre, .novel-template p code {
+    background: rgba(139,115,85,0.12);
+    border: 1px solid rgba(139,115,85,0.25);
+    color: #3a332b;
+    font-family: 'Courier Prime', 'Courier New', monospace;
+}
+
+.novel-template table {
+    background: rgba(247,243,232,0.8);
+    border: 1px solid rgba(139,115,85,0.3);
+}
+
+.novel-template th {
+    background: rgba(139,115,85,0.2);
+    color: #3a332b;
+    font-style: italic;
+}
+
+.novel-template th, .novel-template td {
+    border-bottom: 1px solid rgba(139,115,85,0.25);
+}
+
+.novel-template blockquote {
+    border-left-color: #8b7355;
+    background: rgba(247,243,232,0.6);
+    font-style: italic;
+    color: #4a3f35;
+}
+
+.novel-template strong {
+    color: #5d4e3f;
+    font-weight: 700;
+}
+
+.novel-template a {
+    color: #8b7355;
+    text-decoration: underline;
+}
+
+.novel-template hr {
+    background: linear-gradient(90deg, transparent, rgba(139,115,85,0.4), transparent);
+    height: 1px;
+}
+
+.novel-template mark {
+    background: linear-gradient(135deg, #f4e5b1 0%, #ead084 50%, #f4e5b1 100%);
+    color: #3a332b;
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-weight: 600;
+    box-shadow: 
+        0 2px 8px rgba(139, 115, 85, 0.3),
+        inset 0 1px 0 rgba(247, 243, 232, 0.5);
+    border: 1px solid rgba(139, 115, 85, 0.4);
+    position: relative;
+    display: inline-block;
+    transition: all 0.3s ease;
+    font-style: italic;
+}
+
     </style>
 </head>
 <body>
@@ -3153,8 +3272,9 @@ font-family:'Kalam', sans-serif !important;
                 else if (currentTemplate.includes('gradient-pro')) backgroundColor = '#667eea';
                 else if (currentTemplate.includes('retro')) backgroundColor = '#ff6b35';
                 else if (currentTemplate.includes('glass-morph')) backgroundColor = '#a8edea';
-                else if (currentTemplate.includes('latex-book')) backgroundColor = '#fefefe'; //ultra-dark
-                else if (currentTemplate.includes('ultra-dark')) backgroundColor = '#0a0a0a';
+                else if (currentTemplate.includes('latex-book')) backgroundColor = '#fefefe'; 
+                else if (currentTemplate.includes('ultra-dark')) backgroundColor = '#0a0a0a'; 
+                else if (currentTemplate.includes('novel')) backgroundColor = '#f7f3e8';
 
                 const canvas = await html2canvas(tempContainer.firstChild, {
                     backgroundColor: backgroundColor,
