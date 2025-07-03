@@ -1957,13 +1957,11 @@ font-family:'Kalam', sans-serif !important;
    backdrop-filter: blur(5px);
 }
 
-/* Retro Vibe Template */
+/* Clean Retro Vibe Template - Visual Effects Only */
 .retro-template {
     background: linear-gradient(135deg, #ff6b35 0%, #f7931e 50%, #ffcd3c 100%);
     color: #2c3e50;
-    padding: 40px;
     font-family: 'Kalam', 'Comic Sans MS', cursive, sans-serif !important;
-    line-height: 1.7;
     position: relative;
     box-shadow: inset 0 0 50px rgba(0,0,0,0.1);
 }
@@ -1987,13 +1985,7 @@ font-family:'Kalam', sans-serif !important;
     left: 0;
     right: 0;
     bottom: 0;
-    background: repeating-linear-gradient(
-        45deg,
-        transparent,
-        transparent 10px,
-        rgba(255,255,255,0.1) 10px,
-        rgba(255,255,255,0.1) 20px
-    );
+    background: rgba(255,255,255,0.05);
     pointer-events: none;
 }
 
@@ -2002,50 +1994,48 @@ font-family:'Kalam', sans-serif !important;
     z-index: 1;
 }
 
+/* HEADERS - Visual effects only, template-base handles sizing/spacing */
 .retro-template h1 {
-    font-size: 2.8rem;
-    font-weight: 700;
     color: #2c3e50;
-    margin-bottom: 30px;
     text-align: center;
     text-shadow: 3px 3px 0px rgba(255,255,255,0.8);
     transform: rotate(-2deg);
 }
 
 .retro-template h2 {
-    font-size: 2.2rem;
-    font-weight: 700;
     color: #34495e;
-    margin: 35px 0 25px 0;
     text-shadow: 2px 2px 0px rgba(255,255,255,0.7);
     transform: rotate(1deg);
 }
 
 .retro-template h3 {
-    font-size: 1.8rem;
-    font-weight: 400;
     color: #2c3e50;
-    margin: 25px 0 15px 0;
     transform: rotate(-0.5deg);
 }
 
+.retro-template h4 {
+    color: #2c3e50;
+    transform: rotate(0.3deg);
+}
+
+.retro-template h5 {
+    color: #34495e;
+    transform: rotate(-0.2deg);
+}
+
+.retro-template h6 {
+    color: #2c3e50;
+    transform: rotate(0.1deg);
+}
+
+/* PARAGRAPHS - Visual effects only */
 .retro-template p {
-    font-size: 1.1rem;
-    margin-bottom: 20px;
     color: #34495e;
     text-shadow: 1px 1px 0px rgba(255,255,255,0.5);
 }
 
-.retro-template ul, .retro-template ol {
-    margin: 20px 0;
-    padding-left: 0;
-}
-
+/* LISTS - Visual effects only */
 .retro-template li {
-    list-style: none;
-    margin: 15px 0;
-    padding-left: 40px;
-    position: relative;
     color: #2c3e50;
     transform: rotate(0.3deg);
 }
@@ -2063,47 +2053,49 @@ font-family:'Kalam', sans-serif !important;
     text-shadow: 2px 2px 0px rgba(255,255,255,0.7);
 }
 
-.retro-template code {
+/* CODE BLOCKS - Visual styling only */
+.retro-template pre {
     background: rgba(255,255,255,0.8);
     border: 3px solid #2c3e50;
-    padding: 15px;
-    border-radius: 15px;
-    display: block;
-    font-family: 'Courier New', monospace;
     color: #2c3e50;
-    margin: 20px 0;
-    white-space: pre-wrap;
-    overflow-x: auto;
-    line-height: 1.4;
     transform: rotate(-1deg);
     box-shadow: 5px 5px 0px rgba(0,0,0,0.2);
 }
 
-.retro-template table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    margin: 25px 0;
-    background: rgba(255,255,255,0.9);
-    border: 3px solid #2c3e50;
-    border-radius: 15px;
-    overflow: hidden;
-    transform: rotate(0.5deg);
-    box-shadow: 5px 5px 0px rgba(0,0,0,0.2);
+.retro-template code {
+    background: rgba(255,255,255,0.8);
+    border: 2px solid #2c3e50;
+    color: #2c3e50;
+    font-family: 'Courier New', monospace;
 }
 
-.retro-template th, .retro-template td {
-    padding: 15px;
-    text-align: left;
-    border-bottom: 2px solid #2c3e50;
-    border-right: 2px solid #2c3e50;
+.retro-template p code {
+    background: rgba(255,255,255,0.9);
+    border: 2px solid #2c3e50;
+    color: #2c3e50;
+}
+
+/* TABLES - Visual styling only */
+.retro-template table {
+    background: rgba(255,255,255,0.9);
+    border: 3px solid #2c3e50;
+    transform: rotate(0.2deg);
+    box-shadow: 5px 5px 0px rgba(0,0,0,0.2);
 }
 
 .retro-template th {
     background: #e74c3c;
     color: white;
-    font-weight: 700;
     text-shadow: 1px 1px 0px rgba(0,0,0,0.3);
+    border-bottom: 2px solid #2c3e50;
+    border-right: 2px solid #2c3e50;
+}
+
+.retro-template td {
+    background: rgba(255,255,255,0.9);
+    color: #2c3e50;
+    border-bottom: 2px solid #2c3e50;
+    border-right: 2px solid #2c3e50;
 }
 
 .retro-template th:last-child,
@@ -2115,16 +2107,53 @@ font-family:'Kalam', sans-serif !important;
     border-bottom: none;
 }
 
+/* BLOCKQUOTES - Visual styling only */
+.retro-template blockquote {
+    background: rgba(255,255,255,0.8);
+    border: 3px solid #2c3e50;
+    color: #2c3e50;
+    transform: rotate(-0.5deg);
+    box-shadow: 5px 5px 0px rgba(0,0,0,0.2);
+}
+
+/* LINKS - Visual styling only */
+.retro-template a {
+    color: #e74c3c;
+    text-shadow: 1px 1px 0px rgba(255,255,255,0.7);
+}
+
+.retro-template a:hover {
+    color: #c0392b;
+    transform: rotate(1deg);
+}
+
+/* DIVIDERS - Visual styling only */
+.retro-template hr {
+    background: #2c3e50;
+    transform: rotate(-1deg);
+    box-shadow: 3px 3px 0px rgba(0,0,0,0.2);
+}
+
+/* TEXT STYLING - Visual effects only */
+.retro-template strong {
+    color: #e74c3c;
+    text-shadow: 1px 1px 0px rgba(255,255,255,0.7);
+}
+
+.retro-template em {
+    color: #2c3e50;
+    text-shadow: 1px 1px 0px rgba(255,255,255,0.5);
+}
+
+/* HIGHLIGHTING */
 .retro-template mark {
-   background: #e74c3c;
-   color: #ffffff;
-   padding: 4px 8px;
-   border-radius: 8px;
-   font-weight: 700;
-   transform: rotate(-1deg);
-   box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.2);
-   border: 2px solid #2c3e50;
-   text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.3);
+    background: #e74c3c;
+    color: #ffffff;
+    border-radius: 8px;
+    transform: rotate(-1deg);
+    box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.2);
+    border: 2px solid #2c3e50;
+    text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.3);
 }
 
 /* Glass Morph Template */
