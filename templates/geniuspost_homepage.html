@@ -1010,6 +1010,52 @@
     left: 0;
     font-size: 0.9rem;
 }
+
+/* Video Section */
+.video-section {
+    padding: 80px 0;
+    text-align: center;
+}
+
+.video-title {
+    font-size: 2.8rem;
+    font-weight: 700;
+    margin-bottom: 50px;
+    color: #ffffff;
+}
+
+.video-container {
+    width: 100vw;
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+    padding-bottom: 56.25%;
+    height: 0;
+}
+
+.demo-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+    border: none;
+    border-radius: 20px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .video-title {
+        font-size: 2.2rem;
+    }
+    
+    .video-container {
+        width: 95%;
+    }
+}
     </style>
 </head>
     <meta charset="UTF-8">
@@ -1068,6 +1114,22 @@
             </div>
         </section>
 
+        <!-- How It Works Video Section -->
+        <section class="scroll-section video-section" id="video">
+            <div>
+                <h2 class="video-title">See How It Works</h2>
+                <div class="video-container">
+                    <iframe 
+                        class="demo-video"
+                        src="https://www.youtube.com/embed/R3XDN6kHqCE"
+                        title="GeniusPost AI Demo"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+        </section>
         
 
         <!-- Content Showcase Section -->
