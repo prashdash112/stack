@@ -915,9 +915,9 @@ def debug_fonts():
         'OpenSans-VariableFont.ttf',
         'OpenSans-Italic-VariableFont.ttf',
         # Static fonts
-        'Kalam-light.ttf',
-        'Kalam-regular.ttf',
-        'Kalam-bold.ttf'
+        'Kalam-Light.ttf',
+        'Kalam-Regular.ttf',
+        'Kalam-Bold.ttf'
     ]
     
     font_status = {}
